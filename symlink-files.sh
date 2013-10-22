@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ln -sf ~/dotfiles/gitconfig ~/.gitconfig
+ln -sf ~/dotfiles/ansiweatherrc ~/.ansiweatherrc
+
 # Pretzo (oh-my-zsh fork) setup 
 ln -sf ~/dotfiles/prezto/runcoms/zlogin ~/.zlogin
 ln -sf ~/dotfiles/prezto/runcoms/zlogout ~/.zlogout

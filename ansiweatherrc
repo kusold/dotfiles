@@ -1,0 +1,4 @@
+location:Boulder,US
+fetch_cmd:curl -s
+units:imperial
+symbols:true
