@@ -1,0 +1,54 @@
+[user]
+  name = Mike Kusold
+  email = kusold@git
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[merge]
+  tool = custom 
+  keepBackup = false
+[mergetool "custom"]
+  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$REMOTE" "$PWD/$MERGED"
+  keepTemporaries = false
+  trustExitCode = false
+  keepBackup = false
+[diff]
+  tool = p4diff
+[difftool "p4diff"]
+  prompt = false
+  cmd = p4merge "$LOCAL" "$BASE"
+[core]
+  autocrlf = input
+  legacyheaders = false
+  editor = subl
+[gui]
+  fontdiff = -family Monaco -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+[repack]
+  usedeltabaseoffset = true
+[alias]
+  ci = commit
+  co = checkout
+  st = status
+  br = branch
+  ch = cherry -v origin
+  mine = log --author=Mike
+  spull = !git svn fetch && git svn rebase
+  spush = !git svn dcommit
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  type = cat-file -t
+  dump = cat-file -p
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
