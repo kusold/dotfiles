@@ -2,6 +2,8 @@
 
 ln -sf ~/dotfiles/gitconfig ~/.gitconfig
 ln -sf ~/dotfiles/ansiweatherrc ~/.ansiweatherrc
+ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf
+ln -sf ~/dotfiles/rvmrc ~/.rvmrc
 
 # Pretzo (oh-my-zsh fork) setup 
 ln -sf ~/dotfiles/prezto/runcoms/zlogin ~/.zlogin
