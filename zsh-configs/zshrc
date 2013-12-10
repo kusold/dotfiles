@@ -1,0 +1,57 @@
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
+
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+# Source RVM
+if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
+  source $HOME/.rvm/scripts/rvm
+fi
+
+# Add locally bins
+if [[ -d "/opt/local/bin/" ]]; then
+  export PATH=/opt/local/bin:$PATH
+fi
+
+# Add locally bins
+if [[ -d "/usr/sbin/" ]]; then
+  export PATH=$PATH:/usr/sbin:/sbin
+fi
+
+# Add locally bins
+if [[ -d "/usr/local/" ]]; then
+  export PATH=$PATH:/usr/local
+fi
+
+# Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
+ulimit -n 10000
+
+## Aliases ##
+alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
+alias weather="~/dotfiles/ansiweather/ansiweather"
+alias reload-zsh-config='source ~/.zshrc'
+
+# Heroku Fight
+alias heroku='/usr/local/heroku/bin/heroku'
+
+# Manual Autocorrect Overrides
+alias subl='nocorrect subl'
+
+#Jumpcloud Specific Aliases
+alias fetch-agent-staging='scp -r mike@staging.jumpcloud.com:/opt/provisioning-server/files/* ~/Development/SI/agent-files/'
+alias rsync-agent-staging='rsync -avz --progress mike@staging.jumpcloud.com:/opt/provisioning-server/files/ ~/Development/SI/agent-files/'
+alias load-int-fixture='mongorestore -db SI /Users/JumpCloud/Development/SI/test/webui/integration/fixture/SI-integration'
+alias load-alarm-int-fixture='mongorestore -db SI /Users/JumpCloud/Development/SI/test/webui/integration/fixture/alarms/SI-integration'
+alias load-personal-fixture='mongorestore -db SI /Users/JumpCloud/Development/mongodumps/personal/SI'
+alias restart-ramdb='/Users/JumpCloud/Development/SI/bin/mongod-ramdb-osx stop;/Users/JumpCloud/Development/SI/bin/mongod-ramdb-osx start'
+alias reload-ramdb='restart-ramdb;load-int-fixture'
+alias reload-personal-ramdb='restart-ramdb;load-personal-fixture'
+alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
+
