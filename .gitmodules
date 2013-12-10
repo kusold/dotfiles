@@ -1,6 +1,6 @@
 [submodule "prezto"]
 	path = prezto
-	url = git@github.com:Kusold/prezto.git
+	url = https://github.com/sorin-ionescu/prezto.git
 [submodule "ansiweather"]
 	path = ansiweather
 	url = https://github.com/fcambus/ansiweather.git
