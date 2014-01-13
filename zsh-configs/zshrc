@@ -14,6 +14,14 @@ fi
 if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
   source $HOME/.rvm/scripts/rvm
 fi
+if [[ -d "${HOME}/.rvm/" ]]; then
+  PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+fi
+
+# Add home bin
+if [[ -d "$HOME/.bin/" ]]; then
+  export PATH=$HOME/.bin:$PATH
+fi
 
 # Add locally bins
 if [[ -d "/opt/local/bin/" ]]; then
@@ -47,11 +55,11 @@ alias subl='nocorrect subl'
 #Jumpcloud Specific Aliases
 alias fetch-agent-staging='scp -r mike@staging.jumpcloud.com:/opt/provisioning-server/files/* ~/Development/SI/agent-files/'
 alias rsync-agent-staging='rsync -avz --progress mike@staging.jumpcloud.com:/opt/provisioning-server/files/ ~/Development/SI/agent-files/'
-alias load-int-fixture='mongorestore -db SI /Users/JumpCloud/Development/SI/test/webui/integration/fixture/SI-integration'
-alias load-alarm-int-fixture='mongorestore -db SI /Users/JumpCloud/Development/SI/test/webui/integration/fixture/alarms/SI-integration'
-alias load-personal-fixture='mongorestore -db SI /Users/JumpCloud/Development/mongodumps/personal/SI'
-alias restart-ramdb='/Users/JumpCloud/Development/SI/bin/mongod-ramdb-osx stop;/Users/JumpCloud/Development/SI/bin/mongod-ramdb-osx start'
+alias load-int-fixture='mongorestore -db SI /home/mike/Development/SI/test/webui/integration/fixture/SI-integration'
+alias load-alarm-int-fixture='mongorestore -db SI /home/mike/Development/SI/test/webui/integration/fixture/alarms/SI-integration'
+alias load-personal-fixture='mongorestore -db SI /home/mike/Development/mongodumps/personal/SI'
+alias restart-ramdb='/home/mike/Development/SI/bin/mongod-ramdb-linux stop;/home/mike/Development/SI/bin/mongod-ramdb-linux start'
 alias reload-ramdb='restart-ramdb;load-int-fixture'
 alias reload-personal-ramdb='restart-ramdb;load-personal-fixture'
 alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
-
+alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-dbs.js'
