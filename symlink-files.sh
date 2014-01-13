@@ -13,3 +13,5 @@ ln -sf ~/dotfiles/zsh-configs/zprofile ~/.zprofile
 ln -sf ~/dotfiles/zsh-configs/zshenv ~/.zshenv
 ln -sf ~/dotfiles/zsh-configs/zshrc ~/.zshrc
 ln -sf ~/dotfiles/prezto ~/.zprezto
+sudo ln -sf ~/dotfiles/mySystemWideVariables.sh /etc/profile.d/kusoldSystemWideVariables.sh
+
