@@ -1,6 +1,6 @@
 [user]
   name = Mike Kusold
-  email = kusold@git
+  email = git@mikekusold.com
 [color]
   branch = auto
   diff = auto
@@ -19,18 +19,18 @@
   changed = green
   untracked = cyan
 [merge]
-  tool = custom 
+  tool = webstorm 
   keepBackup = false
-[mergetool "custom"]
-  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$LOCAL" "$PWD/$REMOTE" "$PWD/$MERGED"
+[mergetool "webstorm"]
+  cmd = wstorm merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
   keepTemporaries = false
   trustExitCode = false
   keepBackup = false
 [diff]
-  tool = p4diff
-[difftool "p4diff"]
+  tool = webstorm
+[difftool "webstorm"]
   prompt = false
-  cmd = p4merge "$LOCAL" "$BASE"
+  cmd = wstorm diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
 [core]
   autocrlf = input
   legacyheaders = false
