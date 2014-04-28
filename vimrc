@@ -10,6 +10,9 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 Plugin 'puppetlabs/puppet-syntax-vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'kien/ctrlp.vim'
+Plugin 'mhinz/vim-signify'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " Brief help
@@ -25,3 +28,11 @@ syntax on
 
 " Loading the indent file for specific file types
 filetype plugin indent on
+
+set nu " Line numbering on
+set showmatch " Show matching brackets/paranthesis
+
+" Signify
+let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
+let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
+let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
