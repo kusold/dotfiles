@@ -38,6 +38,11 @@ if [[ -d "/usr/local/" ]]; then
   export PATH=$PATH:/usr/local
 fi
 
+# Go Lang Setup
+if [[ -d "$HOME/Development/go/" ]]; then
+  export GOPATH=$HOME/Development/go
+fi
+
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
 ulimit -n 10000
 
