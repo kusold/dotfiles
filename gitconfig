@@ -19,18 +19,17 @@
   changed = green
   untracked = cyan
 [merge]
-  tool = webstorm 
-  keepBackup = false
-[mergetool "webstorm"]
-  cmd = wstorm merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
-  keepTemporaries = false
-  trustExitCode = false
-  keepBackup = false
-[diff]
   tool = webstorm
-[difftool "webstorm"]
+[diff]
+  tool = meld
+[difftool]
   prompt = false
-  cmd = wstorm diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+[difftool "webstorm"]
+  cmd = webstorm diff $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE")
+  trustExitCode = true
+[mergetool "webstorm"]
+  cmd = webstorm merge $(cd $(dirname "$LOCAL") && pwd)/$(basename "$LOCAL") $(cd $(dirname "$REMOTE") && pwd)/$(basename "$REMOTE") $(cd $(dirname "$BASE") && pwd)/$(basename "$BASE") $(cd $(dirname "$MERGED") && pwd)/$(basename "$MERGED")
+  trustExitCode = true
 [core]
   autocrlf = input
   legacyheaders = false
