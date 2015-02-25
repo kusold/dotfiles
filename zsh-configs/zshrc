@@ -23,6 +23,13 @@ if [[ -d "$HOME/.bin/" ]]; then
   export PATH=$HOME/.bin:$PATH
 fi
 
+# Add gcloud
+if [[ -d "$HOME/google-cloud-sdk" ]]; then
+  export PATH=$HOME/google-cloud-sdk/bin:$PATH
+  # The next line enables bash completion for gcloud.
+  source '/home/mike/google-cloud-sdk/completion.zsh.inc'
+fi
+
 # Add locally bins
 if [[ -d "/opt/local/bin/" ]]; then
   export PATH=/opt/local/bin:$PATH
@@ -38,13 +45,26 @@ if [[ -d "/usr/local/" ]]; then
   export PATH=$PATH:/usr/local
 fi
 
+# Use Custom Key Map (Map L Ctrl -> Capslock. Map Capslock -> R Menu)
+if [ -f $HOME/.Xmodmap ]; then
+  /usr/bin/xmodmap $HOME/.Xmodmap
+fi
+
 # Go Lang Setup
 if [[ -d "$HOME/Development/go/" ]]; then
   export GOPATH=$HOME/Development/go
 fi
 
+if [[ -d "$HOME/Development/go/bin/" ]]; then
+  export PATH=$HOME/Development/go/bin:$PATH
+fi
+
+# JumpCloud Go Directory
+if [[ -d "$HOME/Development/go/src/github.com/TheJumpCloud" ]]; then
+  alias -g gojc=$HOME/Development/go/src/github.com/TheJumpCloud
+fi
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
-ulimit -n 10000
+#ulimit -n 10000
 
 ## Aliases ##
 alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
@@ -60,6 +80,7 @@ alias subl='nocorrect subl'
 #Jumpcloud Specific Aliases
 alias fetch-agent-staging='scp -r mike@staging.jumpcloud.com:/opt/provisioning-server/files/* ~/Development/SI/agent-files/'
 alias rsync-agent-staging='rsync -avz --progress mike@staging.jumpcloud.com:/opt/provisioning-server/files/ ~/Development/SI/agent-files/'
+alias rsync-agent-test='rsync -avz --progress mike@test.jumpcloud.com:/opt/provisioning-server/files/ ~/Development/SI/agent-files/'
 alias load-int-fixture='mongorestore -db SI /home/mike/Development/SI/test/webui/integration/fixture/SI-integration'
 alias load-alarm-int-fixture='mongorestore -db SI /home/mike/Development/SI/test/webui/integration/fixture/alarms/SI-integration'
 alias load-personal-fixture='mongorestore -db SI /home/mike/Development/mongodumps/personal/SI'
@@ -68,3 +89,4 @@ alias reload-ramdb='restart-ramdb;load-int-fixture'
 alias reload-personal-ramdb='restart-ramdb;load-personal-fixture'
 alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
 alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-dbs.js'
+

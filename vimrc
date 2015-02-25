@@ -13,6 +13,7 @@ Plugin 'puppetlabs/puppet-syntax-vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mhinz/vim-signify'
+Plugin 'mattn/emmet-vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " Brief help
@@ -31,7 +32,8 @@ filetype plugin indent on
 
 set nu " Line numbering on
 set showmatch " Show matching brackets/paranthesis
-
+set shiftwidth=2
+set softtabstop=2
 " Signify
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
 let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
