@@ -13,6 +13,11 @@ if ! [[ `ls -al $HOME | grep $VIM_PATH$` ]]; then
   ln -sf ~/dotfiles/vim ~/.vim
 fi
 
+PREZTO_PATH=`pwd`/prezto
+if ! [[ `ls -al $HOME | grep $PREZTO_PATH$` ]]; then
+  ln -sf ~/dotfiles/prezto ~/.zprezto
+fi
+
 # Pretzo (oh-my-zsh fork) setup 
 ln -sf ~/dotfiles/zsh-configs/zlogin ~/.zlogin
 ln -sf ~/dotfiles/zsh-configs/zlogout ~/.zlogout
@@ -20,6 +25,5 @@ ln -sf ~/dotfiles/zsh-configs/zpreztorc ~/.zpreztorc
 ln -sf ~/dotfiles/zsh-configs/zprofile ~/.zprofile
 ln -sf ~/dotfiles/zsh-configs/zshenv ~/.zshenv
 ln -sf ~/dotfiles/zsh-configs/zshrc ~/.zshrc
-ln -sf ~/dotfiles/prezto ~/.zprezto
 sudo ln -sf ~/dotfiles/mySystemWideVariables.sh /etc/profile.d/kusoldSystemWideVariables.sh
 
