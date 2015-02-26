@@ -5,8 +5,13 @@ ln -sf ~/dotfiles/ansiweatherrc ~/.ansiweatherrc
 ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/rvmrc ~/.rvmrc
 ln -sf ~/dotfiles/vimrc ~/.vimrc
-ln -sf ~/dotfiles/vim ~/.vim
 ln -sf ~/dotfiles/ssh_rc ~/.ssh/rc
+
+# Prevent recursive directory creation (vim/vim/vim)
+VIM_PATH=`pwd`/vim
+if ! [[ `ls -al $HOME | grep $VIM_PATH$` ]]; then
+  ln -sf ~/dotfiles/vim ~/.vim
+fi
 
 # Pretzo (oh-my-zsh fork) setup 
 ln -sf ~/dotfiles/zsh-configs/zlogin ~/.zlogin
