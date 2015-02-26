@@ -8,12 +8,20 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Plugin 'puppetlabs/puppet-syntax-vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'kien/ctrlp.vim'
-Plugin 'mhinz/vim-signify'
-Plugin 'mattn/emmet-vim'
+Plugin 'gmarik/Vundle.vim' "Package manager
+Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
+Plugin 'tpope/vim-fugitive' "Git in vim
+Plugin 'kien/ctrlp.vim' "Ctrl-P <filename> to open
+Plugin 'mhinz/vim-signify' "Display which lines have changed for git
+Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
+Plugin 'tpope/vim-sleuth' "Match indentation style
+Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies.
+						"Requires modifying gitconfig https rewrite.
+Plugin 'scrooloose/nerdtree' "File Browser
+Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
+Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
+Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
+"Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 " Brief help
@@ -30,11 +38,48 @@ syntax on
 " Loading the indent file for specific file types
 filetype plugin indent on
 
-set nu " Line numbering on
+set number " Line numbering on
 set showmatch " Show matching brackets/paranthesis
-set shiftwidth=2
-set softtabstop=2
-" Signify
+set tabstop=4 "Tabs take up 4 spaces
+"set shiftwidth=2
+"set softtabstop=2
+set ruler " Display location in file
+set showcmd "Show command in the last line of the screen
+set incsearch "Search as you type. Return to original location if canceled.
+set mouse=a "Enable the mouse use in all modes
+
+" ----- mhinz/signify settings -----
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
 let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
 let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
+
+" ----- scrooloose/nerdtree and justr/vim-nerdtree-tabs settings -----
+" Open/close NERDTree Tabs with \t
+nmap <silent> <leader>t :NERDTreeTabsToggle<CR>
+" To have NERDTree always open on startup. 0 = disabled
+let g:nerdtree_tabs_open_on_console_startup = 0
+
+" ----- scrooloose/syntastic settings -----
+let g:syntastic_error_symbol = '✘'
+let g:syntastic_warning_symbol = "▲"
+augroup mySyntastic
+	au!
+	au FileType tex let b:syntastic_mode = "passive"
+augroup END
+
+" ----- Raimondi/delimitMate settings -----
+let delimitMate_expand_cr = 1
+augroup mydelimitMate
+	au!
+	au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
+	au FileType tex let b:delimitMate_quotes = ""
+	au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
+    au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
+augroup END
+
+" ----- faith/vim-go settings -----
+let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imports
+"\s to list interfaces implemented by the type
+au FileType go nmap <Leader>s <Plug>(go-implements)
+"\i to show type info
+au FileType go nmap <Leader>i <Plug>(go-info)
