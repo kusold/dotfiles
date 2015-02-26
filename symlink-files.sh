@@ -6,6 +6,7 @@ ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/rvmrc ~/.rvmrc
 ln -sf ~/dotfiles/vimrc ~/.vimrc
 ln -sf ~/dotfiles/vim ~/.vim
+ln -sf ~/dotfiles/ssh_rc ~/.ssh/rc
 
 # Pretzo (oh-my-zsh fork) setup 
 ln -sf ~/dotfiles/zsh-configs/zlogin ~/.zlogin
