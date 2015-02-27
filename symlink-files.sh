@@ -6,6 +6,7 @@ ln -sf ~/dotfiles/tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/rvmrc ~/.rvmrc
 ln -sf ~/dotfiles/vimrc ~/.vimrc
 ln -sf ~/dotfiles/ssh_rc ~/.ssh/rc
+ln -sf ~/dotfiles/xinitrc ~/.ssh/.xinitrc
 
 # Prevent recursive directory creation (vim/vim/vim)
 VIM_PATH=`pwd`/vim
@@ -13,6 +14,14 @@ if ! [[ `ls -al $HOME | grep $VIM_PATH$` ]]; then
   ln -sf ~/dotfiles/vim ~/.vim
 fi
 
+FONTS_PATH=`pwd`/fonts
+if ! [[ `ls -al $HOME | grep $FONTS_PATH$` ]]; then
+  ln -sf ~/dotfiles/fonts ~/.fonts
+fi
+FONTS_CONF_PATH=`pwd`/fonts.conf.d
+if ! [[ `ls -al $HOME | grep $FONTS_CONF_PATH$` ]]; then
+  ln -sf ~/dotfiles/fonts.conf.d ~/.config/fontconfig/conf.d
+fi
 PREZTO_PATH=`pwd`/prezto
 if ! [[ `ls -al $HOME | grep $PREZTO_PATH$` ]]; then
   ln -sf ~/dotfiles/prezto ~/.zprezto
