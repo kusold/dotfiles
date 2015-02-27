@@ -21,6 +21,7 @@ Plugin 'scrooloose/nerdtree' "File Browser
 Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
 Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
+Plugin 'bling/vim-airline'
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -83,3 +84,8 @@ let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imp
 au FileType go nmap <Leader>s <Plug>(go-implements)
 "\i to show type info
 au FileType go nmap <Leader>i <Plug>(go-info)
+
+" ----- bling/vim-airline settings -----
+set laststatus=2
+set timeoutlen=50
+let g:airline_powerline_fonts = 1
