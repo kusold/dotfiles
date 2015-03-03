@@ -87,5 +87,10 @@ au FileType go nmap <Leader>i <Plug>(go-info)
 
 " ----- bling/vim-airline settings -----
 set laststatus=2
-set timeoutlen=50
+set timeoutlen=1000
+set ttimeoutlen=50
 let g:airline_powerline_fonts = 1
+
+" ----- mattn/emmet-vim settings -----
+"let g:user_emmet_install_global = 0
+"autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
