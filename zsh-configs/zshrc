@@ -22,6 +22,9 @@ fi
 if [[ -d "$HOME/.bin/" ]]; then
   export PATH=$HOME/.bin:$PATH
 fi
+if [[ -d "$HOME/bin/" ]]; then
+  export PATH=$HOME/bin:$PATH
+fi
 
 # Add gcloud
 if [[ -d "$HOME/google-cloud-sdk" ]]; then
