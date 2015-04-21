@@ -34,5 +34,5 @@ ln -sf ~/dotfiles/zsh-configs/zpreztorc ~/.zpreztorc
 ln -sf ~/dotfiles/zsh-configs/zprofile ~/.zprofile
 ln -sf ~/dotfiles/zsh-configs/zshenv ~/.zshenv
 ln -sf ~/dotfiles/zsh-configs/zshrc ~/.zshrc
-sudo ln -sf ~/dotfiles/mySystemWideVariables.sh /etc/profile.d/kusoldSystemWideVariables.sh
+#sudo ln -sf ~/dotfiles/mySystemWideVariables.sh /etc/profile.d/kusoldSystemWideVariables.sh
 
