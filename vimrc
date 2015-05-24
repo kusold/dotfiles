@@ -10,6 +10,8 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim' "Package manager
 Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
+Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
+Plugin 'skammer/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
 Plugin 'kien/ctrlp.vim' "Ctrl-P <filename> to open
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
@@ -22,6 +24,7 @@ Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
 Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
 Plugin 'bling/vim-airline'
+
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -48,6 +51,10 @@ set ruler " Display location in file
 set showcmd "Show command in the last line of the screen
 set incsearch "Search as you type. Return to original location if canceled.
 set mouse=a "Enable the mouse use in all modes
+
+" ----- background highlight the character if line length goes over 120 -----
+highlight OverLengthIndiator ctermbg=darkyellow
+call matchadd('OverLengthIndiator', '\%121v', 100)
 
 " ----- mhinz/signify settings -----
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
