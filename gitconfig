@@ -19,7 +19,8 @@
   changed = green
   untracked = cyan
 [merge]
-  tool = webstorm
+  tool = vimdiff
+	conflictstyle = diff3
 [diff]
   tool = meld
 [difftool]
@@ -33,7 +34,7 @@
 [core]
   autocrlf = input
   legacyheaders = false
-  editor = subl
+  editor = vim
 [gui]
   fontdiff = -family Monaco -size 12 -weight normal -slant roman -underline 0 -overstrike 0
 [repack]
