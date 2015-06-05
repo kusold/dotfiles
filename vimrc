@@ -50,7 +50,9 @@ set tabstop=4 "Tabs take up 4 spaces
 set ruler " Display location in file
 set showcmd "Show command in the last line of the screen
 set incsearch "Search as you type. Return to original location if canceled.
-set mouse=a "Enable the mouse use in all modes
+"set mouse=a "Enable the mouse use in all modes
+
+nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
 " ----- background highlight the character if line length goes over 120 -----
 highlight OverLengthIndiator ctermbg=darkyellow
