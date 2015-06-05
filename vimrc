@@ -11,7 +11,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim' "Package manager
 Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
-Plugin 'skammer/vim-css-color' "Highlights colors in css files
+Plugin 'ap/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
 Plugin 'kien/ctrlp.vim' "Ctrl-P <filename> to open
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
