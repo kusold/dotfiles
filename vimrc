@@ -51,6 +51,12 @@ set ruler " Display location in file
 set showcmd "Show command in the last line of the screen
 set incsearch "Search as you type. Return to original location if canceled.
 "set mouse=a "Enable the mouse use in all modes
+set ignorecase "case insensitive searching
+set smartcase "if search isn't all lowercase, casesensitive search
+
+" Display characters to symbolize whitespace
+"set list
+set listchars=tab:▸\ ,eol:¬
 
 nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
