@@ -23,7 +23,7 @@ Plugin 'scrooloose/nerdtree' "File Browser
 Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
 Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
-Plugin 'bling/vim-airline'
+Plugin 'bling/vim-airline' "Style the status bar
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
