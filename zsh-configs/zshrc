@@ -62,6 +62,9 @@ if [[ -d "$HOME/Development/go/bin/" ]]; then
   export PATH=$HOME/Development/go/bin:$PATH
 fi
 
+# Vagrant
+export VAGRANT_DEFAULT_PROVIDER=virtualbox
+
 # JumpCloud Go Directory
 if [[ -d "$HOME/Development/go/src/github.com/TheJumpCloud" ]]; then
   alias -g gojc=$HOME/Development/go/src/github.com/TheJumpCloud
