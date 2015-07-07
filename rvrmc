@@ -1,4 +1,0 @@
-# Create gemsets automatically when used
-export rvm_gemset_create_on_use_flag=1
-# Have RVM install rubies when used instead of only displaying a warning and exiting.
-export rvm_install_on_use_flag=1
