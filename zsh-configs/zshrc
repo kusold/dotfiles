@@ -68,6 +68,20 @@ if [[ -d "$HOME/Development/go/bin/" ]]; then
   export PATH=$HOME/Development/go/bin:$PATH
 fi
 
+# Python
+if which pyenv-virtualenv-init > /dev/null; then 
+  eval "$(pyenv virtualenv-init -)"; 
+fi
+if which virtualenv > /dev/null; then 
+  # pip should only run if there is a virtualenv currently activated
+  export PIP_REQUIRE_VIRTUALENV=true
+fi
+
+# Ruby
+if which rbenv > /dev/null; then
+  eval "$(rbenv init -)";
+fi
+
 # Vagrant
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 
