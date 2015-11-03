@@ -9,6 +9,9 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim' "Package manager
+Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
+Plugin 'mxw/vim-jsx' "JSX support (React)
+Plugin 'kchmck/vim-coffee-script' "Coffeescript support
 Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
 Plugin 'ap/vim-css-color' "Highlights colors in css files
@@ -22,6 +25,7 @@ Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies.
 Plugin 'scrooloose/nerdtree' "File Browser
 Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
+Plugin 'jaxbot/syntastic-react' "Syntax checking for React
 Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
 Plugin 'bling/vim-airline' "Style the status bar
 
@@ -82,6 +86,9 @@ augroup mySyntastic
 	au!
 	au FileType tex let b:syntastic_mode = "passive"
 augroup END
+
+" ----- jaxbot/syntastic-react settings -----
+let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
 
 " ----- Raimondi/delimitMate settings -----
 let delimitMate_expand_cr = 1
