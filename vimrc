@@ -42,12 +42,14 @@ call vundle#end()            " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
+
 " Syntax highlighting
 syntax on
 
 " Loading the indent file for specific file types
 filetype plugin indent on
 
+set background=dark " Dark background friendly
 set number " Line numbering on
 set showmatch " Show matching brackets/paranthesis
 set tabstop=4 "Tabs take up 4 spaces
@@ -59,6 +61,7 @@ set incsearch "Search as you type. Return to original location if canceled.
 "set mouse=a "Enable the mouse use in all modes
 set ignorecase "case insensitive searching
 set smartcase "if search isn't all lowercase, casesensitive search
+set backspace=indent,eol,start "make backspace behave like normal"
 
 " Display characters to symbolize whitespace
 "set list
