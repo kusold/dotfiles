@@ -3,7 +3,22 @@
 #
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
+
+# Determine the platform
+if [[ `uname` == 'Linux' ]]; then
+  export GNU_USERLAND=1
+else
+  export LINUX=
+fi
+if [[ `uname` == 'Darwin' ]]; then
+  export OSX=1
+else
+  export OSX=
+fi
+
+# Set default text editor
+export VISUAL=vim
+export EDITOR="$VISUAL"
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -31,6 +46,8 @@ if [[ -d "$HOME/google-cloud-sdk" ]]; then
   export PATH=$HOME/google-cloud-sdk/bin:$PATH
   # The next line enables bash completion for gcloud.
   source "$HOME/google-cloud-sdk/completion.zsh.inc"
+  # The next line enables shell command completion for gcloud.
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
 fi
 
 # Add nvm
@@ -96,6 +113,8 @@ fi
 alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
 alias weather="~/dotfiles/ansiweather/ansiweather"
 alias reload-zsh-config='source ~/.zshrc'
+alias gen-strong-sshkey='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"'
+alias vagrant-ansible-playbook='ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory --private-key=.vagrant/machines/default/virtualbox/private_key -u vagrant'
 
 # Heroku Fight
 alias heroku='/usr/local/heroku/bin/heroku'
