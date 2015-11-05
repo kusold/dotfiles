@@ -73,6 +73,8 @@ nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split
 highlight OverLengthIndiator ctermbg=darkyellow
 call matchadd('OverLengthIndiator', '\%121v', 100)
 
+autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
+
 " ----- mhinz/signify settings -----
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
 let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
@@ -121,6 +123,7 @@ let g:airline_powerline_fonts = 1
 " ----- mattn/emmet-vim settings -----
 "let g:user_emmet_install_global = 0
 "autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
+<<<<<<< HEAD
 
 " ----- mxw/vim-jsx -----
 let g:jsx_ext_required = 0
@@ -203,3 +206,4 @@ endif
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
