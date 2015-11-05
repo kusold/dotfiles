@@ -58,7 +58,7 @@ fi
 # Add nvm
 if [[ -d "$HOME/.nvm" ]]; then
   export NVM_DIR=$HOME/.nvm
-  source $(brew --prefix nvm)/nvm.sh
+  source $HOME/.nvm/nvm.sh
 fi
 
 # Add locally bins
@@ -97,7 +97,7 @@ if [[ -d "/usr/local/go" ]]; then
 fi
 
 # Python
-if which pyenv-virtualenv-init > /dev/null; then 
+if command -v pyenv-virtualenv-init > /dev/null; then 
   eval "$(pyenv virtualenv-init -)"; 
 fi
 if which virtualenv > /dev/null; then 
@@ -106,7 +106,7 @@ if which virtualenv > /dev/null; then
 fi
 
 # Ruby
-if which rbenv > /dev/null; then
+if command -v rbenv > /dev/null; then
   eval "$(rbenv init -)";
 fi
 
