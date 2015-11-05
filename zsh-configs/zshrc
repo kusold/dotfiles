@@ -25,40 +25,12 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Source NVM - Node Version Manager
-if [[ -s "${HOME}/.nvm/nvm.sh" ]]; then
-  . $HOME/.nvm/nvm.sh
-fi
-
-# Source RVM
-if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
-  source $HOME/.rvm/scripts/rvm
-fi
-if [[ -d "${HOME}/.rvm/" ]]; then
-  PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-fi
-
 # Add home bin
 if [[ -d "$HOME/.bin/" ]]; then
   export PATH=$HOME/.bin:$PATH
 fi
 if [[ -d "$HOME/bin/" ]]; then
   export PATH=$HOME/bin:$PATH
-fi
-
-# Add gcloud
-if [[ -d "$HOME/google-cloud-sdk" ]]; then
-  export PATH=$HOME/google-cloud-sdk/bin:$PATH
-  # The next line enables bash completion for gcloud.
-  source "$HOME/google-cloud-sdk/completion.zsh.inc"
-  # The next line enables shell command completion for gcloud.
-  source "$HOME/google-cloud-sdk/path.zsh.inc"
-fi
-
-# Add nvm
-if [[ -d "$HOME/.nvm" ]]; then
-  export NVM_DIR=$HOME/.nvm
-  source $HOME/.nvm/nvm.sh
 fi
 
 # Add locally bins
@@ -79,6 +51,12 @@ fi
 # Use Custom Key Map (Map L Ctrl -> Capslock. Map Capslock -> R Menu)
 if [ -f $HOME/.Xmodmap ]; then
   /usr/bin/xmodmap $HOME/.Xmodmap
+fi
+
+# Add nvm
+if [[ -d "$HOME/.nvm" ]]; then
+  export NVM_DIR=$HOME/.nvm
+  source $HOME/.nvm/nvm.sh
 fi
 
 # Go Lang Setup
@@ -109,9 +87,25 @@ fi
 if command -v rbenv > /dev/null; then
   eval "$(rbenv init -)";
 fi
+# Source RVM
+if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
+  source $HOME/.rvm/scripts/rvm
+fi
+if [[ -d "${HOME}/.rvm/" ]]; then
+  PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+fi
 
 # Vagrant
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
+
+# Add gcloud
+if [[ -d "$HOME/google-cloud-sdk" ]]; then
+  export PATH=$HOME/google-cloud-sdk/bin:$PATH
+  # The next line enables bash completion for gcloud.
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
+  # The next line enables shell command completion for gcloud.
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
+fi
 
 # JumpCloud Go Directory
 if [[ -d "$HOME/Development/go/src/github.com/TheJumpCloud" ]]; then
