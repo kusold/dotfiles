@@ -123,7 +123,6 @@ let g:airline_powerline_fonts = 1
 " ----- mattn/emmet-vim settings -----
 "let g:user_emmet_install_global = 0
 "autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
-<<<<<<< HEAD
 
 " ----- mxw/vim-jsx -----
 let g:jsx_ext_required = 0
