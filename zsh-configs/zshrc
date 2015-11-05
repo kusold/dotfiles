@@ -25,6 +25,11 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# Source NVM - Node Version Manager
+if [[ -s "${HOME}/.nvm/nvm.sh" ]]; then
+  . $HOME/.nvm/nvm.sh
+fi
+
 # Source RVM
 if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
   source $HOME/.rvm/scripts/rvm
@@ -79,10 +84,16 @@ fi
 # Go Lang Setup
 if [[ -d "$HOME/Development/go/" ]]; then
   export GOPATH=$HOME/Development/go
+  alias go-xbuild='CGO_ENABLED=0 gox -osarch="darwin/amd64 linux/amd64 linux/386" && CC="i686-w64-mingw32-gcc" CGO_ENABLED=1 gox -osarch="windows/386"'
 fi
 
 if [[ -d "$HOME/Development/go/bin/" ]]; then
   export PATH=$HOME/Development/go/bin:$PATH
+fi
+
+if [[ -d "/usr/local/go" ]]; then
+  export PATH=$PATH:/usr/local/go/bin
+  export GOROOT=/usr/local/go/
 fi
 
 # Python
@@ -137,7 +148,7 @@ alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-db
 
 function gcloud-ssh () {
   if [[ -n $1 ]]; then
-    gcloud compute ssh --ssh-flag="-A" --zone us-central1-a $1
+    gcloud compute ssh --ssh-flag="-A" $1 $2 $3
   else
     echo "Please pass in the instance name"
   fi
