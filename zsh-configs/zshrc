@@ -148,3 +148,9 @@ function gcloud-ssh () {
   fi
 }
 
+# Load private environment files
+if [ -f $HOME/.private-env ]; then
+  source $HOME/.private-env
+fi
+   
+
