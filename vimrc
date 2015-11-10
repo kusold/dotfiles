@@ -13,6 +13,7 @@ Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Require
 Plugin 'mxw/vim-jsx' "JSX support (React)
 Plugin 'kchmck/vim-coffee-script' "Coffeescript support
 Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
+Plugin 'saltstack/salt-vim' "Salt Syntax Support
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
 Plugin 'ap/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
