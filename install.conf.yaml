@@ -10,7 +10,8 @@
       path: fonts/
       relink: true
     ~/.gitconfig: gitconfig
-    ~/.lessrc: lessrc 
+    ~/.lessrc: lessrc
+    ~/.npmrc: npmrc
 #    ~/.rvmrc: rvmrc
     ~/.ssh/rc: ssh_rc
     ~/.ssh/.xinitrc: xinitrc

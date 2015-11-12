@@ -1,0 +1,13 @@
+init.author.name = Mike Kusold
+init.author.url = https://mikekusold.com
+init.author.email = hello@mikekusold.com
+init.license = MIT
+init.version = "0.0.1"
+save-exact = true
+
+email = hello@mikekusold.com
+
+[_token]
+version = 1
+path = /
+httponly = true
