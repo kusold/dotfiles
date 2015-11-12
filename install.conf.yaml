@@ -1,0 +1,39 @@
+- clean: ['~']
+
+- link:
+    ~/.gitconfig: gitconfig
+    ~/.ansiweatherrc: ansiweatherrc
+    ~/.tmux.conf: tmux.conf
+    ~/.tmux:
+      path: tmux/
+      relink: true
+#    ~/.rvmrc: rvmrc
+    ~/.vimrc: vimrc
+    ~/.vim:
+      path: vim/
+      relink: true
+    ~/.ssh/rc: ssh_rc
+    ~/.ssh/.xinitrc: xinitrc
+    ~/.fonts: 
+      path: fonts/
+      relink: true
+    ~/.config/fontconfig/conf.d:
+      path: fonts.conf.d
+      create: true
+    ~/.zprezto:
+      path: prezto/
+      relink: true
+    ~/.zlogin: zsh-configs/zlogin
+    ~/.zlogout: zsh-configs/zlogout
+    ~/.zpreztorc: zsh-configs/zpreztorc
+    ~/.zprofile: zsh-configs/zprofile
+    ~/.zshenv: zsh-configs/zshenv
+    ~/.zshrc:
+      path: zsh-configs/zshrc
+      force: true
+    ~/bin/tmx: bin/tmx
+
+
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
