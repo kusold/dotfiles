@@ -14,6 +14,12 @@ if ! [[ `ls -al $HOME | grep $VIM_PATH$` ]]; then
   ln -sf ~/dotfiles/vim ~/.vim
 fi
 
+# Prevent recursive directory creation (vim/vim/vim)
+TMUX_PATH=`pwd`/tmux
+if ! [[ `ls -al $HOME | grep $TMUX_PATH$` ]]; then
+  ln -sf ~/dotfiles/tmux ~/.tmux
+fi
+
 FONTS_PATH=`pwd`/fonts
 if ! [[ `ls -al $HOME | grep $FONTS_PATH$` ]]; then
   ln -sf ~/dotfiles/fonts ~/.fonts

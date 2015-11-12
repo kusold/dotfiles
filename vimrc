@@ -79,8 +79,8 @@ let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
 let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
 
 " ----- scrooloose/nerdtree and justr/vim-nerdtree-tabs settings -----
-" Open/close NERDTree Tabs with \t
-nmap <silent> <leader>t :NERDTreeTabsToggle<CR>
+" Open/close NERDTree Tabs (explorer tree) with \e
+nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
 " To have NERDTree always open on startup. 0 = disabled
 let g:nerdtree_tabs_open_on_console_startup = 0
 
@@ -125,6 +125,13 @@ let g:airline_powerline_fonts = 1
 " ----- mxw/vim-jsx -----
 let g:jsx_ext_required = 0
 
+
+" ----- janko-m/vim-test -----
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
 
 " ----- Shougo/neocomplete.vim settings -----
 let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
