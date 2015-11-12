@@ -31,6 +31,7 @@ Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
 Plugin 'bling/vim-airline' "Style the status bar
 Plugin 'Shougo/neocomplete.vim' "Auto word completions
 Plugin 'janko-m/vim-test' "Execute tests from inside vim
+Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
