@@ -32,9 +32,8 @@
       path: zsh-configs/zshrc
       force: true
     ~/bin/tmx: bin/tmx
-    ~/bin/dotfile-install: bin/dotfile-install
-
-
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - [vim +PluginInstall +qall, Installing vim plugins]
+  - [~/.tmux/plugins/tpm/bin/install_plugins, Installing tmux plugins]
