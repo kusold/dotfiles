@@ -54,6 +54,7 @@
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
   prune-merged = !git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d
   subpull = !git submodule foreach git pull --tags origin master
+  history-search = "!git rev-list --all | xargs git grep"
 [push]
 	default = simple
 [url "git@github.com:"]

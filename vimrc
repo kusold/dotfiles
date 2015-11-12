@@ -13,6 +13,7 @@ Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Require
 Plugin 'mxw/vim-jsx' "JSX support (React)
 Plugin 'kchmck/vim-coffee-script' "Coffeescript support
 Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
+Plugin 'saltstack/salt-vim' "Salt Syntax Support
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
 Plugin 'ap/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
@@ -72,6 +73,8 @@ nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split
 " ----- background highlight the character if line length goes over 120 -----
 highlight OverLengthIndiator ctermbg=darkyellow
 call matchadd('OverLengthIndiator', '\%121v', 100)
+
+autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
 
 " ----- mhinz/signify settings -----
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
@@ -210,3 +213,4 @@ endif
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
