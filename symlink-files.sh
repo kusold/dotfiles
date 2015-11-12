@@ -36,3 +36,6 @@ ln -sf ~/dotfiles/zsh-configs/zshenv ~/.zshenv
 ln -sf ~/dotfiles/zsh-configs/zshrc ~/.zshrc
 #sudo ln -sf ~/dotfiles/mySystemWideVariables.sh /etc/profile.d/kusoldSystemWideVariables.sh
 
+# Bin
+ln -sf ~/dotfiles/bin/tmx ~/bin/tmx
+

@@ -1,4 +1,5 @@
 vim/bundle
 vim/.netrwhist
 tmux/plugins
+tmux/resurrect
 *.swp
