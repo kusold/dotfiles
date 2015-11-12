@@ -12,5 +12,5 @@ I am using [dotbot](https://github.com/anishathalye/dotbot) to manage the symlin
 * [ansiweather](https://github.com/fcambus/ansiweather) - fetch the weather from the command line
 * [vundle](https://github.com/gmarik/Vundle.vim) - vim plugin manager
 * [tpm](https://github.com/tmux-plugins/tpm) - tmux plugin manager
-* [dotbot](https://github.com/anishathalye/dotbot)
+* [dotbot](https://github.com/anishathalye/dotbot) - symlink manager for dotfiles
 

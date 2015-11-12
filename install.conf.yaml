@@ -14,7 +14,7 @@
       relink: true
     ~/.ssh/rc: ssh_rc
     ~/.ssh/.xinitrc: xinitrc
-    ~/.fonts: 
+    ~/.fonts:
       path: fonts/
       relink: true
     ~/.config/fontconfig/conf.d:
