@@ -1,0 +1,1 @@
+--buffers=512 --quit-if-one-screen --ignore-case --jump-target=.5 --RAW-CONTROL-CHARS --tabs=4 --shift=.3
