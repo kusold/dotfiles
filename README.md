@@ -17,3 +17,9 @@ I am using [dotbot](https://github.com/anishathalye/dotbot) to manage the symlin
 ## Terminal Colors
 I use the excellent [base16](https://github.com/chriskempson/base16) package for colors. My favorite theme is [eighties](http://chriskempson.github.io/base16/#eighties)
 
+## Someday:
+GPG
+* Add .gnupg and .gpg-agent
+* gitconfig configured with signing
+* npmrc with `sign-git-tag`
+
