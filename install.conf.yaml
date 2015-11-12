@@ -32,6 +32,7 @@
       path: zsh-configs/zshrc
       force: true
     ~/bin/tmx: bin/tmx
+    ~/bin/dotfile-install: bin/dotfile-install
 
 
 
