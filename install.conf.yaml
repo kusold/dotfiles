@@ -50,3 +50,4 @@
   - [git submodule update --init --recursive, Installing submodules]
   - [vim +PluginInstall +qall, Installing vim plugins]
   - [~/.tmux/plugins/tpm/bin/install_plugins, Installing tmux plugins]
+  - [~/.weechat/fetch-ca.sh, Fetching latest CA certificates for weechat]
