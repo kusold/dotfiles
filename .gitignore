@@ -3,3 +3,5 @@ vim/.netrwhist
 tmux/plugins
 tmux/resurrect
 *.swp
+weechat/logs/*
+weechat/weechat.log
