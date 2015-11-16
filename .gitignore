@@ -5,3 +5,4 @@ tmux/resurrect
 *.swp
 weechat/logs/*
 weechat/weechat.log
+weechat/certs/ca-bundle.crt
