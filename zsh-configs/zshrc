@@ -115,7 +115,8 @@ fi
 #ulimit -n 10000
 
 ## Aliases ##
-alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
+#alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
+alias myip="curl https://icanhazip.com"
 alias weather="~/dotfiles/ansiweather/ansiweather"
 alias reload-zsh-config='source ~/.zshrc'
 alias gen-strong-sshkey='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"'
