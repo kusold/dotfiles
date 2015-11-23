@@ -22,6 +22,7 @@ Plugin 'mhinz/vim-signify' "Display which lines have changed for git
 Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
+Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
 Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies.
 			"Requires modifying gitconfig https rewrite.
 Plugin 'scrooloose/nerdtree' "File Browser
