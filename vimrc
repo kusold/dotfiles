@@ -131,6 +131,8 @@ set laststatus=2
 set timeoutlen=1000
 set ttimeoutlen=50
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 
 " ----- mattn/emmet-vim settings -----
 "let g:user_emmet_install_global = 0
