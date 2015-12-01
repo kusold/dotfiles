@@ -175,11 +175,14 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " Recommended key-mappings.
 " <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+
+" ---Play niceley with delimitMate
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+imap <expr> <CR> pumvisible() ? "<SID>my_cr_function()<CR>" : "<Plug>delimitMateCR"
 function! s:my_cr_function()
   return neocomplete#close_popup() . "\<CR>"
   " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+  " return pumvisible() ? neocomplete#close_popup() : "\<CR>
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
