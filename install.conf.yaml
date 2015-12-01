@@ -10,19 +10,19 @@
       path: fonts/
       relink: true
     ~/.gitconfig: gitconfig
-    ~/.gnupg/gpg.conf:
-      path: gnupg/gpg.conf
-      create: true
-      force: true
-    ~/.gnupg/sks-keyservers.netCA.pem:
-      path: gnupg/sks-keyservers.netCA.pem
-      create: true
+#    ~/.gnupg/gpg.conf:
+#      path: gnupg/gpg.conf
+#      create: true
+#      force: true
+#    ~/.gnupg/sks-keyservers.netCA.pem:
+#      path: gnupg/sks-keyservers.netCA.pem
+#      create: true
     ~/.lessrc: lessrc
     ~/.npmrc: npmrc
 #    ~/.rvmrc: rvmrc
-    ~/.rbenv/version:
-      path: rbenv-version
-      create: true
+#    ~/.rbenv/version:
+#      path: rbenv-version
+#      create: true
     ~/.ssh/rc: ssh_rc
     ~/.ssh/.xinitrc: xinitrc
     ~/.tmux.conf: tmux.conf
