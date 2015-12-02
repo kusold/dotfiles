@@ -121,6 +121,8 @@ alias weather="~/dotfiles/ansiweather/ansiweather"
 alias reload-zsh-config='source ~/.zshrc'
 alias gen-strong-sshkey='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"'
 alias vagrant-ansible-playbook='ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory --private-key=.vagrant/machines/default/virtualbox/private_key -u vagrant'
+# Could be a git alias, but it had trouble finding pbcopy
+alias git-hash='git rev-parse HEAD && git rev-parse HEAD | pbcopy'
 
 # Heroku Fight
 alias heroku='/usr/local/heroku/bin/heroku'
