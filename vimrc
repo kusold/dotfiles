@@ -178,7 +178,7 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " ---Play niceley with delimitMate
 "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-imap <expr> <CR> pumvisible() ? "<SID>my_cr_function()<CR>" : "<Plug>delimitMateCR"
+imap <expr> <CR> pumvisible() ? neocomplete#close_popup() . "\<CR>" : "<Plug>delimitMateCR"
 function! s:my_cr_function()
   return neocomplete#close_popup() . "\<CR>"
   " For no inserting <CR> key.
