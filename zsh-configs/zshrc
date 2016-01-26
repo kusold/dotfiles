@@ -119,6 +119,10 @@ fi
 if [[ -d "$HOME/Development/go/src/github.com/TheJumpCloud" ]]; then
   alias -g gojc=$HOME/Development/go/src/github.com/TheJumpCloud
 fi
+
+# Necessary for the grpc node_module to run
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
+
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
 #ulimit -n 10000
 
