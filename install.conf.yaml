@@ -2,7 +2,9 @@
 
 - link:
     ~/.ansiweatherrc: ansiweatherrc
-    ~/bin/tmx: bin/tmx
+    ~/bin/tmx:
+      path: bin/tmx
+      create: true
     ~/.config/fontconfig/conf.d:
       path: fonts.conf.d
       create: true
