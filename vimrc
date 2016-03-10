@@ -73,6 +73,14 @@ set listchars=tab:▸\ ,eol:¬
 
 nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
+function! SetupCommandAlias(from, to)
+  exec 'cnoreabbrev <expr> '.a:from
+  \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+  \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+endfunction
+call SetupCommandAlias("Q", "q")
+call SetupCommandAlias("W", "w")
+
 " ----- background highlight the character if line length goes over 120 -----
 highlight OverLengthIndiator ctermbg=darkyellow
 call matchadd('OverLengthIndiator', '\%121v', 100)
