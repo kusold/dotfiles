@@ -53,3 +53,4 @@
   - [vim +PluginInstall +qall, Installing vim plugins]
   - [~/.tmux/plugins/tpm/bin/install_plugins, Installing tmux plugins]
   - [~/.weechat/fetch-ca.sh, Fetching latest CA certificates for weechat]
+  - [source ./base16-gnome-terminal/base16-eighties.dark.sh, Applying GNOME Terminal theme]
