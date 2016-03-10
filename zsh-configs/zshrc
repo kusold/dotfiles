@@ -54,6 +54,11 @@ if [ -f $HOME/.Xmodmap ]; then
 fi
 
 # Add nvm
+if [[ -f "/usr/share/nvm/nvm.sh" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  source /usr/share/nvm/nvm.sh
+  source /usr/share/nvm/bash_completion
+fi
 if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
   export NVM_DIR=$HOME/.nvm
   source $HOME/.nvm/nvm.sh
