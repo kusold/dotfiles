@@ -1,0 +1,5 @@
+node_modules/
+tmux_resurrect*.txt
+/.config/
+/.cache/
+/.npm/
