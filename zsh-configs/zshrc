@@ -158,6 +158,7 @@ alias reload-ramdb='restart-ramdb;load-int-fixture'
 alias reload-personal-ramdb='restart-ramdb;load-personal-fixture'
 alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
 alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-dbs.js'
+alias fucking-mongo="$HOME/Development/documentation/mongo-unlock-database.sh"
 
 function gcloud-ssh () {
   if [[ -n $1 ]]; then
