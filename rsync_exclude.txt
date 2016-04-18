@@ -3,3 +3,7 @@ tmux_resurrect*.txt
 /.config/
 /.cache/
 /.npm/
+/.dropbox/
+/.dropbox-dist/
+Dropbox/
+/.vagrant.d/
