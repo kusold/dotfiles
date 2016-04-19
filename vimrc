@@ -24,7 +24,7 @@ Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
 Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
 Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies.
-			"Requires modifying gitconfig https rewrite.
+                        "Requires modifying gitconfig https rewrite.
 Plugin 'scrooloose/nerdtree' "File Browser
 Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
@@ -110,8 +110,8 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 augroup mySyntastic
-	au!
-	au FileType tex let b:syntastic_mode = "passive"
+  au!
+  au FileType tex let b:syntastic_mode = "passive"
 augroup END
 
 " ----- jaxbot/syntastic-react settings -----
@@ -120,11 +120,11 @@ let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
 " ----- Raimondi/delimitMate settings -----
 let delimitMate_expand_cr = 1
 augroup mydelimitMate
-	au!
-	au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
-	au FileType tex let b:delimitMate_quotes = ""
-	au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
-    au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
+  au!
+  au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
+  au FileType tex let b:delimitMate_quotes = ""
+  au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
+  au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 augroup END
 
 " ----- faith/vim-go settings -----
