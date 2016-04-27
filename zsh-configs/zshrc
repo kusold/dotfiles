@@ -199,4 +199,4 @@ if [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
 fi
 
 # Don't let homebrew report google analytics
-HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_ANALYTICS=1
