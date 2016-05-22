@@ -111,6 +111,10 @@ if [[ -d "${HOME}/.rvm/" ]]; then
   PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 fi
 
+if command -v npm > /dev/null; then
+  alias npm-install-globals="npm install -g grunt-cli eslint jshint npm-shrinkwrap clone-org-repos"
+fi
+
 # Vagrant
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 
@@ -171,6 +175,7 @@ alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
 alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-dbs.js'
 alias fucking-mongo="$HOME/Development/documentation/mongo-unlock-database.sh"
 alias upgrade-arch="yaourt -Syu --devel --aur --noconfirm"
+alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"
 
 function gcloud-ssh () {
   if [[ -n $1 ]]; then
