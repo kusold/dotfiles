@@ -111,13 +111,14 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
 augroup mySyntastic
   au!
   au FileType tex let b:syntastic_mode = "passive"
 augroup END
 
-" ----- jaxbot/syntastic-react settings -----
-let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
+let g:syntastic_javascript_checkers = ['eslint', 'jshint'] "Use eslint for syntax checking
+let g:syntastic_make_checkers = ['gnumake']
 
 " ----- Raimondi/delimitMate settings -----
 let delimitMate_expand_cr = 1
