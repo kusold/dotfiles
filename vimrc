@@ -149,6 +149,18 @@ let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 "let g:user_emmet_install_global = 0
 "autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
 
+" ----- pangloss/vim-javascript -----
+let g:javascript_conceal_function       = "ƒ"
+let g:javascript_conceal_null           = "ø"
+let g:javascript_conceal_this           = "@"
+let g:javascript_conceal_return         = "⇚"
+let g:javascript_conceal_undefined      = "¿"
+let g:javascript_conceal_NaN            = "ℕ"
+let g:javascript_conceal_prototype      = "¶"
+let g:javascript_conceal_static         = "•"
+let g:javascript_conceal_super          = "Ω"
+let g:javascript_conceal_arrow_function = "⇒"
+
 " ----- mxw/vim-jsx -----
 let g:jsx_ext_required = 0
 
