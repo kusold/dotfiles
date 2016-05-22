@@ -20,6 +20,7 @@ Plugin 'tpope/vim-fugitive' "Git in vim
 Plugin 'kien/ctrlp.vim' "Ctrl-P <filename> to open
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
 Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
+Plugin 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
 Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
@@ -156,6 +157,12 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
+
+" make test commands execute using dispatch.vim
+let test#strategy = "dispatch"
+
+" Set the NODE_ENV correctly for tests
+let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
 
 " ----- Shougo/neocomplete.vim settings -----
 let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
