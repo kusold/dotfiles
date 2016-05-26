@@ -63,6 +63,7 @@ fi
 if [[ -d "$HOME/Development/go/" ]]; then
   export GOPATH=$HOME/Development/go
   alias go-xbuild='CGO_ENABLED=0 gox -osarch="darwin/amd64 linux/amd64 linux/386" && CC="i686-w64-mingw32-gcc" CGO_ENABLED=1 gox -osarch="windows/386"'
+  alias godoc-local='godoc -http=:6060'
 fi
 
 if [[ -d "$HOME/Development/go/bin/" ]]; then
