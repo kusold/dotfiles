@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+autoload command_exists
+
+command_missing() {
+  ! command_exists "$1"
+}

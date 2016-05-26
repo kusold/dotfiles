@@ -4,17 +4,7 @@
 # Authors:
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 
-# Determine the platform
-if [[ `uname` == 'Linux' ]]; then
-  export GNU_USERLAND=1
-else
-  export LINUX=
-fi
-if [[ `uname` == 'Darwin' ]]; then
-  export OSX=1
-else
-  export OSX=
-fi
+DOTFILES="$HOME/dotfiles"
 
 # Set default text editor
 export VISUAL=vim
@@ -25,32 +15,26 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+fpath=($DOTFILES/zsh-configs/functions $fpath)
+
+# Source all utilities
+for script in $DOTFILES/zsh-configs/utilities/*.sh; do
+  if [ -x "${script}" ]; then
+    source ${script}
+  fi
+done
+
+# Source all scripts
+for script in $DOTFILES/zsh-configs/scripts/*.sh; do
+  if [ -x "${script}" ]; then
+    source ${script}
+  fi
+done
+
+
 # Development Directory Shortcut
 if [[ -d "$HOME/Development" ]]; then
   alias -g dev=$HOME/Development/
-fi
-
-# Add home bin
-if [[ -d "$HOME/.bin/" ]]; then
-  export PATH=$HOME/.bin:$PATH
-fi
-if [[ -d "$HOME/bin/" ]]; then
-  export PATH=$HOME/bin:$PATH
-fi
-
-# Add locally bins
-if [[ -d "/opt/local/bin/" ]]; then
-  export PATH=/opt/local/bin:$PATH
-fi
-
-# Add locally bins
-if [[ -d "/usr/sbin/" ]]; then
-  export PATH=$PATH:/usr/sbin:/sbin
-fi
-
-# Add locally bins
-if [[ -d "/usr/local/" ]]; then
-  export PATH=$PATH:/usr/local
 fi
 
 # Use Custom Key Map (Map L Ctrl -> Capslock. Map Capslock -> R Menu)
@@ -58,83 +42,6 @@ if [ -f $HOME/.Xmodmap ]; then
   /usr/bin/xmodmap $HOME/.Xmodmap
 fi
 
-# Add nvm
-if [[ -f "/usr/share/nvm/nvm.sh" ]]; then
-  export NVM_DIR="$HOME/.nvm"
-  source /usr/share/nvm/nvm.sh
-  source /usr/share/nvm/bash_completion
-fi
-if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
-  export NVM_DIR=$HOME/.nvm
-  source $HOME/.nvm/nvm.sh
-fi
-
-# Go Lang Setup
-if [[ -d "$HOME/Development/go/" ]]; then
-  export GOPATH=$HOME/Development/go
-
-  function go_build () {
-    OUTPUT_PREFIX=${PWD##*/}
-    GOOS="$1" GOARCH="$2" go build -o "${OUTPUT_PREFIX}_${GOOS}_${GOARCH}"
-  }
-#  alias go-xbuild='CGO_ENABLED=0 gox -osarch="darwin/amd64 linux/amd64 linux/386" && CC="i686-w64-mingw32-gcc" CGO_ENABLED=1 gox -osarch="windows/386"'
-  alias go-xbuild='go_build "darwin" "amd64" && go_build "linux" "386" && go_build "linux" "amd64"  && go_build "windows" "386"  && go_build "windows" "amd64"'
-  alias godoc-local='godoc -http=:6060'
-fi
-
-if [[ -d "$HOME/Development/go/bin/" ]]; then
-  export PATH=$HOME/Development/go/bin:$PATH
-fi
-
-if [[ -d "/usr/local/go" ]]; then
-  export PATH=$PATH:/usr/local/go/bin
-  export GOROOT=/usr/local/go/
-fi
-
-# Python
-if command -v pyenv-virtualenv-init > /dev/null; then 
-  eval "$(pyenv virtualenv-init -)"; 
-fi
-if which virtualenv > /dev/null; then 
-  # pip should only run if there is a virtualenv currently activated
-  export PIP_REQUIRE_VIRTUALENV=true
-fi
-
-# Ruby
-if command -v rbenv > /dev/null; then
-  eval "$(rbenv init -)";
-fi
-# Source RVM
-if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
-  source $HOME/.rvm/scripts/rvm
-fi
-if [[ -d "${HOME}/.rvm/" ]]; then
-  PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-fi
-
-if command -v npm > /dev/null; then
-  alias npm-install-globals="npm install -g grunt-cli eslint jshint npm-shrinkwrap clone-org-repos"
-fi
-
-# Vagrant
-export VAGRANT_DEFAULT_PROVIDER=virtualbox
-
-# Add gcloud
-if [[ -d "$HOME/google-cloud-sdk" ]]; then
-  export PATH=$HOME/google-cloud-sdk/bin:$PATH
-  # The next line enables bash completion for gcloud.
-  source "$HOME/google-cloud-sdk/completion.zsh.inc"
-  # The next line enables shell command completion for gcloud.
-  source "$HOME/google-cloud-sdk/path.zsh.inc"
-fi
-
-# JumpCloud Go Directory
-if [[ -d "$HOME/Development/go/src/github.com/TheJumpCloud" ]]; then
-  alias -g gojc=$HOME/Development/go/src/github.com/TheJumpCloud
-fi
-
-# Necessary for the grpc node_module to run
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
 
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
 #ulimit -n 10000
@@ -155,36 +62,13 @@ if [[ -s "$HOME/.zshrc" ]]; then
   alias edit-zshrc="$EDITOR $HOME/.zshrc"
 fi
 
-
 # Heroku Fight
 alias heroku='/usr/local/heroku/bin/heroku'
 
 # Manual Autocorrect Overrides
 alias subl='nocorrect subl'
 
-#Jumpcloud Specific Aliases
-alias fetch-agent-staging='scp -r mike@staging.jumpcloud.com:/opt/provisioning-server/files/* ~/Development/SI/agent-files/'
-alias rsync-agent-staging='rsync -avz --progress mike@staging.jumpcloud.com:/opt/provisioning-server/files/ ~/Development/SI/agent-files/'
-alias rsync-agent-test='rsync -avz --progress mike@test.jumpcloud.com:/opt/provisioning-server/files/ ~/Development/SI/agent-files/'
-alias load-int-fixture='mongorestore -db SI /home/mike/Development/SI/test/webui/integration/fixture/SI-integration'
-alias load-alarm-int-fixture='mongorestore -db SI /home/mike/Development/SI/test/webui/integration/fixture/alarms/SI-integration'
-alias load-personal-fixture='mongorestore -db SI /home/mike/Development/mongodumps/personal/SI'
-alias restart-ramdb='/home/mike/Development/SI/bin/mongod-ramdb-linux stop;/home/mike/Development/SI/bin/mongod-ramdb-linux start'
-alias reload-ramdb='restart-ramdb;load-int-fixture'
-alias reload-personal-ramdb='restart-ramdb;load-personal-fixture'
-alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
-alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-dbs.js'
-alias fucking-mongo="$HOME/Development/documentation/mongo-unlock-database.sh"
 alias upgrade-arch="yaourt -Syu --devel --aur --noconfirm"
-alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"
-
-function gcloud-ssh () {
-  if [[ -n $1 ]]; then
-    gcloud compute ssh --ssh-flag="-A" $1 $2 $3
-  else
-    echo "Please pass in the instance name"
-  fi
-}
 
 # Load private environment files
 if [ -f $HOME/.private-env ]; then
@@ -204,5 +88,3 @@ if [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
   ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
 fi
 
-# Don't let homebrew report google analytics
-export HOMEBREW_NO_ANALYTICS=1
