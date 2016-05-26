@@ -7,3 +7,5 @@ tmux_resurrect*.txt
 /.dropbox-dist/
 Dropbox/
 /.vagrant.d/
+.atom/
+Trash/
