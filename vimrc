@@ -20,11 +20,12 @@ Plugin 'tpope/vim-fugitive' "Git in vim
 Plugin 'kien/ctrlp.vim' "Ctrl-P <filename> to open
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
 Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
+Plugin 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
 Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
 Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies.
-			"Requires modifying gitconfig https rewrite.
+                        "Requires modifying gitconfig https rewrite.
 Plugin 'scrooloose/nerdtree' "File Browser
 Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
@@ -34,6 +35,7 @@ Plugin 'bling/vim-airline' "Style the status bar
 Plugin 'Shougo/neocomplete.vim' "Auto word completions
 Plugin 'janko-m/vim-test' "Execute tests from inside vim
 Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
+Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
@@ -73,6 +75,14 @@ set listchars=tab:▸\ ,eol:¬
 
 nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
+function! SetupCommandAlias(from, to)
+  exec 'cnoreabbrev <expr> '.a:from
+  \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+  \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+endfunction
+call SetupCommandAlias("Q", "q")
+call SetupCommandAlias("W", "w")
+
 " ----- background highlight the character if line length goes over 120 -----
 highlight OverLengthIndiator ctermbg=darkyellow
 call matchadd('OverLengthIndiator', '\%121v', 100)
@@ -101,22 +111,23 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
 augroup mySyntastic
-	au!
-	au FileType tex let b:syntastic_mode = "passive"
+  au!
+  au FileType tex let b:syntastic_mode = "passive"
 augroup END
 
-" ----- jaxbot/syntastic-react settings -----
-let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
+let g:syntastic_javascript_checkers = ['eslint', 'jshint'] "Use eslint for syntax checking
+let g:syntastic_make_checkers = ['gnumake']
 
 " ----- Raimondi/delimitMate settings -----
 let delimitMate_expand_cr = 1
 augroup mydelimitMate
-	au!
-	au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
-	au FileType tex let b:delimitMate_quotes = ""
-	au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
-    au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
+  au!
+  au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
+  au FileType tex let b:delimitMate_quotes = ""
+  au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
+  au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
 augroup END
 
 " ----- faith/vim-go settings -----
@@ -138,6 +149,18 @@ let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 "let g:user_emmet_install_global = 0
 "autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
 
+" ----- pangloss/vim-javascript -----
+let g:javascript_conceal_function       = "ƒ"
+let g:javascript_conceal_null           = "ø"
+let g:javascript_conceal_this           = "@"
+let g:javascript_conceal_return         = "⇚"
+let g:javascript_conceal_undefined      = "¿"
+let g:javascript_conceal_NaN            = "ℕ"
+let g:javascript_conceal_prototype      = "¶"
+let g:javascript_conceal_static         = "•"
+let g:javascript_conceal_super          = "Ω"
+let g:javascript_conceal_arrow_function = "⇒"
+
 " ----- mxw/vim-jsx -----
 let g:jsx_ext_required = 0
 
@@ -148,6 +171,12 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
+
+" make test commands execute using dispatch.vim
+let test#strategy = "dispatch"
+
+" Set the NODE_ENV correctly for tests
+let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
 
 " ----- Shougo/neocomplete.vim settings -----
 let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
@@ -178,7 +207,7 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 
 " ---Play niceley with delimitMate
 "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-imap <expr> <CR> pumvisible() ? "<SID>my_cr_function()<CR>" : "<Plug>delimitMateCR"
+imap <expr> <CR> pumvisible() ? neocomplete#close_popup() . "\<CR>" : "<Plug>delimitMateCR"
 function! s:my_cr_function()
   return neocomplete#close_popup() . "\<CR>"
   " For no inserting <CR> key.

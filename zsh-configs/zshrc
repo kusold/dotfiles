@@ -25,6 +25,11 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+# Development Directory Shortcut
+if [[ -d "$HOME/Development" ]]; then
+  alias -g dev=$HOME/Development/
+fi
+
 # Add home bin
 if [[ -d "$HOME/.bin/" ]]; then
   export PATH=$HOME/.bin:$PATH
@@ -54,6 +59,11 @@ if [ -f $HOME/.Xmodmap ]; then
 fi
 
 # Add nvm
+if [[ -f "/usr/share/nvm/nvm.sh" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  source /usr/share/nvm/nvm.sh
+  source /usr/share/nvm/bash_completion
+fi
 if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
   export NVM_DIR=$HOME/.nvm
   source $HOME/.nvm/nvm.sh
@@ -62,7 +72,13 @@ fi
 # Go Lang Setup
 if [[ -d "$HOME/Development/go/" ]]; then
   export GOPATH=$HOME/Development/go
-  alias go-xbuild='CGO_ENABLED=0 gox -osarch="darwin/amd64 linux/amd64 linux/386" && CC="i686-w64-mingw32-gcc" CGO_ENABLED=1 gox -osarch="windows/386"'
+
+  function go_build () {
+    OUTPUT_PREFIX=${PWD##*/}
+    GOOS="$1" GOARCH="$2" go build -o "${OUTPUT_PREFIX}_${GOOS}_${GOARCH}"
+  }
+#  alias go-xbuild='CGO_ENABLED=0 gox -osarch="darwin/amd64 linux/amd64 linux/386" && CC="i686-w64-mingw32-gcc" CGO_ENABLED=1 gox -osarch="windows/386"'
+  alias go-xbuild='go_build "darwin" "amd64" && go_build "linux" "386" && go_build "linux" "amd64"  && go_build "windows" "386"  && go_build "windows" "amd64"'
   alias godoc-local='godoc -http=:6060'
 fi
 
@@ -96,6 +112,10 @@ if [[ -d "${HOME}/.rvm/" ]]; then
   PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 fi
 
+if command -v npm > /dev/null; then
+  alias npm-install-globals="npm install -g grunt-cli eslint jshint npm-shrinkwrap clone-org-repos"
+fi
+
 # Vagrant
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 
@@ -112,6 +132,10 @@ fi
 if [[ -d "$HOME/Development/go/src/github.com/TheJumpCloud" ]]; then
   alias -g gojc=$HOME/Development/go/src/github.com/TheJumpCloud
 fi
+
+# Necessary for the grpc node_module to run
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
+
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
 #ulimit -n 10000
 
@@ -119,9 +143,18 @@ fi
 #alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
 alias myip="curl https://icanhazip.com"
 alias weather="~/dotfiles/ansiweather/ansiweather"
-alias reload-zsh-config='source ~/.zshrc'
-alias gen-strong-sshkey='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"'
+alias ssh-keygen-strong='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)" -f "$HOME/.ssh/$(whoami)@$(hostname)-$(date -I)"'
 alias vagrant-ansible-playbook='ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory --private-key=.vagrant/machines/default/virtualbox/private_key -u vagrant'
+# Could be a git alias, but it had trouble finding pbcopy
+alias git-hash='git rev-parse HEAD && git rev-parse HEAD | pbcopy'
+alias backup-to-nas='rsync --archive --delete --progress --exclude-from="$HOME/dotfiles/rsync_exclude.txt" --verbose $HOME/ admin@coruscant:/share/Backups/$HOST'
+
+# Reload zshrc.
+if [[ -s "$HOME/.zshrc" ]]; then
+  alias reload-zshrc="source $HOME/.zshrc"
+  alias edit-zshrc="$EDITOR $HOME/.zshrc"
+fi
+
 
 # Heroku Fight
 alias heroku='/usr/local/heroku/bin/heroku'
@@ -141,6 +174,9 @@ alias reload-ramdb='restart-ramdb;load-int-fixture'
 alias reload-personal-ramdb='restart-ramdb;load-personal-fixture'
 alias reload-alarm-ramdb='restart-ramdb;load-alarm-int-fixture'
 alias drop-test-dbs='mongo /home/mike/Development/SI/bin/queries/drop-SI-Test-dbs.js'
+alias fucking-mongo="$HOME/Development/documentation/mongo-unlock-database.sh"
+alias upgrade-arch="yaourt -Syu --devel --aur --noconfirm"
+alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"
 
 function gcloud-ssh () {
   if [[ -n $1 ]]; then
@@ -155,7 +191,18 @@ if [ -f $HOME/.private-env ]; then
   source $HOME/.private-env
 fi
 
+# Use gpg-agent instead of ssh-agent if it is configured
+if [ -f "${HOME}/.gpg-agent-info" ]; then
+  . "${HOME}/.gpg-agent-info"
+  export GPG_AGENT_INFO
+  export SSH_AUTH_SOCK
+fi
+export GPG_TTY=$(tty)
+
 # Always set the ssh agent in the same place
 if [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
   ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
 fi
+
+# Don't let homebrew report google analytics
+export HOMEBREW_NO_ANALYTICS=1
