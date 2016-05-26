@@ -36,6 +36,7 @@ Plugin 'Shougo/neocomplete.vim' "Auto word completions
 Plugin 'janko-m/vim-test' "Execute tests from inside vim
 Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
 Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
+Plugin 'wakatime/vim-wakatime' "Collects stats on programming
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
