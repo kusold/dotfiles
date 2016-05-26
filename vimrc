@@ -37,6 +37,7 @@ Plugin 'janko-m/vim-test' "Execute tests from inside vim
 Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
 Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
 Plugin 'wakatime/vim-wakatime' "Collects stats on programming
+Plugin 'Konfekt/FastFold' "Allow syntax folding without constant recaclulation
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
@@ -179,6 +180,9 @@ let test#strategy = "dispatch"
 
 " Set the NODE_ENV correctly for tests
 let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
+
+" ----- Konfekt/FastFold settings -----
+
 
 " ----- Shougo/neocomplete.vim settings -----
 let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
