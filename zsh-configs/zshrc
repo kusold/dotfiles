@@ -42,6 +42,10 @@ if [ -f $HOME/.Xmodmap ]; then
   /usr/bin/xmodmap $HOME/.Xmodmap
 fi
 
+# CertCanary Go Directory
+if [[ -d "$GOPATH/src/gitlab.com/certcanary" ]]; then
+  alias -g gocc=$GOPATH/src/gitlab.com/certcanary
+fi
 
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
 #ulimit -n 10000
