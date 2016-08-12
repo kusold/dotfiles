@@ -136,7 +136,14 @@ augroup mydelimitMate
 augroup END
 
 " ----- faith/vim-go settings -----
+"let g:go_highlight_functions = 1
+"let g:go_highlight_methods = 1
+"let g:go_highlight_structs = 1
+"let g:go_highlight_interfaces = 1
+"let g:go_highlight_operators = 1
+"let g:go_highlight_build_constraints = 1
 let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imports
+let g:go_list_type = "quickfix"
 "\s to list interfaces implemented by the type
 au FileType go nmap <Leader>s <Plug>(go-implements)
 "\i to show type info
