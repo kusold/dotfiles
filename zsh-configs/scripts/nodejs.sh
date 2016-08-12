@@ -13,7 +13,7 @@ if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
 fi
 
 if command_exists npm; then
-  alias npm-install-globals="npm install -g grunt-cli eslint jshint npm-shrinkwrap clone-org-repos"
+  alias npm-install-globals="npm install -g grunt-cli eslint jshint jshint-jsx npm-shrinkwrap clone-org-repos"
 fi
 
 alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"

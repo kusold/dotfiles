@@ -120,7 +120,9 @@ augroup mySyntastic
   au FileType tex let b:syntastic_mode = "passive"
 augroup END
 
-let g:syntastic_javascript_checkers = ['eslint', 'jshint'] "Use eslint for syntax checking
+let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
+let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 let g:syntastic_make_checkers = ['gnumake']
 
 " ----- Raimondi/delimitMate settings -----
