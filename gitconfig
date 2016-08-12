@@ -23,6 +23,7 @@
 	conflictstyle = diff3
 [diff]
   tool = meld
+	compactionHeuristic = true
 [difftool]
   prompt = false
 [difftool "webstorm"]
@@ -62,3 +63,5 @@
 
 [filter "remove-tokens"]
 clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expires =.*/d'"
+[submodule]
+	fetchJobs = 4
