@@ -38,6 +38,7 @@ Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus ev
 Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
 Plugin 'wakatime/vim-wakatime' "Collects stats on programming
 Plugin 'Konfekt/FastFold' "Allow syntax folding without constant recaclulation
+Plugin 'mileszs/ack.vim' "Faster grep for code
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
@@ -90,6 +91,16 @@ highlight OverLengthIndiator ctermbg=darkyellow
 call matchadd('OverLengthIndiator', '\%121v', 100)
 
 autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
+
+" ----- mileszs/ack.vim -----
+" if silver surfer is installed, use that instead
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+" Don't automatically jump to the first result
+cnoreabbrev Ack Ack!
+nnoremap <Leader>a :Ack!<Space>
 
 " ----- mhinz/signify settings -----
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?

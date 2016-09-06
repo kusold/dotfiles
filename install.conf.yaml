@@ -2,6 +2,9 @@
 
 - link:
     ~/.ansiweatherrc: ansiweatherrc
+    ~/bin/ack:
+      path: bin/ack-2.14-single-file
+      create: true
     ~/bin/tmx:
       path: bin/tmx
       create: true
