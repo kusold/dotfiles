@@ -1,6 +1,7 @@
 - clean: ['~']
 
 - link:
+    ~/.ackrc: ackrc
     ~/.ansiweatherrc: ansiweatherrc
     ~/bin/ack:
       path: bin/ack-2.14-single-file
