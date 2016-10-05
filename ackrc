@@ -13,3 +13,6 @@
 # Go
 # http://golang.org/
 --ignore-directory=is:vendor
+
+# Intellij
+--ignore-directory=is:.idea
