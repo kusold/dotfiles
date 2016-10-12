@@ -15,6 +15,11 @@ if [[ -d "/usr/local/go" ]]; then
   export GOROOT=/usr/local/go/
 fi
 
+if [[ -d "/usr/local/opt/go/libexec" ]]; then
+  export PATH=$PATH:/usr/local/opt/go/libexec
+  export GOROOT=/usr/local/opt/go/libexec
+fi
+
 if command_exists go; then
   function go_build () {
     OUTPUT_PREFIX=${PWD##*/}
