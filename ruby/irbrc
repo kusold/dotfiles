@@ -1,0 +1,16 @@
+# Autocompletion for methods
+require 'irb/completion'
+
+# Pretty print objects
+require "pp"
+
+%w[ rubygems interactive_editor pp completion].each do |gem|
+  begin
+    require gem
+  rescue LoadError
+    puts "Failed to load #{gem} gem."
+  end
+end
+
+# Auto indent code blocks
+IRB.conf[:AUTO_INDENT]=true

@@ -15,6 +15,7 @@
     ~/.fonts:
       path: fonts/
       relink: true
+    ~/.gemrc: ruby/gemrc
     ~/.gitconfig: gitconfig
 #    ~/.gnupg/gpg.conf:
 #      path: gnupg/gpg.conf
@@ -23,8 +24,10 @@
 #    ~/.gnupg/sks-keyservers.netCA.pem:
 #      path: gnupg/sks-keyservers.netCA.pem
 #      create: true
+    ~/.irbrc: ruby/irbrc
     ~/.lessrc: lessrc
     ~/.npmrc: npmrc
+    ~/.railsrc: ruby/railsrc
 #    ~/.rvmrc: rvmrc
 #    ~/.rbenv/version:
 #      path: rbenv-version
