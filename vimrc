@@ -12,12 +12,10 @@ Plugin 'gmarik/Vundle.vim' "Package manager
 Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
 Plugin 'mxw/vim-jsx' "JSX support (React)
 Plugin 'kchmck/vim-coffee-script' "Coffeescript support
-Plugin 'puppetlabs/puppet-syntax-vim' "Puppet support
-Plugin 'saltstack/salt-vim' "Salt Syntax Support
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
 Plugin 'ap/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
-Plugin 'kien/ctrlp.vim' "Ctrl-P <filename> to open
+Plugin 'ctrlpvim/ctrlp.vim' "Ctrl-P <filename> to open
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
 Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
 Plugin 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
@@ -202,7 +200,6 @@ let test#strategy = "dispatch"
 let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
 
 " ----- Konfekt/FastFold settings -----
-
 
 " ----- Shougo/neocomplete.vim settings -----
 let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
