@@ -100,6 +100,16 @@ endif
 cnoreabbrev Ack Ack!
 nnoremap <Leader>a :Ack!<Space>
 
+" ----- ctrlpvim/ctrlp.vim settings -----
+" The Silver Searcher
+if executable('ag')
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
 " ----- mhinz/signify settings -----
 let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
 let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
