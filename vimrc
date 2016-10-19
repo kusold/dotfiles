@@ -140,6 +140,12 @@ augroup mySyntastic
 augroup END
 
 let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
+
+" Point syntastic checker at locally installed `eslint` if it exists.
+if executable('node_modules/.bin/eslint')
+  let b:syntastic_javascript_eslint_exec = 'node_modules/.bin/eslint'
+endif
+
 let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
 "let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 let g:syntastic_make_checkers = ['gnumake']
