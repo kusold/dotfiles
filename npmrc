@@ -4,6 +4,7 @@ init.author.email=hello@mikekusold.com
 init.license=MIT
 init.version=0.0.1
 save-exact=true
+save=true
 email=hello@mikekusold.com
 
 [_token]
