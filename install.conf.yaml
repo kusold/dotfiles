@@ -61,3 +61,4 @@
   - [~/.tmux/plugins/tpm/bin/install_plugins, Installing tmux plugins]
   - [~/.weechat/fetch-ca.sh, Fetching latest CA certificates for weechat]
   - [source ./base16-gnome-terminal/base16-eighties.dark.sh, Applying GNOME Terminal theme]
+  - [npm install -g grunt-cli@latest eslint@latest eslint-plugin-react@latest babel-eslint@latest jshint@latest jshint-jsx@latest npm-shrinkwrap@latest clone-org-repos@latest]
