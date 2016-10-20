@@ -11,13 +11,12 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim' "Package manager
 Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
 Plugin 'mxw/vim-jsx' "JSX support (React)
-Plugin 'kchmck/vim-coffee-script' "Coffeescript support
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
 Plugin 'ap/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
 Plugin 'ctrlpvim/ctrlp.vim' "Ctrl-P <filename> to open
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
-Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
+"Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
 Plugin 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
