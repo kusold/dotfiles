@@ -12,7 +12,7 @@ timeformat:%b %d %r
 
 # Text and Colors
 
-background:\e[0m
+background:\033[0m
 text:\033[36;1m
 data:\033[33;1m
 delimiter:\033[35m=>
