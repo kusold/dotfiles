@@ -1,7 +1,8 @@
-# My Numlock doesn't work on my mac when using an external keyboard
+#!/usr/bin/env zsh
 
 autoload is_darwin
 
+# My Numlock doesn't work on my mac when using an external keyboard
 if is_darwin; then
   # Keypad
   # 0 . Enter
