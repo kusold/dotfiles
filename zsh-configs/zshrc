@@ -52,12 +52,6 @@ if [[ -d "$GOPATH/src/github.com/kusold" ]]; then
   alias -g gome=$GOPATH/src/github.com/kusold
 fi
 
-# BriteContent Github Go Directory
-if [[ -d "$GOPATH/src/github.com/BriteContent" ]]; then
-  alias -g gobc=$GOPATH/src/github.com/BriteContent
-fi
-
-
 # Increase the maximum open files. This is useful for filewatcher programs (such as node-dev)
 #ulimit -n 10000
 
