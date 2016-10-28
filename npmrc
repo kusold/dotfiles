@@ -6,8 +6,3 @@ init.version=0.0.1
 save-exact=true
 save=true
 email=hello@mikekusold.com
-
-[_token]
-version=1
-path=/
-httponly=true

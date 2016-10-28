@@ -62,6 +62,6 @@
 	insteadOf = https://github.com/
 
 [filter "remove-tokens"]
-clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expires =.*/d'"
+clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expires =.*/d' | sed -e '/_authToken=.*/d'"
 [submodule]
 	fetchJobs = 4
