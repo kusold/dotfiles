@@ -9,34 +9,33 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim' "Package manager
-Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
-Plugin 'mxw/vim-jsx' "JSX support (React)
-Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
-Plugin 'slim-template/vim-slim.git' "Slim template language syntax highlighting
+Plugin 'Konfekt/FastFold' "Allow syntax folding without constant recaclulation
+Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
+Plugin 'Shougo/neocomplete.vim' "Auto word completions
 Plugin 'ap/vim-css-color' "Highlights colors in css files
-Plugin 'tpope/vim-fugitive' "Git in vim
+Plugin 'bling/vim-airline' "Style the status bar
 Plugin 'ctrlpvim/ctrlp.vim' "Ctrl-P <filename> to open
-Plugin 'mhinz/vim-signify' "Display which lines have changed for git
+Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
+Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies. Requires modifying gitconfig https rewrite.
+Plugin 'janko-m/vim-test' "Execute tests from inside vim
+Plugin 'jaxbot/syntastic-react' "Syntax checking for React
+Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
 "Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
+Plugin 'mhinz/vim-signify' "Display which lines have changed for git
+Plugin 'mileszs/ack.vim' "Faster grep for code
+Plugin 'mxw/vim-jsx' "JSX support (React)
+Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
+Plugin 'scrooloose/nerdtree' "File Browser
+Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
+Plugin 'slim-template/vim-slim.git' "Slim template language syntax highlighting
+Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
 Plugin 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
+Plugin 'tpope/vim-fugitive' "Git in vim
+Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
-Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
-Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies.
-                        "Requires modifying gitconfig https rewrite.
-Plugin 'scrooloose/nerdtree' "File Browser
-Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
-Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
-Plugin 'jaxbot/syntastic-react' "Syntax checking for React
-Plugin 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
-Plugin 'bling/vim-airline' "Style the status bar
-Plugin 'Shougo/neocomplete.vim' "Auto word completions
-Plugin 'janko-m/vim-test' "Execute tests from inside vim
-Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
 Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
 Plugin 'wakatime/vim-wakatime' "Collects stats on programming
-Plugin 'Konfekt/FastFold' "Allow syntax folding without constant recaclulation
-Plugin 'mileszs/ack.vim' "Faster grep for code
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
