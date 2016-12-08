@@ -19,3 +19,6 @@
 [submodule "puree"]
 	path = puree
 	url = git@github.com:kusold/puree.git
+[submodule "dotbot-brew"]
+	path = dotbot-brew
+	url = https://github.com/d12frosted/dotbot-brew.git
