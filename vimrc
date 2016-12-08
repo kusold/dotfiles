@@ -12,6 +12,7 @@ Plugin 'gmarik/Vundle.vim' "Package manager
 Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
 Plugin 'mxw/vim-jsx' "JSX support (React)
 Plugin 'digitaltoad/vim-jade' "Jade language syntax highlighting
+Plugin 'slim-template/vim-slim.git' "Slim template language syntax highlighting
 Plugin 'ap/vim-css-color' "Highlights colors in css files
 Plugin 'tpope/vim-fugitive' "Git in vim
 Plugin 'ctrlpvim/ctrlp.vim' "Ctrl-P <filename> to open
@@ -199,6 +200,10 @@ let g:javascript_conceal_arrow_function = "⇒"
 
 " ----- mxw/vim-jsx -----
 let g:jsx_ext_required = 0
+
+" ----- slim-template/vim-slim.git =====
+" Needed to use `doctype html` - https://github.com/slim-template/vim-slim/issues/38
+autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
 
 
 " ----- janko-m/vim-test -----
