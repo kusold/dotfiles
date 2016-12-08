@@ -27,7 +27,6 @@ Plugin 'mileszs/ack.vim' "Faster grep for code
 Plugin 'mxw/vim-jsx' "JSX support (React)
 Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
 Plugin 'scrooloose/nerdtree' "File Browser
-Plugin 'scrooloose/syntastic' "Display where errors and warnings occur
 Plugin 'slim-template/vim-slim.git' "Slim template language syntax highlighting
 Plugin 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
 Plugin 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
@@ -36,6 +35,7 @@ Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be r
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
 Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
+Plugin 'vim-syntastic/syntastic' "Display where errors and warnings occur
 Plugin 'wakatime/vim-wakatime' "Collects stats on programming
 
 "Plugin 'ciaranm/detectindent'
@@ -125,7 +125,7 @@ let g:nerdtree_tabs_open_on_console_startup = 0
 " Open tagbar with F8
 nmap <F8> :TagbarToggle<CR>
 
-" ----- scrooloose/syntastic settings -----
+" ----- vim-syntastic/syntastic settings -----
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
