@@ -65,6 +65,7 @@
 
 - brew:
   - bzr
+  - ctags
   - dos2unix
   - go
   - gpg2
