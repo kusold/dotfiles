@@ -20,6 +20,7 @@ Plugin 'fatih/vim-go'	"Run :GoInstallBinaries to pull down dependencies. Require
 Plugin 'janko-m/vim-test' "Execute tests from inside vim
 Plugin 'jaxbot/syntastic-react' "Syntax checking for React
 Plugin 'jistr/vim-nerdtree-tabs' "Same nerdtree in every file
+Plugin 'majutsushi/tagbar' "Display ctags in a tagbar
 "Plugin 'mattn/emmet-vim' "Shortcuts to generate HTML
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
 Plugin 'mileszs/ack.vim' "Faster grep for code
@@ -119,6 +120,10 @@ let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
 nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
 " To have NERDTree always open on startup. 0 = disabled
 let g:nerdtree_tabs_open_on_console_startup = 0
+
+" ----- majutsushi/tagbar -----
+" Open tagbar with F8
+nmap <F8> :TagbarToggle<CR>
 
 " ----- scrooloose/syntastic settings -----
 set statusline+=%#warningmsg#
