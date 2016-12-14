@@ -25,6 +25,7 @@ Plugin 'majutsushi/tagbar' "Display ctags in a tagbar
 Plugin 'mhinz/vim-signify' "Display which lines have changed for git
 Plugin 'mileszs/ack.vim' "Faster grep for code
 Plugin 'mxw/vim-jsx' "JSX support (React)
+Plugin 'neomake/neomake' "Asyncronous job running (Make and Linting)
 Plugin 'pangloss/vim-javascript' "Better Javascript syntax highlighting (Required by react)
 Plugin 'scrooloose/nerdtree' "File Browser
 Plugin 'slim-template/vim-slim.git' "Slim template language syntax highlighting
@@ -35,7 +36,7 @@ Plugin 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be r
 Plugin 'tpope/vim-sleuth' "Match indentation style
 Plugin 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
 Plugin 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
-Plugin 'vim-syntastic/syntastic' "Display where errors and warnings occur
+"Plugin 'vim-syntastic/syntastic' "Display where errors and warnings occur
 Plugin 'wakatime/vim-wakatime' "Collects stats on programming
 
 "Plugin 'ciaranm/detectindent'
@@ -124,7 +125,14 @@ let g:nerdtree_tabs_open_on_console_startup = 0
 " ----- majutsushi/tagbar -----
 " Open tagbar with F8
 nmap <F8> :TagbarToggle<CR>
+let g:tagbar_autofocus = 1 "Automatically focus the tagbar when it is opened
 
+" ----- neomake/neomake settings -----
+autocmd! BufWritePost * Neomake "Run on every file save
+let g:neomake_open_list = 2
+let g:neomake_list_height = 5
+
+let g:neomake_javascript_enabled_makers = ['eslint'] "Use eslint for syntax checking
 " ----- vim-syntastic/syntastic settings -----
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
