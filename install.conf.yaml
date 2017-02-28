@@ -12,6 +12,7 @@
     ~/.config/fontconfig/conf.d:
       path: fonts.conf.d
       create: true
+    ~/.editorconfig: editorconfig
     ~/.fonts:
       path: fonts/
       relink: true
