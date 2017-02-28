@@ -80,6 +80,6 @@
   - terminal-notifier
   - the_silver_searcher
   - tmux
-  - vim --with-client-server --with-lua
+  - vim --with-lua
   - watchman
   - weechat --with-aspell --with-curl --with-python --with-perl --with-ruby --with-lua --with-guile
