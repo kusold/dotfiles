@@ -65,12 +65,14 @@
 
 - brew:
   - bzr
+  - chromedriver
   - ctags
   - dos2unix
   - go
   - gpg2
   - jq
   - keybase
+  - mercurial
   - nvm
   - rbenv
   - readline
@@ -81,5 +83,25 @@
   - the_silver_searcher
   - tmux
   - vim --with-lua
-  - watchman
+  - watchman # Used for jest file watching
   - weechat --with-aspell --with-curl --with-python --with-perl --with-ruby --with-lua --with-guile
+
+- cask:
+  - disk-inventory-x
+  - docker
+  - dropbox
+  - filezilla
+  - flux
+  - freemind
+  - gimp
+  - google-chrome
+  - intellij-idea
+  - little-snitch
+  - private-internet-access
+  - slack
+  - spotify
+  - steam
+  - tiddlywiki
+  - tunnelblick
+  - veracrypt
+  - vlc
