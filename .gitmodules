@@ -9,16 +9,16 @@
 	url = https://github.com/gmarik/Vundle.vim
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
-	url = git@github.com:tmux-plugins/tpm.git
+	url = https://github.com/tmux-plugins/tpm.git
 [submodule "dotbot"]
 	path = dotbot
 	url = https://github.com/anishathalye/dotbot
 [submodule "base16-gnome-terminal"]
 	path = base16-gnome-terminal
-	url = git@github.com:chriskempson/base16-gnome-terminal.git
+	url = https://github.com/chriskempson/base16-gnome-terminal.git
 [submodule "puree"]
 	path = puree
-	url = git@github.com:kusold/puree.git
+	url = https://github.com/kusold/puree.git
 [submodule "dotbot-brew"]
 	path = dotbot-brew
 	url = https://github.com/d12frosted/dotbot-brew.git
