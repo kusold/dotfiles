@@ -1,20 +1,10 @@
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-
-DOTFILES="$HOME/dotfiles"
+export DOTFILES="$HOME/dotfiles"
 
 # Set default text editor
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
-# Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
-
+# Source functions
 fpath=($DOTFILES/zsh-configs/functions $fpath)
 
 # Source all utilities
@@ -31,6 +21,12 @@ for script in $DOTFILES/zsh-configs/scripts/*.sh; do
   fi
 done
 
+# Source zplug and plugins
+if [[ -d "$HOME/.zplug" ]]; then
+  export ZPLUG_HOME=$HOME/.zplug
+  source "$ZPLUG_HOME/init.zsh"
+  source "$DOTFILES/zsh-configs/zplugins.zsh"
+fi
 
 # Development Directory Shortcut
 if [[ -d "$HOME/Development" ]]; then

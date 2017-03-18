@@ -72,10 +72,7 @@
     ~/.weechat: weechat/
     ~/.zlogin: zsh-configs/zlogin
     ~/.zlogout: zsh-configs/zlogout
-    ~/.zprezto:
-      path: prezto/
-      relink: true
-    ~/.zpreztorc: zsh-configs/zpreztorc
+    ~/.zplug: zplug/
     ~/.zprofile: zsh-configs/zprofile
     ~/.zshenv: zsh-configs/zshenv
     ~/.zshrc:
