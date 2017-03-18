@@ -229,7 +229,7 @@ nmap <silent> <leader>g :TestVisit<CR>
 let test#strategy = "dispatch"
 
 " Set the NODE_ENV correctly for tests
-let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
+"let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
 
 " ----- Konfekt/FastFold settings -----
 
