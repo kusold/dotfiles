@@ -28,3 +28,6 @@
 [submodule "base16-terminal-app"]
 	path = base16-terminal-app
 	url = https://github.com/korzhyk/base16-terminal-app.git
+[submodule "zplug"]
+	path = zplug
+	url = https://github.com/zplug/zplug.git
