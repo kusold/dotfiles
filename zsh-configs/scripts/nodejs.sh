@@ -12,10 +12,9 @@ elif [[ -f "/usr/share/nvm/nvm.sh" ]]; then
   source /usr/share/nvm/bash_completion
 fi
 
-# Installs happen via dotbot now
-#if command_exists npm; then
-#  alias npm-install-globals="npm install -g grunt-cli eslint jshint jshint-jsx npm-shrinkwrap clone-org-repos"
-#fi
+if command_exists nodenv; then
+  eval "$(nodenv init -)"
+fi
 
 alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"
 
