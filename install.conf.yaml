@@ -2,7 +2,30 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
-  - ['command -v brew >/dev/null 2>&1 || {/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" }', Installing homebrew package manager]
+  - ['command -v brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"', Installing homebrew package manager]
+
+- brew:
+  - bzr
+  - chromedriver
+  - ctags
+  - dos2unix
+  - go
+  - gpg2
+  - jq
+  - mercurial
+  - nodenv
+  - rbenv
+  - readline
+  - reattach-to-user-namespace
+  - ruby-build
+  - ssh-copy-id
+  - terminal-notifier
+  - the_silver_searcher
+  - tmux
+  - vim --with-lua
+  - watchman
+    #  - weechat --with-aspell --with-curl --with-python --with-perl --with-ruby --with-lua --with-guile
+  - zsh
 
 - link:
     ~/.ackrc: ackrc
@@ -21,7 +44,6 @@
       path: fonts/
       relink: true
     ~/.gemrc: ruby/gemrc
-    ~/.gitconfig: gitconfig
 #    ~/.gnupg/gpg.conf:
 #      path: gnupg/gpg.conf
 #      create: true
@@ -65,30 +87,7 @@
   - [~/.tmux/plugins/tpm/bin/install_plugins, Installing tmux plugins]
   - [~/.weechat/fetch-ca.sh, Fetching latest CA certificates for weechat]
   - [source ./base16-gnome-terminal/base16-eighties.dark.sh, Applying GNOME Terminal theme]
-  - [npm install -g grunt-cli@latest eslint@latest eslint-plugin-react@latest babel-eslint@latest jshint@latest jshint-jsx@latest npm-shrinkwrap@latest clone-org-repos@latest]
-
-- brew:
-  - bzr
-  - chromedriver
-  - ctags
-  - dos2unix
-  - go
-  - gpg2
-  - jq
-  - keybase
-  - mercurial
-  - nvm
-  - rbenv
-  - readline
-  - reattach-to-user-namespace
-  - ruby-build
-  - ssh-copy-id
-  - terminal-notifier
-  - the_silver_searcher
-  - tmux
-  - vim --with-lua
-  - watchman # Used for jest file watching
-  - weechat --with-aspell --with-curl --with-python --with-perl --with-ruby --with-lua --with-guile
+  - [npm install -g grunt-cli@latest eslint@latest eslint-plugin-react@latest babel-eslint@latest jshint@latest jshint-jsx@latest npm-shrinkwrap@latest clone-org-repos@latest foreman@latest]
 
 - cask:
   - disk-inventory-x
@@ -100,6 +99,8 @@
   - gimp
   - google-chrome
   - intellij-idea
+  - java
+  - keybase
   - little-snitch
   - private-internet-access
   - slack
@@ -109,3 +110,6 @@
   - tunnelblick
   - veracrypt
   - vlc
+
+- link:
+    ~/.gitconfig: gitconfig
