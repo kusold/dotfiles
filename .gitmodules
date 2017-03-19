@@ -22,6 +22,3 @@
 [submodule "zplug"]
 	path = zplug
 	url = https://github.com/zplug/zplug.git
-[submodule "vim/autoload/vim-plug"]
-	path = vim/autoload/vim-plug
-	url = https://github.com/junegunn/vim-plug.git
