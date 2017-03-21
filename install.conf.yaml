@@ -80,11 +80,14 @@
       force: true
 
 - shell:
-  - [vim +PluginInstall +qall, Installing vim plugins]
+  - [vim +PlugInstall +qall, Installing vim plugins]
   - [~/.tmux/plugins/tpm/bin/install_plugins, Installing tmux plugins]
   - [~/.weechat/fetch-ca.sh, Fetching latest CA certificates for weechat]
   - [source ./base16-gnome-terminal/base16-eighties.dark.sh, Applying GNOME Terminal theme]
   - [npm install -g grunt-cli@latest eslint@latest eslint-plugin-react@latest babel-eslint@latest jshint@latest jshint-jsx@latest npm-shrinkwrap@latest clone-org-repos@latest foreman@latest]
+
+- tap:
+  - caskroom/fonts
 
 - cask:
   - disk-inventory-x
@@ -92,12 +95,12 @@
   - dropbox
   - filezilla
   - flux
+  - font-source-code-pro
   - freemind
   - gimp
   - google-chrome
   - intellij-idea
   - java
-  - keybase
   - little-snitch
   - private-internet-access
   - slack

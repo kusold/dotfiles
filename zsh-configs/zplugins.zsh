@@ -24,6 +24,7 @@ zplug "zsh-users/zsh-history-substring-search", defer:3
 
 zplug "zsh-users/zsh-autosuggestions"
 zplug "chrissicool/zsh-256color", use:zsh-256color.plugin.zsh
+zplug "supercrabtree/k"
 
 # A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
 zplug "djui/alias-tips"
