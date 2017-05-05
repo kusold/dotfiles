@@ -40,6 +40,7 @@ fi
 
 # CertCanary Go Directory
 if [[ -d "$GOPATH/src/gitlab.com/certcanary" ]]; then
+  hash -d canary=$GOPATH/src/gitlab.com/certcanary/
   alias -g gocc=$GOPATH/src/gitlab.com/certcanary
 fi
 
