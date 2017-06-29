@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Example /etc/hosts:
+
+### Focus START
+#127.0.0.1 reddit.com www.reddit.com
+### Focus END
+
+
+HOSTS_FILE=/etc/hosts
+VOICE=Samantha
+
+comment() {
+  sed -i '.bak' '/^### Focus START/,/^### Focus END/s/^#//' $HOSTS_FILE
+}
+
+uncomment() {
+  sed -i '.bak' '/^## Focus START/,/^## Focus END/s/^/#/' $HOSTS_FILE
+}
+
+checkRoot() {
+  if ! [ $(id -u) = 0 ]; then
+    echo "Must be ran as root"
+    say -v $VOICE "Must be ran as root"
+    exit 1
+  fi
+}
+
+main() {
+  checkRoot
+
+  if grep --quiet "### Focus START" $HOSTS_FILE; then
+    say -v $VOICE "Time to focus..."
+    comment
+  else
+    say -v $VOICE "Enjoy your break..."
+    uncomment
+  fi
+}
+
+main
+
