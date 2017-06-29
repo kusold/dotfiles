@@ -65,6 +65,8 @@
     ~/.tmux:
       path: tmux/
       relink: true
+    ~/.torrc:
+      path: tor/torrc
     ~/.vimrc: vimrc
     ~/.vim:
       path: vim/
