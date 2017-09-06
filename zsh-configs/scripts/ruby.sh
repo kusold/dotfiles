@@ -14,4 +14,8 @@ if [[ -d "${HOME}/.rvm/" ]]; then
   PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 fi
 
+if command_exists bundle; then
+  alias be="bundle exec";
+fi
+
 
