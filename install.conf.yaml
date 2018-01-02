@@ -12,6 +12,7 @@
   - gpg2
   - jq
   - mercurial
+  - node
   - nodenv
   - rbenv
   - readline
@@ -98,6 +99,8 @@
   - caskroom/fonts
 
 - cask:
+  - 1password
+  - alfred
   - disk-inventory-x
   - docker
   - dropbox
@@ -117,6 +120,7 @@
   - tiddlywiki
   - tunnelblick
   - veracrypt
+  - visual-studio-code
   - vlc
 
 - link:
