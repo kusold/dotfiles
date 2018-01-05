@@ -15,6 +15,4 @@ These are my dotfiles. They are in a constant state of evolution as my workflow 
 I use the excellent [base16](https://github.com/chriskempson/base16) package for colors. My favorite theme is [eighties](http://chriskempson.github.io/base16/#eighties)
 
 ## Someday:
-GPG
-* npmrc with `sign-git-tag`
-
+* Remove nodenv, rbenv, etc... and manage versions with asdf
