@@ -25,6 +25,7 @@
   - vim --with-lua
   - watchman
     #  - weechat --with-aspell --with-curl --with-python --with-perl --with-ruby --with-lua --with-guile
+  - yubikey-personalization
   - zsh
 
 - link:
