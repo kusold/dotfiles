@@ -8,5 +8,7 @@ weechat/logs/*
 weechat/weechat.log
 weechat/certs/ca-bundle.crt
 
+secrets/decrypted
+
 .DS_Store
 
