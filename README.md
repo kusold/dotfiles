@@ -1,18 +1,14 @@
 # Dotfiles
 These are my dotfiles. They are in a constant state of evolution as my workflow changes.
 
-## Managing symlinks
-I am using [dotbot](https://github.com/anishathalye/dotbot) to manage the symlinks. It is written in python, so it should work cross platform without any issues.
-
-### Applying the symlinks
-`$ ./bin/dotfile-install`
+### Install
+`$ make`
 
 ## External Dependencies
 * [prezto](https://github.com/sorin-ionescu/prezto) - makes zsh prettier and more useful
 * [ansiweather](https://github.com/fcambus/ansiweather) - fetch the weather from the command line
 * [vundle](https://github.com/gmarik/Vundle.vim) - vim plugin manager
 * [tpm](https://github.com/tmux-plugins/tpm) - tmux plugin manager
-* [dotbot](https://github.com/anishathalye/dotbot) - symlink manager for dotfiles
 * [ack](http://beyondgrep.com/install/) - faster grep for code. Fetched the single file version for simplicity.
 
 ## Terminal Colors
@@ -20,7 +16,5 @@ I use the excellent [base16](https://github.com/chriskempson/base16) package for
 
 ## Someday:
 GPG
-* Add .gnupg and .gpg-agent
-* gitconfig configured with signing
 * npmrc with `sign-git-tag`
 
