@@ -5,17 +5,17 @@ export VISUAL=vim
 export EDITOR="$VISUAL"
 
 # Source functions
-fpath=($DOTFILES/zsh-configs/functions $fpath)
+fpath=($DOTFILES/zsh/functions $fpath)
 
 # Source all utilities
-for script in $DOTFILES/zsh-configs/utilities/*.sh; do
+for script in $DOTFILES/zsh/utilities/*.sh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi
 done
 
 # Source all scripts
-for script in $DOTFILES/zsh-configs/scripts/*.sh; do
+for script in $DOTFILES/zsh/scripts/*.sh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi
@@ -25,7 +25,7 @@ done
 if [[ -d "$HOME/.zplug" ]]; then
   export ZPLUG_HOME=$HOME/.zplug
   source "$ZPLUG_HOME/init.zsh"
-  source "$DOTFILES/zsh-configs/zplugins.zsh"
+  source "$DOTFILES/zsh/zplugins.zsh"
 fi
 
 # Development Directory Shortcut

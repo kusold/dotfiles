@@ -48,11 +48,11 @@ link-dotfiles:
 	@ln -sfh `pwd`/vim $(HOME)/.vim
 # zsh
 	@ln -sfh `pwd`/zplug $(HOME)/.zplug
-	@ln -sf `pwd`/zsh-configs/zlogin $(HOME)/.zlogin
-	@ln -sf `pwd`/zsh-configs/zlogout $(HOME)/.zlogout
-	@ln -sf `pwd`/zsh-configs/zprofile $(HOME)/.zprofile
-	@ln -sf `pwd`/zsh-configs/zshenv $(HOME)/.zshenv
-	@ln -sf `pwd`/zsh-configs/zshrc $(HOME)/.zshrc
+	@ln -sf `pwd`/zsh/zlogin $(HOME)/.zlogin
+	@ln -sf `pwd`/zsh/zlogout $(HOME)/.zlogout
+	@ln -sf `pwd`/zsh/zprofile $(HOME)/.zprofile
+	@ln -sf `pwd`/zsh/zshenv $(HOME)/.zshenv
+	@ln -sf `pwd`/zsh/zshrc $(HOME)/.zshrc
 
 	@echo "### linking dotfiles finished ###"
 

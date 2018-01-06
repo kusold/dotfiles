@@ -51,7 +51,7 @@ if ! zplug check --verbose; then
 fi
 
 # Source plugin configurations
-for script in $DOTFILES/zsh-configs/plugins/*.zsh; do
+for script in $DOTFILES/zsh/plugins/*.zsh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi

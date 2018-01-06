@@ -1,6 +1,6 @@
 # For puree theme
 DOTFILES="$HOME/dotfiles"
-fpath=($DOTFILES/zsh-configs/functions $fpath)
+fpath=($DOTFILES/zsh/functions $fpath)
 
 #
 # Sets Prezto options.
