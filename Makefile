@@ -6,6 +6,9 @@ install: install-packages install-vim-plugins install-tmux-plugins install-npm-p
 link: link-dotfiles link-bin link-secrets
 update: update-submodules
 
+help list:
+	@make -rpn | sed -n -e '/^$$/ { n ; /^[^ .#][^ ]*:/p ; }' | sort | egrep --color '^[^ ]*:'
+
 link-bin:
 	@mkdir -p $HOME/bin
 	@ln -sf `pwd`/bin/ack-2.14-single-file $(HOME)/ack
