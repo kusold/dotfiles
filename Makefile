@@ -16,16 +16,18 @@ link-dotfiles:
 	@echo "### linking dotfiles ###"
 	@ln -sf `pwd`/ackrc $(HOME)/.ackrc
 	@ln -sf `pwd`/ansiweatherrc $(HOME)/.ansiweatherrc
-	@mkdir -p $(HOME)/.config/fontconfig/
-	@ln -sfh `pwd`/fonts.conf.d $(HOME)/.config/fontconfig/conf.d
 	@ln -sf `pwd`/editorconfig $(HOME)/.editorconfig
-	@ln -sfh `pwd`/fonts $(HOME)/.fonts
 	@ln -sf `pwd`/lessrc $(HOME)/.lessrc
 	@ln -sf `pwd`/npmrc $(HOME)/.npmrc
 	@ln -sf `pwd`/torrc $(HOME)/.torrc
 	@ln -sfh `pwd`/weechat $(HOME)/.weechat
 
-#gpg
+# fonts
+	@mkdir -p $(HOME)/.config/fontconfig/
+	@ln -sfh `pwd`/fonts/fonts.conf.d $(HOME)/.config/fontconfig/conf.d
+	@ln -sfh `pwd`/fonts/fonts $(HOME)/.fonts
+
+# gpg
 	@mkdir -p $(HOME)/.gnupg
 	@ln -sf `pwd`/gpg/gpg.conf $(HOME)/.gnupg/gpg.conf
 	@ln -sf `pwd`/gpg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf
