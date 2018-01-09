@@ -1,6 +1,6 @@
 # api_key:85a4e3c55b73909f42c6a23ec35b7147
 
-location:Boulder,US
+location:Denver,US
 fetch_cmd:curl -sf
 units:imperial
 forecast:0
