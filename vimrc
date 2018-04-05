@@ -1,313 +1,455 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+" Refactored vimrc start
 
-" Load vim-plug
-call plug#begin('~/.vim/plugged')
+"│-v-1 │ to-do's
+"└─────┴─────────
+  " TODO Move all settings into folds
+  " TODO Convert most plugins to lazy load
+  " TODO evaluate if all plugins are necessary
+  " TODO expand on plugin descriptions
+  " TODO investigate https://github.com/reedes/vim-thematic
 
-" let Vundle manage Vundle, required
-Plug 'Konfekt/FastFold' "Allow syntax folding without constant recaclulation
-Plug 'Raimondi/delimitMate' " Autoclose quotes and groupings ()
-Plug 'Shougo/neocomplete.vim' "Auto word completions
-Plug 'ap/vim-css-color', {'for': ['css', 'scss', 'sass']} "Highlights colors in css files
-Plug 'bling/vim-airline' "Style the status bar
-Plug 'ctrlpvim/ctrlp.vim' "Ctrl-P <filename> to open
-Plug 'digitaltoad/vim-jade', {'for': 'jade'} "Jade language syntax highlighting
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }	"Run :GoInstallBinaries to pull down dependencies. Requires modifying gitconfig https rewrite.
-Plug 'janko-m/vim-test' "Execute tests from inside vim
-Plug 'jaxbot/syntastic-react', {'for': 'jsx'} "Syntax checking for React
-Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeTabsToggle' } "Same nerdtree in every file
-Plug 'majutsushi/tagbar' "Display ctags in a tagbar
-"Plug 'mattn/emmet-vim' "Shortcuts to generate HTML
-Plug 'mhinz/vim-signify' "Display which lines have changed for git
-Plug 'mileszs/ack.vim', {'on': 'Ack!'} "Faster grep for code
-Plug 'mxw/vim-jsx', {'for': 'jsx'} "JSX support (React)
-Plug 'neomake/neomake' "Asyncronous job running (Make and Linting)
-Plug 'pangloss/vim-javascript', {'for': ['javascript', 'jsx']} "Better Javascript syntax highlighting (Required by react)
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeTabsToggle' } "File Browser
-Plug 'tmux-plugins/vim-tmux-focus-events' "makes tmux + vim work with focus events
-Plug 'tpope/vim-dispatch' "Asynchronous command running. Useful for builds/tests
-Plug 'tpope/vim-fugitive' "Git in vim
-Plug 'tpope/vim-repeat' "Enable plugin bindings (such as vim-surround) to be repeated with `.`
-Plug 'tpope/vim-sleuth' "Match indentation style
-Plug 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
-Plug 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
-"Plug 'vim-syntastic/syntastic' "Display where errors and warnings occur
-Plug 'wakatime/vim-wakatime' "Collects stats on programming
-Plug 'dracula/vim', { 'as': 'dracula' }
+"│-v-1 │ initiliaze
+"└─┬───┴─┬────────────────
+  "│-v-2 │ compatibility settings
+  "└─────┴─────────
+    " Disable vi compatibility settings
+    set nocompatible
 
-"Plugin 'ciaranm/detectindent'
-" All of your Plugins must be added before the following line
-call plug#end()
-" Brief help
-" PlugInstall [name ...] [#threads]          Install plugins
-" PlugUpdate [name ...] [#threads]           Install or update plugins
-" PlugClean[!]                               Remove unused directories (bang version will clean without prompt)
-" PlugUpgrade                                Upgrade vim-plug itself
-" PlugStatus                                 Check the status of plugins
-" PlugDiff                                   Examine changes from the previous update and the pending changes
-" PlugSnapshot[!] [output path]              Generate script for restoring the current snapshot of the plugins
+    "For that which __requires_utf_8:
+    set encoding=utf8
 
-" Syntax highlighting
-syntax on
+  "│-v-2 │ filetype settings
+  "└─────┴─────────
+    " Enable filetype detection
+    " Enable loading of filetype plugins
+    " Enable loading of filetype indents
+    filetype plugin indent on
 
-" Loading the indent file for specific file types
-filetype plugin indent on
+  "│-v-2 │ leader key settings
+  "└─────┴─────────
+    " Set the leader key to \
+    let mapleader = "\\"
 
-set background=dark " Dark background friendly
-color dracula "Set the color scheme
-set number " Line numbering on
-set showmatch " Show matching brackets/paranthesis
-set tabstop=4 "Tabs take up 4 spaces
-"set shiftwidth=2
-"set softtabstop=2
-set ruler " Display location in file
-set showcmd "Show command in the last line of the screen
-set incsearch "Search as you type. Return to original location if canceled.
-"set mouse=a "Enable the mouse use in all modes
-set ignorecase "case insensitive searching
-set smartcase "if search isn't all lowercase, casesensitive search
-set backspace=indent,eol,start "make backspace behave like normal"
+"│-v-1 │ plugin settings
+"└─┬───┴─┬────────────────
+  "│-v-2 │ junegunn/vim-plug (plugin manager)
+  "└─┬───┴─┬────────────────
+    "│-v-3 │ plugin manager init
+    "└─────┴─────────
+      " Load vim-plug
+      call plug#begin('~/.vim/plugged')
+    "│-v-3 │ plugin list
+    "└─┬───┴─┬────────────────
+      "│-v-4 │ appearance
+      "└─────┴─────────
+        " Style the status/tabline
+        Plug 'bling/vim-airline'
 
-" Display characters to symbolize whitespace
-"set list
-set listchars=tab:▸\ ,eol:¬
+        " Dracula color schme
+        Plug 'dracula/vim', { 'as': 'dracula' }
 
-nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
+        "Display which lines have changed for git
+        Plug 'mhinz/vim-signify'
 
-function! SetupCommandAlias(from, to)
-  exec 'cnoreabbrev <expr> '.a:from
-  \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
-  \ .'? ("'.a:to.'") : ("'.a:from.'"))'
-endfunction
-call SetupCommandAlias("Q", "q")
-call SetupCommandAlias("W", "w")
+      "│-v-4 │ performance
+      "└─────┴─────────
+        "Allow syntax folding without constant recaclulation
+        Plug 'Konfekt/FastFold'
 
-" ----- background highlight the character if line length goes over 120 -----
-highlight OverLengthIndiator ctermbg=darkyellow
-call matchadd('OverLengthIndiator', '\%121v', 100)
+        "Faster grep for code
+        Plug 'mileszs/ack.vim', {'on': 'Ack!'}
 
-autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
+        "Asyncronous job running (Make and Linting)
+        Plug 'neomake/neomake'
 
-" ----- mileszs/ack.vim -----
-" if silver surfer is installed, use that instead
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
+        "Asynchronous command running. Useful for builds/tests
+        Plug 'tpope/vim-dispatch'
 
-" Don't automatically jump to the first result
-cnoreabbrev Ack Ack!
-nnoremap <Leader>a :Ack!<Space>
+      "│-v-4 │ ide
+      "└─────┴─────────
+        " Autocompletions
+        Plug 'Shougo/neocomplete.vim'
 
-" ----- ctrlpvim/ctrlp.vim settings -----
-" The Silver Searcher
-if executable('ag')
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+        " File Browser
+        Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeTabsToggle' }
 
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
+         "Same nerdtree in every file
+        Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeTabsToggle' }
 
-" ----- mhinz/signify settings -----
-let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
-let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
-let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
+        "Ctrl-P <filename> to open
+        Plug 'ctrlpvim/ctrlp.vim'
 
-" ----- scrooloose/nerdtree and justr/vim-nerdtree-tabs settings -----
-" Open/close NERDTree Tabs (explorer tree) with \e
-nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
-" To have NERDTree always open on startup. 0 = disabled
-let g:nerdtree_tabs_open_on_console_startup = 0
+        "Execute tests from inside vim
+        Plug 'janko-m/vim-test'
 
-" ----- majutsushi/tagbar -----
-" Open tagbar with F8
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_autofocus = 1 "Automatically focus the tagbar when it is opened
+        "Display ctags in a tagbar
+        Plug 'majutsushi/tagbar'
 
-" ----- neomake/neomake settings -----
-autocmd! BufWritePost * Neomake "Run on every file save
-let g:neomake_open_list = 2
-let g:neomake_list_height = 5
+        "Git in vim
+        Plug 'tpope/vim-fugitive'
 
-let g:neomake_javascript_enabled_makers = ['eslint'] "Use eslint for syntax checking
-" ----- vim-syntastic/syntastic settings -----
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+        "Plug 'vim-syntastic/syntastic' "Display where errors and warnings occur
 
-let g:syntastic_error_symbol = '✘'
-let g:syntastic_warning_symbol = "▲"
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_loc_list_height=5
+      "│-v-4 │ editing
+      "└─────┴─────────
+        " Autoclose quotes and groupings ()
+        Plug 'Raimondi/delimitMate'
 
-augroup mySyntastic
-  au!
-  au FileType tex let b:syntastic_mode = "passive"
-augroup END
+        "Easy keybindings for surrounding things in pairs
+        Plug 'tpope/vim-surround'
 
-let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
+        "provides several pairs of bracket maps.
+        Plug 'tpope/vim-unimpaired'
 
-" Point syntastic checker at locally installed `eslint` if it exists.
-if executable('node_modules/.bin/eslint')
-  let b:syntastic_javascript_eslint_exec = 'node_modules/.bin/eslint'
-endif
+        "Enable plugin bindings (such as vim-surround) to be repeated with `.`
+        Plug 'tpope/vim-repeat'
 
-let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
-"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-let g:syntastic_make_checkers = ['gnumake']
+        "Match indentation style
+        Plug 'tpope/vim-sleuth'
 
-" ----- Raimondi/delimitMate settings -----
-let delimitMate_expand_cr = 1
-augroup mydelimitMate
-  au!
-  au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
-  au FileType tex let b:delimitMate_quotes = ""
-  au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
-  au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
-augroup END
+      "│-v-4 │ language specific
+      "└─────┴─────────
+        " Shows a rough representation of color codes
+        Plug 'ap/vim-css-color', {'for': ['css', 'scss', 'sass']}
 
-" ----- faith/vim-go settings -----
-"let g:go_highlight_functions = 1
-"let g:go_highlight_methods = 1
-"let g:go_highlight_structs = 1
-"let g:go_highlight_interfaces = 1
-"let g:go_highlight_operators = 1
-"let g:go_highlight_build_constraints = 1
-let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imports
-let g:go_list_type = "quickfix"
-"\s to list interfaces implemented by the type
-au FileType go nmap <Leader>s <Plug>(go-implements)
-"\i to show type info
-au FileType go nmap <Leader>i <Plug>(go-info)
+        " Jade language syntax highlighting
+        Plug 'digitaltoad/vim-jade', {'for': 'jade'}
 
-" ----- bling/vim-airline settings -----
-set laststatus=2
-set timeoutlen=1000
-set ttimeoutlen=50
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
-let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
+        "Better Javascript syntax highlighting (Required by react)
+        Plug 'pangloss/vim-javascript', {'for': ['javascript', 'jsx']}
 
-" ----- mattn/emmet-vim settings -----
-"let g:user_emmet_install_global = 0
-"autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
+        "Run :GoInstallBinaries to pull down dependencies.
+        "Requires modifying gitconfig https rewrite.
+        Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }
 
-" ----- pangloss/vim-javascript -----
-let g:javascript_conceal_function       = "ƒ"
-let g:javascript_conceal_null           = "ø"
-let g:javascript_conceal_this           = "@"
-let g:javascript_conceal_return         = "⇚"
-let g:javascript_conceal_undefined      = "¿"
-let g:javascript_conceal_NaN            = "ℕ"
-let g:javascript_conceal_prototype      = "¶"
-let g:javascript_conceal_static         = "•"
-let g:javascript_conceal_super          = "Ω"
-let g:javascript_conceal_arrow_function = "⇒"
+        "Syntax checking for React
+        Plug 'jaxbot/syntastic-react', {'for': 'jsx'}
 
-" ----- mxw/vim-jsx -----
-let g:jsx_ext_required = 0
+        "JSX support (React)
+        Plug 'mxw/vim-jsx', {'for': 'jsx'}
 
-" ----- slim-template/vim-slim.git =====
-" Needed to use `doctype html` - https://github.com/slim-template/vim-slim/issues/38
-autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+      "│-v-4 │ miscellaneous
+      "└─────┴─────────
+        "makes tmux + vim work with focus events
+        Plug 'tmux-plugins/vim-tmux-focus-events'
+
+        "Collects stats on programming
+        Plug 'wakatime/vim-wakatime'
+
+    "│-v-3 │ plugin manager deinit
+    "└─────┴─────────
+      call plug#end()
+
+  "│-v-2 │ ack - mileszs/ack.vim
+  "└─────┴─────────
+    " if silver surfer is installed, use that instead
+    if executable('ag')
+      let g:ackprg = 'ag --vimgrep'
+    endif
+
+    " Don't automatically jump to the first result
+    cnoreabbrev Ack Ack!
+    nnoremap <Leader>a :Ack!<Space>
+
+  "│-v-2 │ airline - bling/vim-airline
+  "└─────┴─────────
+    set laststatus=2
+    set timeoutlen=1000
+    set ttimeoutlen=50
+    let g:airline_powerline_fonts = 1
+    let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+    let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
+
+  "│-v-2 │ ctrlp - ctrlpvim/ctrlp.vim
+  "└─────┴─────────
+    " The Silver Searcher
+    if executable('ag')
+      " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+      let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+      " ag is fast enough that CtrlP doesn't need to cache
+      let g:ctrlp_use_caching = 0
+    endif
+
+  "│-v-2 │ delimitMate - Raimondi/delimitMate
+  "└─────┴─────────
+    let delimitMate_expand_cr = 1
+    augroup mydelimitMate
+      au!
+      au FileType markdown let b:delimitMate_nesting_quotes = ["`"]
+      au FileType tex let b:delimitMate_quotes = ""
+      au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
+      au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
+    augroup END
+
+  "│-v-2 │ emmet - mattn/emmet-vim
+  "└─────┴─────────
+    "let g:user_emmet_install_global = 0
+    "autocmd FileType html,css,tpl EmmetInstall "Only enable for html,css,tpl files
+
+  "│-v-2 │ fastfold - Konfekt/FastFold
+  "└─────┴─────────
+  "│-v-2 │ go - faith/vim-go
+  "└─────┴─────────
+    "let g:go_highlight_functions = 1
+    "let g:go_highlight_methods = 1
+    "let g:go_highlight_structs = 1
+    "let g:go_highlight_interfaces = 1
+    "let g:go_highlight_operators = 1
+    "let g:go_highlight_build_constraints = 1
+    let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imports
+    let g:go_list_type = "quickfix"
+    "\s to list interfaces implemented by the type
+    au FileType go nmap <Leader>s <Plug>(go-implements)
+    "\i to show type info
+    au FileType go nmap <Leader>i <Plug>(go-info)
+
+  "│-v-2 │ javascript - pangloss/vim-javascript
+  "└─────┴─────────
+    let g:javascript_conceal_function       = "ƒ"
+    let g:javascript_conceal_null           = "ø"
+    let g:javascript_conceal_this           = "@"
+    let g:javascript_conceal_return         = "⇚"
+    let g:javascript_conceal_undefined      = "¿"
+    let g:javascript_conceal_NaN            = "ℕ"
+    let g:javascript_conceal_prototype      = "¶"
+    let g:javascript_conceal_static         = "•"
+    let g:javascript_conceal_super          = "Ω"
+    let g:javascript_conceal_arrow_function = "⇒"
+
+  "│-v-2 │ jsx - mxw/vim-jsx
+  "└─────┴─────────
+    let g:jsx_ext_required = 0
+
+  "│-v-2 │ neocomplete - Shougo/neocomplete.vim
+  "└─────┴─────────
+    let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
+    let g:neocomplete#enable_at_startup = 1 " Use neocomplete.
+    let g:neocomplete#enable_smart_case = 1 " Use smartcase.
+    let g:neocomplete#sources#syntax#min_keyword_length = 3 " Set minimum syntax keyword length.
+    let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+    " Define dictionary.
+    let g:neocomplete#sources#dictionary#dictionaries = {
+        \ 'default' : '',
+        \ 'vimshell' : $HOME.'/.vimshell_hist',
+        \ 'scheme' : $HOME.'/.gosh_completions'
+            \ }
+
+    " Define keyword.
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+    " Plugin key-mappings.
+    inoremap <expr><C-g>     neocomplete#undo_completion()
+    inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+    " Recommended key-mappings.
+    " <CR>: close popup and save indent.
+
+    " ---Play niceley with delimitMate
+    "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    imap <expr> <CR> pumvisible() ? neocomplete#close_popup() . "\<CR>" : "<Plug>delimitMateCR"
+    function! s:my_cr_function()
+      return neocomplete#close_popup() . "\<CR>"
+      " For no inserting <CR> key.
+      " return pumvisible() ? neocomplete#close_popup() : "\<CR>
+    endfunction
+    " <TAB>: completion.
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><C-y>  neocomplete#close_popup()
+    inoremap <expr><C-e>  neocomplete#cancel_popup()
+    " Close popup by <Space>.
+    "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+
+    " For cursor moving in insert mode(Not recommended)
+    "inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
+    "inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
+    "inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
+    "inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
+    " Or set this.
+    "let g:neocomplete#enable_cursor_hold_i = 1
+
+    " AutoComplPop like behavior.
+    "let g:neocomplete#enable_auto_select = 1
+
+    " Shell like behavior(not recommended).
+    "set completeopt+=longest
+    "let g:neocomplete#enable_auto_select = 1
+    "let g:neocomplete#disable_auto_complete = 1
+    "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+    " Enable omni completion.
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+    " Enable heavy omni completion.
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+      let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+    "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+    "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+    "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+    " For perlomni.vim setting.
+    " https://github.com/c9s/perlomni.vim
+    let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
+  "│-v-2 │ neomake - neomake/neomake
+  "└─────┴─────────
+    autocmd! BufWritePost * Neomake "Run on every file save
+    let g:neomake_open_list = 2
+    let g:neomake_list_height = 5
+
+    let g:neomake_javascript_enabled_makers = ['eslint'] "Use eslint for syntax checking
+
+  "│-v-2 │ nerdtree  - scrooloose/nerdtree and justr/vim-nerdtree-tabs
+  "└─────┴─────────
+    " Open/close NERDTree Tabs (explorer tree) with \e
+    nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
+    " To have NERDTree always open on startup. 0 = disabled
+    let g:nerdtree_tabs_open_on_console_startup = 0
+
+  "│-v-2 │ signify - mhinz/signify
+  "└─────┴─────────
+    let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
+    let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
+    let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
+
+  "│-v-2 │ slim - slim-template/vim-slim.git
+  "└─────┴─────────
+    " Needed to use `doctype html` - https://github.com/slim-template/vim-slim/issues/38
+    autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+
+  "│-v-2 │ syntastic - syntastic/syntastic
+  "└─────┴─────────
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+
+    let g:syntastic_error_symbol = '✘'
+    let g:syntastic_warning_symbol = "▲"
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
+    let g:syntastic_loc_list_height=5
+
+    augroup mySyntastic
+      au!
+      au FileType tex let b:syntastic_mode = "passive"
+    augroup END
+
+    let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
+
+    " Point syntastic checker at locally installed `eslint` if it exists.
+    if executable('node_modules/.bin/eslint')
+      let b:syntastic_javascript_eslint_exec = 'node_modules/.bin/eslint'
+    endif
+
+    let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
+    "let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+    let g:syntastic_make_checkers = ['gnumake']
+
+  "│-v-2 │ tagbar - majutsushi/tagbar
+  "└─────┴─────────
+    " Open tagbar with F8
+    nmap <F8> :TagbarToggle<CR>
+    let g:tagbar_autofocus = 1 "Automatically focus the tagbar when it is opened
+
+  "│-v-2 │ test - janko-m/vim-test
+  "└─────┴─────────
+    nmap <silent> <leader>t :TestNearest<CR>
+    nmap <silent> <leader>T :TestFile<CR>
+    nmap <silent> <leader>a :TestSuite<CR>
+    nmap <silent> <leader>l :TestLast<CR>
+    nmap <silent> <leader>g :TestVisit<CR>
+    " make test commands execute using dispatch.vim
+    let test#strategy = "dispatch"
+
+    " Set the NODE_ENV correctly for tests
+    "let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
 
 
-" ----- janko-m/vim-test -----
-nmap <silent> <leader>t :TestNearest<CR>
-nmap <silent> <leader>T :TestFile<CR>
-nmap <silent> <leader>a :TestSuite<CR>
-nmap <silent> <leader>l :TestLast<CR>
-nmap <silent> <leader>g :TestVisit<CR>
+"│-v-1 │ functions
+"└─────┴─────────
+  " Useful for setting the upperchase char to the same as the  lowercase char
+  function! SetupCommandAlias(from, to)
+    exec 'cnoreabbrev <expr> '.a:from
+    \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+    \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+  endfunction
 
-" make test commands execute using dispatch.vim
-let test#strategy = "dispatch"
+"│-v-1 │ settings
+"└─┬───┴─┬────────────────
+  "│-v-2 │ appearance
+  "└─┬───┴─┬────────────────
+    "│-v-3 │ syntax
+    "└─────┴─────────
+      " enable syntax highlighting
+      syntax on
+    "│-v-3 │ display
+    "└─────┴─────────
+      " Display characters to symbolize whitespace
+      "set list
+      set listchars=tab:▸\ ,eol:¬
+      set number " Line numbering on
+      set ruler " Display location in file
+      set showmatch " Show matching brackets/paranthesis
+      set showcmd "Show command in the last line of the screen
 
-" Set the NODE_ENV correctly for tests
-"let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
+      " ----- background highlight the character if line length goes over 120 -----
+      highlight OverLengthIndiator ctermbg=darkyellow
+      call matchadd('OverLengthIndiator', '\%121v', 100)
 
-" ----- Konfekt/FastFold settings -----
+    "│-v-3 │ color scheme
+    "└─────┴─────────
+      set background=dark " Dark background friendly
+      color dracula "Set the color scheme
 
-" ----- Shougo/neocomplete.vim settings -----
-let g:acp_enableAtStartup = 0 " Disable AutoComplPop.
-let g:neocomplete#enable_at_startup = 1 " Use neocomplete.
-let g:neocomplete#enable_smart_case = 1 " Use smartcase.
-let g:neocomplete#sources#syntax#min_keyword_length = 3 " Set minimum syntax keyword length.
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+  "│-v-2 │ editor
+  "└─────┴─────────
+    set tabstop=4 "Tabs take up 4 spaces
+    "set shiftwidth=2
+    "set softtabstop=2
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+  "│-v-2 │ search
+  "└─────┴─────────
+    set incsearch "Search as you type. Return to original location if canceled.
+    set ignorecase "case insensitive searching
+    set smartcase "if search isn't all lowercase, casesensitive search
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+  "│-v-2 │ mouse
+  "└─────┴─────────
+    set mouse=a "Enable the mouse use in all modes
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
+"│-v-1 │ mappings
+"└─┬───┴─┬────────────────
+  "│-v-2 │ keys
+  "└─────┴─────────
+    set backspace=indent,eol,start "make backspace behave like normal
+    call SetupCommandAlias("Q", "q")
+    call SetupCommandAlias("W", "w")
 
-" ---Play niceley with delimitMate
-"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-imap <expr> <CR> pumvisible() ? neocomplete#close_popup() . "\<CR>" : "<Plug>delimitMateCR"
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  " return pumvisible() ? neocomplete#close_popup() : "\<CR>
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+  "│-v-2 │ layout
+  "└─────┴─────────
+    nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
-" For cursor moving in insert mode(Not recommended)
-"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-" Or set this.
-"let g:neocomplete#enable_cursor_hold_i = 1
+"│-v-1 │ filetype
+"└─┬───┴─┬────────────────
+  "│-v-2 │ markdown
+  "└─────┴─────────
+    autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
 
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
+"│-v-1 │ footer
+"└─────┴─────────
+  " vim: set fmr=-v-,-^- fdm=marker cms="%s et ts=2 sw=0 sts=0 :
