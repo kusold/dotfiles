@@ -325,6 +325,10 @@
   "└─────┴─────────
     " Open/close NERDTree Tabs (explorer tree) with \e
     nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
+
+    " Open NERDTree at current file
+    nmap <silent> <leader>E :NERDTreeFind<CR>
+
     " To have NERDTree always open on startup. 0 = disabled
     let g:nerdtree_tabs_open_on_console_startup = 0
 
