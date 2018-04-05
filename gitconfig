@@ -20,8 +20,10 @@
   changed = green
   untracked = cyan
 [merge]
-  tool = vimdiff
+  tool = fugitive
 	conflictstyle = diff3
+[mergetool "fugitive"]
+    cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [diff]
   tool = meld
 	compactionHeuristic = true
