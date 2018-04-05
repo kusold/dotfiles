@@ -461,6 +461,13 @@
       set background=dark " Dark background friendly
       color dracula "Set the color scheme
 
+  "│-v-2 │ commands
+  "└─┬───┴─┬────────────────
+    "│-v-3 │ wildmenu
+    "└─────┴─────────
+      set wildmenu
+      set wildmode=longest:list,full
+
   "│-v-2 │ editor
   "└─────┴─────────
     set tabstop=4 "Tabs take up 4 spaces
