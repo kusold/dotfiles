@@ -85,6 +85,9 @@
         "Display ctags in a tagbar
         Plug 'majutsushi/tagbar'
 
+        "Disaply fancy start screen on start
+        Plug 'mhinz/vim-startify'
+
         "Git in vim
         Plug 'tpope/vim-fugitive'
 
@@ -328,6 +331,28 @@
   "└─────┴─────────
     " Needed to use `doctype html` - https://github.com/slim-template/vim-slim/issues/38
     autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+
+  "│-v-2 │ startify - mhinz/vim-startify
+  "└─────┴─────────
+    function! s:list_commits()
+      let git = 'git'
+      let commits = systemlist(git .' log --oneline | head -n5')
+      let git = 'G'. git[1:]
+      return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"), "cmd": "'. git .' show ". matchstr(v:val, "^\\x\\+") }')
+    endfunction
+
+    " Define what get's shown on open
+    let g:startify_lists = [
+      \ { 'type': 'files',     'header': [   'Most Recently Used']            },
+      \ { 'type': 'dir',       'header': [   'Most Recently Used - '. getcwd()] },
+      \ { 'type': 'sessions',  'header': [   'Sessions']       },
+      \ { 'type': 'bookmarks', 'header': [   'Bookmarks']      },
+      \ { 'type': 'commands',  'header': [   'Commands']       },
+      \ { 'type': function('s:list_commits'), 'header': [ 'Commits in '. getcwd()] },
+      \ ]
+    " When opening a file or bookmark, seek and change to the root directory
+    " of the VCS (if there is one).
+    let g:startify_change_to_vcs_root = 1
 
   "│-v-2 │ syntastic - syntastic/syntastic
   "└─────┴─────────
