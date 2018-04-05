@@ -33,6 +33,7 @@ Plug 'tpope/vim-surround' "Easy keybindings for surrounding things in pairs
 Plug 'tpope/vim-unimpaired' "provides several pairs of bracket maps.
 "Plug 'vim-syntastic/syntastic' "Display where errors and warnings occur
 Plug 'wakatime/vim-wakatime' "Collects stats on programming
+Plug 'dracula/vim', { 'as': 'dracula' }
 
 "Plugin 'ciaranm/detectindent'
 " All of your Plugins must be added before the following line
@@ -53,6 +54,7 @@ syntax on
 filetype plugin indent on
 
 set background=dark " Dark background friendly
+color dracula "Set the color scheme
 set number " Line numbering on
 set showmatch " Show matching brackets/paranthesis
 set tabstop=4 "Tabs take up 4 spaces
