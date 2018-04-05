@@ -98,7 +98,7 @@
         "Git in vim
         Plug 'tpope/vim-fugitive'
 
-        "Plug 'vim-syntastic/syntastic' "Display where errors and warnings occur
+        Plug 'vim-syntastic/syntastic' "Display where errors and warnings occur
 
       "│-v-4 │ editing
       "└─────┴─────────
