@@ -469,6 +469,9 @@
       highlight OverLengthIndiator ctermbg=darkyellow
       call matchadd('OverLengthIndiator', '\%121v', 100)
 
+      " redraw only when we need to."
+      set lazyredraw
+
     "│-v-3 │ color scheme
     "└─────┴─────────
       set background=dark " Dark background friendly
