@@ -368,6 +368,13 @@
       return map(commits, '{"line": matchstr(v:val, "\\s\\zs.*"), "cmd": "'. git .' show ". matchstr(v:val, "^\\x\\+") }')
     endfunction
 
+    " Let us assume you have vim-devicons installed. That plugin has a function
+    " `WebDevIconsGetFileTypeSymbol()` which returns an icon depending on the given
+    " file. Prepend the logo to each Startify entry by putting this in your vimrc:
+    function! StartifyEntryFormat()
+      return 'WebDevIconsGetFileTypeSymbol(absolute_path) ." ". entry_path'
+    endfunction
+
     " Define what get's shown on open
     let g:startify_lists = [
       \ { 'type': 'files',     'header': [   'Most Recently Used']            },
