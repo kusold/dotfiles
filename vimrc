@@ -447,6 +447,11 @@
   "└─────┴─────────
     nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
+  "│-v-2 │ file shortcuts
+  "└─────┴─────────
+    " Quick settings access
+    nnoremap <silent> <F2> :tabedit $MYVIMRC<cr>
+
 "│-v-1 │ filetype
 "└─┬───┴─┬────────────────
   "│-v-2 │ markdown
