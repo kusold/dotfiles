@@ -7,6 +7,8 @@
   " TODO evaluate if all plugins are necessary
   " TODO expand on plugin descriptions
   " TODO investigate https://github.com/reedes/vim-thematic
+  " TODO https://github.com/mbbill/undotree
+  " TODO https://github.com/godlygeek/tabular
 
 "│-v-1 │ initiliaze
 "└─┬───┴─┬────────────────
