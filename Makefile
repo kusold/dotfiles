@@ -2,7 +2,7 @@ OS:=$(shell uname -s)
 GPG_RECIPIENT:=0xB989072E874C4B23
 
 all: update link install link-git-config
-install: install-packages install-vim-plugins install-tmux-plugins install-npm-packages install-weechat-ca
+install: install-packages install-vim-plugins install-tmux-plugins install-npm-packages install-weechat-ca install-fonts
 link: link-dotfiles link-bin link-secrets
 update: update-submodules
 
@@ -63,6 +63,10 @@ link-dotfiles:
 link-git-config:
 	@ln -sf `pwd`/gitconfig $(HOME)/.gitconfig
 
+install-fonts: install-nerd-fonts
+
+install-nerd-fonts:
+	@./nerd-fonts/install.sh SourceCodePro
 ifeq ($(OS),Darwin)
 install-packages: install-packages-macos
 else

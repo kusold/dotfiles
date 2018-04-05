@@ -13,3 +13,7 @@
 [submodule "zplug"]
 	path = zplug
 	url = https://github.com/zplug/zplug.git
+[submodule "nerd-fonts"]
+	path = nerd-fonts
+	shallow = true
+	url = https://github.com/ryanoasis/nerd-fonts.git

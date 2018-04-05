@@ -51,6 +51,13 @@
         "Display which lines have changed for git
         Plug 'mhinz/vim-signify'
 
+        " Adds filetype glyphs (icons) to NerdTree and other plugins
+        " Requires special fonts
+        Plug 'ryanoasis/vim-devicons'
+
+        "Highlight devicons in nerdtree
+        Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeTabsToggle' }
+
       "│-v-4 │ performance
       "└─────┴─────────
         "Allow syntax folding without constant recaclulation
@@ -320,6 +327,20 @@
     nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
     " To have NERDTree always open on startup. 0 = disabled
     let g:nerdtree_tabs_open_on_console_startup = 0
+
+    " Disable cursor line highlight in order to speed up
+    " nerdtree-syntax-highlight
+    let g:NERDTreeHighlightCursorline = 0
+
+  "│-v-2 │ nerdtree-syntax-highlight  - tiagofumo/vim-nerdtree-syntax-highlight
+  "└─────┴─────────
+    " Disable all extensions to prevent lag
+    let g:NERDTreeSyntaxDisableDefaultExtensions = 1
+    let g:NERDTreeDisableExactMatchHighlight = 1
+    let g:NERDTreeDisablePatternMatchHighlight = 1
+
+    " Only change the color for extensions I commonly use
+    let g:NERDTreeSyntaxEnabledExtensions = ['css', 'go', 'html', 'js', 'json', 'jsx', 'markdown', 'md', 'sh', 'vim', 'zsh']
 
   "│-v-2 │ signify - mhinz/signify
   "└─────┴─────────
