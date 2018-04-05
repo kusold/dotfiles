@@ -421,6 +421,9 @@
     "set shiftwidth=2
     "set softtabstop=2
 
+  "│-v-2 │ spelling
+  "└─────┴─────────
+    set spelllang=en_us
   "│-v-2 │ search
   "└─────┴─────────
     set incsearch "Search as you type. Return to original location if canceled.
