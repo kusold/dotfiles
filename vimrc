@@ -481,12 +481,12 @@
     "└─────┴─────────
       set background=dark " Dark background friendly
       let g:dracula_italic = 0 " Disable italics https://github.com/dracula/vim/issues/65
-      color dracula "Set the color scheme
       let g:airline_theme='dracula'
       augroup dracula_customization
           au!
-          autocmd ColorScheme dracula hi DraculaComment ctermfg=84
+          autocmd ColorScheme dracula hi DraculaComment ctermfg=63
       augroup END
+      color dracula "Set the color scheme
 
   "│-v-2 │ commands
   "└─┬───┴─┬────────────────
