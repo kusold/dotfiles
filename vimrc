@@ -92,7 +92,7 @@
         Plug 'janko-m/vim-test'
 
         "Display ctags in a tagbar
-        Plug 'majutsushi/tagbar'
+        Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 
         "Disaply fancy start screen on start
         Plug 'mhinz/vim-startify'
