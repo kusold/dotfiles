@@ -68,9 +68,6 @@
         "Faster grep for code
         Plug 'mileszs/ack.vim', {'on': 'Ack!'}
 
-        "Asyncronous job running (Make and Linting)
-        Plug 'neomake/neomake'
-
         "Asynchronous command running. Useful for builds/tests
         Plug 'tpope/vim-dispatch'
 
@@ -100,7 +97,7 @@
         "Git in vim
         Plug 'tpope/vim-fugitive'
 
-        Plug 'vim-syntastic/syntastic' "Display where errors and warnings occur
+        Plug 'w0rp/ale' "Display where errors and warnings occur
 
       "│-v-4 │ editing
       "└─────┴─────────
@@ -133,9 +130,6 @@
         "Run :GoInstallBinaries to pull down dependencies.
         "Requires modifying gitconfig https rewrite.
         Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }
-
-        "Syntax checking for React
-        Plug 'jaxbot/syntastic-react', {'for': 'jsx'}
 
         "JSX support (React)
         Plug 'mxw/vim-jsx', {'for': 'jsx'}
@@ -318,14 +312,6 @@
     " https://github.com/c9s/perlomni.vim
     let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
-  "│-v-2 │ neomake - neomake/neomake
-  "└─────┴─────────
-    autocmd! BufWritePost * Neomake "Run on every file save
-    let g:neomake_open_list = 2
-    let g:neomake_list_height = 5
-
-    let g:neomake_javascript_enabled_makers = ['eslint'] "Use eslint for syntax checking
-
   "│-v-2 │ nerdtree  - scrooloose/nerdtree and justr/vim-nerdtree-tabs
   "└─────┴─────────
     " Open/close NERDTree Tabs (explorer tree) with \e
@@ -391,35 +377,25 @@
     " of the VCS (if there is one).
     let g:startify_change_to_vcs_root = 1
 
-  "│-v-2 │ syntastic - syntastic/syntastic
+  "│-v-2 │ ale - w0rp/ale
   "└─────┴─────────
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
 
-    let g:syntastic_error_symbol = '✘'
-    let g:syntastic_warning_symbol = "▲"
-    let g:syntastic_always_populate_loc_list = 1
-    let g:syntastic_auto_loc_list = 1
-    let g:syntastic_check_on_open = 1
-    let g:syntastic_check_on_wq = 0
+    " :ALEFix
+    let g:ale_fixers = {
+    \  'javascript': ['eslint'],
+    \}
+
+    let g:ale_sign_error = '✘'
+    let g:ale_sign_warning = '▲'
+
+    " Configure for airline
+    let g:airline#extensions#ale#enabled = 1
+
+    " Open location or quick fix list when there are errors
+    let g:ale_open_list = 1
+
+    let g:ale_list_window_size = 5
     let g:syntastic_loc_list_height=5
-
-    augroup mySyntastic
-      au!
-      au FileType tex let b:syntastic_mode = "passive"
-    augroup END
-
-    let g:syntastic_javascript_checkers = ['eslint'] "Use eslint for syntax checking
-
-    " Point syntastic checker at locally installed `eslint` if it exists.
-    if executable('node_modules/.bin/eslint')
-      let b:syntastic_javascript_eslint_exec = 'node_modules/.bin/eslint'
-    endif
-
-    let g:syntastic_go_checkers = ['go', 'gofmt', 'golint', 'govet', 'errcheck']
-    "let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
-    let g:syntastic_make_checkers = ['gnumake']
 
   "│-v-2 │ tagbar - majutsushi/tagbar
   "└─────┴─────────
@@ -442,7 +418,7 @@
 
   "│-v-2 │ xterm-color-table - guns/xterm-color-table.vim
   "└─────┴─────────
-  
+
 "│-v-1 │ functions
 "└─────┴─────────
   " Useful for setting the upperchase char to the same as the  lowercase char
