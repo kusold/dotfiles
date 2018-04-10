@@ -539,10 +539,13 @@
 
 "│-v-1 │ filetype
 "└─┬───┴─┬────────────────
-  "│-v-2 │ markdown
+  "│-v-2 │ .md - markdown
   "└─────┴─────────
     autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
 
+  "│-v-2 │ .ejs - embeddedjs)
+  "└─────┴─────────
+    autocmd BufNewFile,BufRead *.ejs set filetype=html
 "│-v-1 │ footer
 "└─────┴─────────
   " vim: set fmr=-v-,-^- fdm=marker cms="%s et ts=2 sw=0 sts=0 :
