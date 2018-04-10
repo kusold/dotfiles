@@ -327,6 +327,9 @@
     " nerdtree-syntax-highlight
     let g:NERDTreeHighlightCursorline = 0
 
+    " Show hidden files and folders
+    let NERDTreeShowHidden = 1
+
   "│-v-2 │ nerdtree-syntax-highlight  - tiagofumo/vim-nerdtree-syntax-highlight
   "└─────┴─────────
     " Disable all extensions to prevent lag
