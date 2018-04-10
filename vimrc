@@ -142,6 +142,9 @@
 
       "│-v-4 │ miscellaneous
       "└─────┴─────────
+        " display a 256 color table
+        Plug 'guns/xterm-color-table.vim'
+
         "makes tmux + vim work with focus events
         Plug 'tmux-plugins/vim-tmux-focus-events'
 
@@ -437,7 +440,9 @@
     " Set the NODE_ENV correctly for tests
     "let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
 
-
+  "│-v-2 │ xterm-color-table - guns/xterm-color-table.vim
+  "└─────┴─────────
+  
 "│-v-1 │ functions
 "└─────┴─────────
   " Useful for setting the upperchase char to the same as the  lowercase char
