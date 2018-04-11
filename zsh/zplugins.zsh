@@ -29,6 +29,9 @@ zplug "supercrabtree/k"
 # A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
 zplug "djui/alias-tips"
 
+# Make working with colors easier
+zplug "modules/spectrum", from:prezto
+
 #
 # Theme
 #
