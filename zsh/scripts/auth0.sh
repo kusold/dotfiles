@@ -12,6 +12,8 @@ if [[ -d "$HOME/Development/auth0" ]]; then
                        vivaldi pull && \
                        echo "$FG[yellow]Installing deps$FG[none]" && \
                        vivaldi install-deps'
+
+   alias auth0-start='vivaldi down && vivaldi up mongo redis rabbit limitd && sleep 120 && vivaldi up && vivaldi logs'
  fi
 fi
 
