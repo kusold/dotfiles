@@ -498,7 +498,8 @@
 
   "│-v-2 │ mouse
   "└─────┴─────────
-    set mouse=a "Enable the mouse use in all modes
+    "set mouse=a "Enable the mouse use in all modes
+    set mouse-=a "Disable the mouse use in all modes
 
   "│-v-2 │ files
   "└─────┴─────────
