@@ -483,6 +483,10 @@
     "set shiftwidth=2
     "set softtabstop=2
 
+    " Open new splits on the right, or bottom
+    set splitbelow
+    set splitright
+
   "│-v-2 │ spelling
   "└─────┴─────────
     set spelllang=en_us
