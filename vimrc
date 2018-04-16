@@ -136,6 +136,9 @@
 
       "│-v-4 │ miscellaneous
       "└─────┴─────────
+        " Seemless Vim/Tmux navigation by using C+J/K/H/L
+        Plug 'christoomey/vim-tmux-navigator'
+
         " display a 256 color table
         Plug 'guns/xterm-color-table.vim'
 
