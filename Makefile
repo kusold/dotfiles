@@ -67,16 +67,23 @@ install-fonts: install-nerd-fonts
 
 install-nerd-fonts:
 	@./nerd-fonts/install.sh SourceCodePro
+
 ifeq ($(OS),Darwin)
 install-packages: install-packages-macos
 else
 install-packages: install-packages-debian
 endif
 
-install-packages-macos:
-	@echo "### installing MacOS packages ###"
+install-packages-macos: homebrew-upgrade hombrew-install-cli
+	@echo "### You may also want to run `make homebrew-install-gui` for addional packages ###"
+
+homebrew-upgrade:
+	@echo "### upgrading homebrew ###"
 	@brew update
 	@brew upgrade
+
+homebrew-install-cli:
+	@echo "### installing hombrew cli packages ###"
 	@brew install \
 			bzr \
 			chromedriver \
@@ -101,6 +108,9 @@ install-packages-macos:
 			watchman \
 			yubikey-personalization \
 			zsh
+
+homebrew-install-gui:
+	@echo "### installing hombrew gui packages ###"
 	@brew tap \
 			caskroom/fonts
 	@brew cask install \
