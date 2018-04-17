@@ -82,11 +82,12 @@
          "Same nerdtree in every file
         Plug 'jistr/vim-nerdtree-tabs', { 'on': 'NERDTreeTabsToggle' }
 
-        "Ctrl-P <filename> to open
-        Plug 'ctrlpvim/ctrlp.vim'
-
         "Execute tests from inside vim
         Plug 'janko-m/vim-test'
+
+        " Install fzf for fuzzy searching
+        Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+        Plug 'junegunn/fzf.vim'
 
         "Display ctags in a tagbar
         Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
@@ -172,17 +173,6 @@
     let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
     let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 
-  "│-v-2 │ ctrlp - ctrlpvim/ctrlp.vim
-  "└─────┴─────────
-    " The Silver Searcher
-    if executable('ag')
-      " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-      let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-      " ag is fast enough that CtrlP doesn't need to cache
-      let g:ctrlp_use_caching = 0
-    endif
-
   "│-v-2 │ delimitMate - Raimondi/delimitMate
   "└─────┴─────────
     let delimitMate_expand_cr = 1
@@ -201,6 +191,26 @@
 
   "│-v-2 │ fastfold - Konfekt/FastFold
   "└─────┴─────────
+
+  "│-v-2 │ fzf - junegunn/fzf.vim
+  "└─────┴─────────
+
+  " Files command with preview window
+   command! -bang -nargs=? -complete=dir Files
+     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+   " mappings
+   nnoremap <silent> <leader><space> :Files<CR>
+   nnoremap <silent> <leader>c :Commands<CR>
+
+
+   " use ripgrep if installed
+    if executable('rg')
+      command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!{.git,node_modules}/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+
+      set grepprg=rg\ --vimgrep
+    endif
+
   "│-v-2 │ go - faith/vim-go
   "└─────┴─────────
     "let g:go_highlight_functions = 1

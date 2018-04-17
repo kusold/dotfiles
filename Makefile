@@ -91,6 +91,7 @@ install-packages-macos:
 			rbenv \
 			readline \
 			reattach-to-user-namespace \
+			ripgrep \
 			ruby-build \
 			ssh-copy-id \
 			terminal-notifier \
