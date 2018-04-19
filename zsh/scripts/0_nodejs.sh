@@ -16,5 +16,9 @@ if command_exists nodenv; then
   eval "$(nodenv init -)"
 fi
 
+if command_exists npx; then
+  alias npx="npx --no-install"
+fi
+
 alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"
 
