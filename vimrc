@@ -555,6 +555,10 @@
   "└─────┴─────────
     " Quick settings access
     nnoremap <silent> <F2> :tabedit $MYVIMRC<cr>
+    augroup myvimrc
+      au!
+      au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+    augroup END
 
 "│-v-1 │ filetype
 "└─┬───┴─┬────────────────
