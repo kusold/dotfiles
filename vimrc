@@ -30,7 +30,7 @@
   "│-v-2 │ leader key settings
   "└─────┴─────────
     " Set the leader key to \
-    let mapleader = "\\"
+    let mapleader = "\<Space>"
 
 "│-v-1 │ plugin settings
 "└─┬───┴─┬────────────────
