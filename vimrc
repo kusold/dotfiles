@@ -285,7 +285,7 @@
     " ---Play niceley with delimitMate
     "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
     imap <expr> <CR> pumvisible() ? neocomplete#close_popup() . "\<CR>" : "<Plug>delimitMateCR"
-    function! s:my_cr_function()
+    function! s:my_cr_function() abort
       return neocomplete#close_popup() . "\<CR>"
       " For no inserting <CR> key.
       " return pumvisible() ? neocomplete#close_popup() : "\<CR>
@@ -318,11 +318,16 @@
     "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
     " Enable omni completion.
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+    augroup NeocompleteFileTypes
+      " Clear all events in augroup namespace
+      autocmd!
+
+      autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+      autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+      autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+      autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+      autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+    augroup END
 
     " Enable heavy omni completion.
     if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -377,7 +382,7 @@
 
   "│-v-2 │ startify - mhinz/vim-startify
   "└─────┴─────────
-    function! s:list_commits()
+    function! s:list_commits() abort
       let git = 'git'
       let commits = systemlist(git .' log --oneline | head -n5')
       let git = 'G'. git[1:]
@@ -387,7 +392,7 @@
     " Let us assume you have vim-devicons installed. That plugin has a function
     " `WebDevIconsGetFileTypeSymbol()` which returns an icon depending on the given
     " file. Prepend the logo to each Startify entry by putting this in your vimrc:
-    function! StartifyEntryFormat()
+    function! StartifyEntryFormat() abort
       return 'WebDevIconsGetFileTypeSymbol(absolute_path) ." ". entry_path'
     endfunction
 
@@ -449,7 +454,7 @@
 "│-v-1 │ functions
 "└─────┴─────────
   " Useful for setting the upperchase char to the same as the  lowercase char
-  function! SetupCommandAlias(from, to)
+  function! SetupCommandAlias(from, to) abort
     exec 'cnoreabbrev <expr> '.a:from
     \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
     \ .'? ("'.a:to.'") : ("'.a:from.'"))'
