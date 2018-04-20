@@ -40,6 +40,11 @@ zplug "modules/spectrum", from:prezto
 zplug "mafredri/zsh-async", from:github, defer:0
 zplug "kusold/puree", use:puree.zsh, from:github, as:theme
 
+BASE16_SCHEME="eighties"
+zplug "chriskempson/base16-shell", use:"base16-shell.plugin.zsh", defer:0
+zplug "chriskempson/base16-shell", use:"scripts/base16-$BASE16_SCHEME.sh", defer:0
+zplug "chriskempson/base16-shell", use:colortest, as:command
+
 
 #
 # Load everything up

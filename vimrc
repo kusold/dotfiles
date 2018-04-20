@@ -45,7 +45,11 @@
       "│-v-4 │ appearance
       "└─────┴─────────
         " Style the status/tabline
-        Plug 'bling/vim-airline'
+        Plug 'vim-airline/vim-airline'
+        Plug 'vim-airline/vim-airline-themes'
+
+        " Base16 Themes
+        Plug 'chriskempson/base16-vim'
 
         " Dracula color schme
         Plug 'dracula/vim', { 'as': 'dracula' }
@@ -172,6 +176,13 @@
     let g:airline_powerline_fonts = 1
     let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
     let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
+
+  "│-v-2 │ base16 - chriskempson/base16-vim
+  "└─────┴─────────
+    if filereadable(expand("~/.vimrc_background"))
+      let base16colorspace=256 " Access colors present in 256 colorspace
+      source ~/.vimrc_background
+    endif
 
   "│-v-2 │ delimitMate - Raimondi/delimitMate
   "└─────┴─────────
@@ -473,12 +484,11 @@
     "└─────┴─────────
       set background=dark " Dark background friendly
       let g:dracula_italic = 0 " Disable italics https://github.com/dracula/vim/issues/65
-      let g:airline_theme='dracula'
       augroup dracula_customization
           au!
           autocmd ColorScheme dracula hi DraculaComment ctermfg=63
       augroup END
-      color dracula "Set the color scheme
+      "color dracula "Set the color scheme
 
   "│-v-2 │ commands
   "└─┬───┴─┬────────────────
