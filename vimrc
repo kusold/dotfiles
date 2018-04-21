@@ -48,6 +48,9 @@
     if executable('ag')
         let g:ackprg = 'ag --vimgrep'
     endif
+    if executable('rg')
+        let g:ackprg = 'rg --vimgrep'
+    endif
 
     " Don't automatically jump to the first result
     cnoreabbrev Ack Ack!

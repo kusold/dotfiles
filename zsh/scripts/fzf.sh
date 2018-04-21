@@ -12,6 +12,11 @@ if command_exists fzf; then
     alias search-content='rg --smart-case --no-line-number --no-heading . |fzf --preview "head -$LINES {1}" --delimiter=:'
   fi
 
+  # use fd
+  if command_exists fd; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude node_modules'
+  fi
+
 
   if command_exists git; then
     git-show() {

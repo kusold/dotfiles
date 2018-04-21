@@ -91,6 +91,7 @@ homebrew-install-cli:
 			cmake \
 			ctags \
 			dos2unix \
+			fd \
 			go \
 			gpg2 \
 			jq \
