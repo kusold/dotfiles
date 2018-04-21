@@ -352,6 +352,9 @@
     " display a 256 color table
     Plug 'guns/xterm-color-table.vim'
 
+  "│-v-2 │ youcompleteme               - Valloric/YouCompleteMe (autocomplete)
+  "└─────┴─────────
+    Plug 'Valloric/YouCompleteMe', { 'do': './install.py  --go-completer --js-completer' }
 
   "│-v-2 │ vim-plug                    - junegunn/vim-plug (load plugins)
   "└─────┴─────────

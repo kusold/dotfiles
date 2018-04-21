@@ -88,6 +88,7 @@ homebrew-install-cli:
 	@brew install \
 			bzr \
 			chromedriver \
+			cmake \
 			ctags \
 			dos2unix \
 			go \
