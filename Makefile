@@ -24,6 +24,7 @@ link-dotfiles:
 	@ln -sf `pwd`/npmrc $(HOME)/.npmrc
 	@ln -sf `pwd`/torrc $(HOME)/.torrc
 	@ln -sfh `pwd`/weechat $(HOME)/.weechat
+	@ln -sf `pwd`/tern-config $(HOME)/.tern-config
 
 # fonts
 	@mkdir -p $(HOME)/.config/fontconfig/
