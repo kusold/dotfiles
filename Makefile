@@ -75,7 +75,7 @@ else
 install-packages: install-packages-debian
 endif
 
-install-packages-macos: homebrew-upgrade hombrew-install-cli
+install-packages-macos: homebrew-upgrade homebrew-install-cli
 	@echo "### You may also want to run `make homebrew-install-gui` for addional packages ###"
 
 homebrew-upgrade:
