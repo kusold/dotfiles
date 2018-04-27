@@ -191,5 +191,5 @@ secrets-decrypt:
 	@mkdir -p secrets/decrypted
 	@for file in $(shell find $(CURDIR)/secrets/encrypted -type f -not -name ".gitkeep" -not -name "*.swp"); do \
 		f=$$(basename $$file .gpg); \
-		gpg --decrypt --output secrets/decrypted/$$f $$file; \
+		gpg2 --decrypt --output secrets/decrypted/$$f $$file; \
 	done
