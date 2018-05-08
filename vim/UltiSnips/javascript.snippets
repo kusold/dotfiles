@@ -1,0 +1,16 @@
+snippet req "require file"
+const ${1:var_name} = require('$0');
+endsnippet
+
+# Mocha
+snippet desc "Describe (mocha)"
+describe('${1:description}', () => {
+	$0
+});
+endsnippet
+
+snippet it "It (mocha)"
+it('${1:description}', async () => {
+	$0
+});
+endsnippet

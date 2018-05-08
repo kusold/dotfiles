@@ -103,6 +103,16 @@
   "└─────┴─────────
   " Shows a rough representation of color codes
   Plug 'ap/vim-css-color', {'for': ['css', 'scss', 'sass']}
+
+  "│-v-2 │ completorr                  - maralla/completor.vim (autocompletion)
+  "└─────┴─────────
+  Plug 'maralla/completor.vim', {'do': 'make js'}
+
+  " Use Tab to select completion
+  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+
   "│-v-2 │ delimitMate                 - Raimondi/delimitMate (autoclose quotes and groupings)
   "└─────┴─────────
     " Autoclose quotes and groupings ()
@@ -341,6 +351,15 @@
     "makes tmux + vim work with focus events
     Plug 'tmux-plugins/vim-tmux-focus-events'
 
+  "│-v-2 │ ultisnips                   - SirVer/ultisnips (snippets)
+  "└─────┴─────────
+   Plug 'SirVer/ultisnips'
+   " make :UltiSnipsEdit to split the window.
+   let g:UltiSnipsEditSplit="horizontal"
+
+   " Specify UltiSnips directory
+   let g:UltiSnipsSnippetDirectories=[$HOME."/.vim/UltiSnips"]
+
   "│-v-2 │ unimpaired                  - tpope/vim-unimpaird (bracket maps)
   "└─────┴─────────
     "provides several pairs of bracket maps.
@@ -355,9 +374,6 @@
     " display a 256 color table
     Plug 'guns/xterm-color-table.vim'
 
-  "│-v-2 │ youcompleteme               - Valloric/YouCompleteMe (autocomplete)
-  "└─────┴─────────
-    Plug 'Valloric/YouCompleteMe', { 'do': './install.py  --go-completer --js-completer' }
 
   "│-v-2 │ vim-plug                    - junegunn/vim-plug (load plugins)
   "└─────┴─────────
