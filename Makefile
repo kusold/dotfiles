@@ -63,6 +63,7 @@ link-dotfiles:
 # This is done seperately so that it doesn't interfere with other operations
 link-git-config:
 	@ln -sf `pwd`/gitconfig $(HOME)/.gitconfig
+	@ln -sf `pwd`/gitignore_global $(HOME)/.gitignore_global
 
 install-fonts: install-nerd-fonts
 
