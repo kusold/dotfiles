@@ -479,7 +479,10 @@
   "└─────┴─────────
     nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
 
-    command! BufOnly silent! execute "%bd|e#" "Delete all buffers except the current
+    command! BufOnly silent! execute "%bdelete|e#" "Delete all buffers except the current
+
+    " Delete buffer without closing the tab
+    nnoremap <C-c> :bprevious\|bdelete #<CR>
 
   "│-v-2 │ file shortcuts
   "└─────┴─────────
