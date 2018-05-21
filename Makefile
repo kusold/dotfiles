@@ -22,6 +22,7 @@ link-dotfiles:
 	@ln -sf `pwd`/editorconfig $(HOME)/.editorconfig
 	@ln -sf `pwd`/lessrc $(HOME)/.lessrc
 	@ln -sf `pwd`/npmrc $(HOME)/.npmrc
+	@ln -sf `pwd`/spacemacs $(HOME)/.spacemacs
 	@ln -sf `pwd`/torrc $(HOME)/.torrc
 	@ln -sfh `pwd`/weechat $(HOME)/.weechat
 	@ln -sf `pwd`/tern-config $(HOME)/.tern-config
