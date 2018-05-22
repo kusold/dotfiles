@@ -301,6 +301,12 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+  ;; Use openssl certs in order to use Let's Encrypt certs
+  ;; melpa.org uses LE
+  (if (file-exists-p "/usr/local/etc/openssl/cert.pem")
+     (progn
+	    (require 'gnutls)
+      (add-to-list 'gnutls-trustfiles "/usr/local/etc/openssl/cert.pem")))
   )
 
 (defun dotspacemacs/user-config ()
