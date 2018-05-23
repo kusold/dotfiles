@@ -71,8 +71,14 @@ link-git-config:
 
 install-fonts: install-nerd-fonts
 
+ifeq ($(OS),Darwin)
 install-nerd-fonts:
-	@./nerd-fonts/install.sh SourceCodePro
+	@cd ~/Library/Fonts && curl --silent -fLo "Sauce Code Pro Nerd Font Complete Mono.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf
+else
+install-nerd-fonts:
+	@mkdir -p ~/.local/share/fonts
+	@cd ~/.local/share/fonts && curl --silent -fLo "Sauce Code Pro Nerd Font Complete Mono.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf
+endif
 
 ifeq ($(OS),Darwin)
 install-packages: install-packages-macos
