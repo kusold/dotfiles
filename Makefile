@@ -27,13 +27,13 @@ link-dotfiles:
 	@ln -sf `pwd`/npmrc $(HOME)/.npmrc
 	@ln -sf `pwd`/spacemacs $(HOME)/.spacemacs
 	@ln -sf `pwd`/torrc $(HOME)/.torrc
-	@ln -sfh `pwd`/weechat $(HOME)/.weechat
+	@ln -sfn `pwd`/weechat $(HOME)/.weechat
 	@ln -sf `pwd`/tern-config $(HOME)/.tern-config
 
 # fonts
 	@mkdir -p $(HOME)/.config/fontconfig/
-	@ln -sfh `pwd`/fonts/fonts.conf.d $(HOME)/.config/fontconfig/conf.d
-	@ln -sfh `pwd`/fonts/fonts $(HOME)/.fonts
+	@ln -sfn `pwd`/fonts/fonts.conf.d $(HOME)/.config/fontconfig/conf.d
+	@ln -sfn `pwd`/fonts/fonts $(HOME)/.fonts
 
 # gpg
 	@mkdir -p $(HOME)/.gnupg
@@ -50,12 +50,12 @@ link-dotfiles:
 	@ln -sf `pwd`/xinitrc $(HOME)/.ssh/.xinitrc
 # tmux
 	@ln -sf `pwd`/tmux.conf $(HOME)/.tmux.conf
-	@ln -sfh `pwd`/tmux $(HOME)/.tmux
+	@ln -sfn `pwd`/tmux $(HOME)/.tmux
 # vim
 	@ln -sf `pwd`/vimrc $(HOME)/.vimrc
-	@ln -sfh `pwd`/vim $(HOME)/.vim
+	@ln -sfn `pwd`/vim $(HOME)/.vim
 # zsh
-	@ln -sfh `pwd`/zplug $(HOME)/.zplug
+	@ln -sfn `pwd`/zplug $(HOME)/.zplug
 	@ln -sf `pwd`/zsh/zlogin $(HOME)/.zlogin
 	@ln -sf `pwd`/zsh/zlogout $(HOME)/.zlogout
 	@ln -sf `pwd`/zsh/zprofile $(HOME)/.zprofile
