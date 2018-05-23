@@ -2,7 +2,10 @@ OS:=$(shell uname -s)
 GPG_RECIPIENT:=0xB989072E874C4B23
 
 all: update link install link-git-config
-install: install-packages install-vim-plugins install-tmux-plugins install-npm-packages install-weechat-ca install-fonts
+remote: update link user-install link-git-config
+install: system-install user-install
+user-install: install-vim-plugins install-tmux-plugins install-npm-packages install-weechat-ca
+system-install: install-packages install-fonts
 link: link-dotfiles link-bin link-secrets
 update: update-submodules
 
@@ -177,7 +180,7 @@ install-weechat-ca:
 
 update-submodules:
 	@echo "### updating submodules ###"
-	@git submodule update --init --recursive
+	@git submodule update --init --recursive --recommend-shallow
 	@echo "### updating submodules finished ###"
 
 link-secrets:
