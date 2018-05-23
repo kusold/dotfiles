@@ -186,7 +186,7 @@ install-weechat-ca:
 
 update-submodules:
 	@echo "### updating submodules ###"
-	@git submodule update --init --recursive --recommend-shallow
+	@git submodule update --init --recursive
 	@echo "### updating submodules finished ###"
 
 link-secrets:
