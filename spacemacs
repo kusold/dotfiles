@@ -190,10 +190,10 @@ values."
    dotspacemacs-default-layout-name "Default"
    ;; If non nil the default layout name is displayed in the mode-line.
    ;; (default nil)
-   dotspacemacs-display-default-layout nil
+   dotspacemacs-display-default-layout t
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -274,7 +274,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers nil
+   dotspacemacs-line-numbers t
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -344,6 +344,12 @@ you should place your code here."
   (add-hook 'prog-mode-hook #'(lambda ()
                                 (dtrt-indent-mode)
                                 (dtrt-indent-adapt)))
+
+  ;; Enable version-control gutter for all buffers by default
+  '(version-control :variables
+                    version-control-global-margin t)
+  '(version-control :variables
+                    version-control-diff-tool 'git-gutter)
   )
 
 
