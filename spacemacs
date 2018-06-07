@@ -333,11 +333,19 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; Don't overwrite system clipboard https://github.com/syl20bnr/spacemacs/issues/5750#issuecomment-281480406
+  (setq x-select-enable-clipboard nil)
+  (define-key evil-visual-state-map (kbd "s-c") (kbd "\"+y"))
+  (define-key evil-insert-state-map  (kbd "s-v") (kbd "+"))
+  (define-key evil-ex-completion-map (kbd "s-v") (kbd "+"))
+  (define-key evil-ex-search-keymap  (kbd "s-v") (kbd "+"))
+
   ;; Match indent of current file
   (add-hook 'prog-mode-hook #'(lambda ()
                                 (dtrt-indent-mode)
                                 (dtrt-indent-adapt)))
   )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
