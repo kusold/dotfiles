@@ -1,3 +1,5 @@
+export DOTFILES="$HOME/dotfiles"
+
 #
 # Defines environment variables.
 #
