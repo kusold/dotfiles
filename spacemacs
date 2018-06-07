@@ -321,7 +321,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
      (progn
 	    (require 'gnutls)
       (add-to-list 'gnutls-trustfiles "/usr/local/etc/openssl/cert.pem")))
-  )
+  (setq exec-path-from-shell-arguments
+        '("-1"))
+)
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
