@@ -36,8 +36,21 @@
 "└─┬───┴─┬────────────────
   "│-v-2 │ vim-plug                    - junegunn/vim-plug (init vim-plug)
   "└─────┴─────────
+    " Install vim-plug
+    if has('nvim')
+        let vim_plug_path = '~/.config/nvim/autoload/plug.vim'
+    else
+        let vim_plug_path = '~/.vim/autoload/plug.vim'
+    endif
+
+    if empty(glob(vim_plug_path))
+      silent execute '!curl -fLo ' . vim_plug_path . ' --create-dirs
+            \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
+
     " Load vim-plug
-    call plug#begin('~/.vim/plugged')
+    call plug#begin()
 
   "│-v-2 │ ack                         - mileszs/ack.vim (faster grep)
   "└─────┴─────────
@@ -106,12 +119,14 @@
 
   "│-v-2 │ completorr                  - maralla/completor.vim (autocompletion)
   "└─────┴─────────
-  Plug 'maralla/completor.vim', {'do': 'make js'}
+  if !has('nvim')
+    Plug 'maralla/completor.vim', {'do': 'make js'}
 
-  " Use Tab to select completion
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+    " Use Tab to select completion
+    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+  endif
 
   "│-v-2 │ delimitMate                 - Raimondi/delimitMate (autoclose quotes and groupings)
   "└─────┴─────────
@@ -126,6 +141,34 @@
         au FileType tex let b:delimitMate_matchpairs = "(:),[:],{:},`:'"
         au FileType python let b:delimitMate_nesting_quotes = ['"', "'"]
     augroup END
+
+  "│-v-2 │ deoplete                    - Shougo/deoplete.nvim (autocompletion)
+  "└─────┴─────────
+  if has('nvim')
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+      let g:deoplete#enable_at_startup = 1
+      " Use Tab to select completion
+      "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+      "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+      "inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+  endif
+
+  "│-v-2 │ deoplete-go                  - zchee/deoplete-go (go autocomplete)
+  "└─────┴─────────
+  if has('nvim')
+      Plug 'zchee/deoplete-go', { 'do': 'make'}
+  endif
+
+  "│-v-2 │ deoplete-ternjs                  - carlitux/deoplete-ternjs (javascript autocomplete)
+  "└─────┴─────────
+  if has('nvim')
+      Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
+
+      let g:deoplete#sources#ternjs#timeout = 1
+      let g:deoplete#sources#ternjs#case_insensitive = 1
+      let g:deoplete#sources#ternjs#filetypes = [ 'jsx', 'javascript.jsx']
+  endif
 
   "│-v-2 │ devicons                    - ryanoasis/vim-devicons (filetype icons for nerdtree)
   "└─────┴─────────
@@ -312,6 +355,11 @@
     " When opening a file or bookmark, seek and change to the root directory
     " of the VCS (if there is one).
     let g:startify_change_to_vcs_root = 1
+
+  "│-v-2 │ supertab                    -
+  "└─────┴─────────
+  Plug 'ervandew/supertab'
+  let g:SuperTabDefaultCompletionType = "<C-n>"
 
   "│-v-2 │ surround                    - tpope/vim-surround (keybindings for surrounding things)
   "└─────┴─────────

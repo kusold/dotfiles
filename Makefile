@@ -54,6 +54,10 @@ link-dotfiles:
 # vim
 	@ln -sf `pwd`/vimrc $(HOME)/.vimrc
 	@ln -sfn `pwd`/vim $(HOME)/.vim
+
+	@mkdir -p $(HOME)/.config/nvim
+	@ln -sfn `pwd`/vimrc $(HOME)/.config/nvim/init.vim
+	@ln -sfn `pwd`/vim/ftplugin/ $(HOME)/.config/nvim/ftplugin
 # zsh
 	@ln -sfn `pwd`/zplug $(HOME)/.zplug
 	@ln -sf `pwd`/zsh/zlogin $(HOME)/.zlogin
