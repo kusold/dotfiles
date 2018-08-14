@@ -310,7 +310,12 @@
   "│-v-2 │ repeat                      - tpope/vim-repeat (enable plugin bindings to repeat)
   "└─────┴─────────
     "Enable plugin bindings (such as vim-surround) to be repeated with `.`
+    "
     Plug 'tpope/vim-repeat'
+
+  "│-v-2 │ rhubarb                            - tpope/vim-rhubarb (github integration)
+  "└─────┴─────────
+   Plug 'tpope/vim-rhubarb'
 
   "│-v-2 │ signify                     - mhinz/signify (gutter git status)
   "└─────┴─────────
@@ -356,7 +361,7 @@
     " of the VCS (if there is one).
     let g:startify_change_to_vcs_root = 1
 
-  "│-v-2 │ supertab                    -
+  "│-v-2 │ supertab                           - use tab for completions
   "└─────┴─────────
   Plug 'ervandew/supertab'
   let g:SuperTabDefaultCompletionType = "<C-n>"
