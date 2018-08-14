@@ -14,9 +14,10 @@ help list:
 
 link-bin:
 	@mkdir -p $HOME/bin
-	@ln -sf `pwd`/bin/ack-2.14-single-file $(HOME)/ack
-	@ln -sf `pwd`/bin/focus $(HOME)/focus
-	@ln -sf `pwd`/bin/tmx $(HOME)/tmx
+	@ln -sf `pwd`/bin/ack-2.14-single-file $(HOME)/bin/ack
+	@ln -sf `pwd`/bin/auth0-mongo $(HOME)/bin/auth0-mongo
+	@ln -sf `pwd`/bin/focus $(HOME)/bin/focus
+	@ln -sf `pwd`/bin/tmx $(HOME)/bin/tmx
 
 link-dotfiles:
 	@echo "### linking dotfiles ###"
