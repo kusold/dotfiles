@@ -38,7 +38,7 @@ zplug "modules/spectrum", from:prezto
 
 # Async for zsh, used by pure
 zplug "mafredri/zsh-async", from:github, defer:0
-zplug "kusold/puree", use:puree.zsh, from:github, as:theme
+zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 
 BASE16_SCHEME="eighties"
 zplug "chriskempson/base16-shell", use:"base16-shell.plugin.zsh", defer:0
