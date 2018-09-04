@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
 autoload command_exists
 
+# Set a default in case `private-env` isn't decrypted
+export NPM_FONTAWESOME=""
+
 # Add nvm
 if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
   export NVM_DIR=$HOME/.nvm
