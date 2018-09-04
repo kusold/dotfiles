@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Heavily influenced by https://github.com/roddhjav/progressbar/blob/master/progressbar.sh
+progress_bar() {
+   local title=$1
+   local current=$2
+   local total=$3
+
+   local percentage_open='['
+   local percentage_close=']'
+   local progress_bar_start='|'
+   local progress_bar_end='|'
+   local progress_current_mark='#'
+   local progress_remaining_mark='-'
+
+   # calculate the percent complete
+   let percentage=${current}*100/${total}
+   # display percentage, fixed width 3
+   local percentage_display="${percentage_open}$(printf "%+3s" "${percentage}")%%${percentage_close}"
+
+   # get width of terminal
+   local cols=$(tput cols)
+
+   # progress bar math
+   let progress_bar_size=${cols}/2
+   let progress_bar_current_size=${progress_bar_size}*${percentage}/100
+   let progress_bar_remaining_size=${progress_bar_size}-${progress_bar_current_size}
+
+   local progress_current=$(printf "%${progress_bar_current_size}s")
+   local progress_remaining=$(printf "%${progress_bar_remaining_size}s")
+   local progress_bar=$(printf "${progress_bar_start}${progress_current// /${progress_current_mark}}${progress_remaining// /${progress_remaining_mark}}${progress_bar_end}")
+
+   let title_spacing_count=${cols}-${#title}-${#progress_bar}-2-${#percentage_display}
+   local title_spacing=$(printf "%${title_spacing_count}s")
+
+   printf "${title}${title_spacing}${progress_bar}  ${percentage_display}\r"
+}
+
+secs=$((4 * 60))
+i=0
+
+while [ $i -le $secs ]; do
+   progress_bar "brewing coffee" $i $secs
+   sleep 1
+   : $((i++))
+done
+say -v Karen "coffee is ready"
