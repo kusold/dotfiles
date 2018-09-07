@@ -32,6 +32,8 @@
     " Set the leader key to \
     let mapleader = "\<Space>"
 
+    let g:which_key_map = {}
+
 "│-v-1 │ plugin settings
 "└─┬───┴─┬────────────────
   "│-v-2 │ vim-plug                    - junegunn/vim-plug (init vim-plug)
@@ -49,8 +51,51 @@
       autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
     endif
 
+
+    let g:which_key_map.v = {
+      \ 'name' : '+vim',
+      \ 'p' : {
+      \   'name': '+plugin',
+      \   'S': ['PlugSnapshot', 'snapshot'],
+      \   'U': ['PlugUpgrade', 'upgrade'],
+      \   'c': ['PlugClean', 'clean'],
+      \   'd': ['PlugDiff', 'diff'],
+      \   'i': ['PlugInstall', 'install'],
+      \   's': ['PlugStatus', 'status'],
+      \   'u': ['PlugUpdate', 'update'],
+      \   }
+      \ }
+
     " Load vim-plug
     call plug#begin()
+
+  "│-v-2 │ whichkey                    - liuchengxu/vim-which-key (key helper)
+  "└─────┴─────────
+
+    "Displays commands attached the the leader keys
+    Plug 'liuchengxu/vim-which-key'
+
+    let g:which_key_map.b = {
+      \ 'name' : '+buffer',
+      \ }
+    let g:which_key_map.f = {
+      \ 'name' : '+file',
+      \ }
+    let g:which_key_map.l = {
+      \ 'name' : '+lsp',
+      \ }
+    let g:which_key_map.s = {
+      \ 'name' : '+search',
+      \ }
+    let g:which_key_map.t = {
+      \ 'name' : '+test',
+      \ }
+    let g:which_key_map.v = {
+      \ 'name' : '+vcs',
+      \ }
+    let g:which_key_map.w = {
+      \ 'name' : '+window',
+      \ }
 
   "│-v-2 │ ack                         - mileszs/ack.vim (faster grep)
   "└─────┴─────────
@@ -106,6 +151,14 @@
     let g:ale_list_window_size = 5
     let g:syntastic_loc_list_height=5
 
+    let g:which_key_map.l.f = ['ALEFix', 'fix']
+    let g:which_key_map.l.g = ['ALEGoToDefinition', 'go-to-definition']
+    let g:which_key_map.l.r = ['ALEFindReferences', 'find-references']
+    let g:which_key_map.l.h = ['ALEHover', 'hover-information']
+    let g:which_key_map.l.t = ['ALEToggle', 'toggle']
+    let g:which_key_map.l.T = ['ALEToggleBuffer', 'toggle-buffer']
+    let g:which_key_map.l.l = ['ALELint', 'lint']
+
   "│-v-2 │ base16                      - chriskempson/base16-vim (base16 color scheme)
   "└─────┴─────────
     " Base16 Themes
@@ -154,13 +207,13 @@
       "inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
   endif
 
-  "│-v-2 │ deoplete-go                  - zchee/deoplete-go (go autocomplete)
+  "│-v-2 │ deoplete-go                 - zchee/deoplete-go (go autocomplete)
   "└─────┴─────────
   if has('nvim')
       Plug 'zchee/deoplete-go', { 'do': 'make'}
   endif
 
-  "│-v-2 │ deoplete-ternjs                  - carlitux/deoplete-ternjs (javascript autocomplete)
+  "│-v-2 │ deoplete-ternjs             - carlitux/deoplete-ternjs (javascript autocomplete)
   "└─────┴─────────
   if has('nvim')
       Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
@@ -202,6 +255,22 @@
     "Git in vim
     Plug 'tpope/vim-fugitive'
 
+    let g:which_key_map.v.B = ['Gbrowse', 'browse']
+    let g:which_key_map.v.D = ['Gdiff', 'diff']
+    let g:which_key_map.v.M = ['Gmerge', 'merge']
+    let g:which_key_map.v.P = ['Gpush', 'push']
+    let g:which_key_map.v.R = ['Grebase', 'rebase']
+    let g:which_key_map.v.b = ['Gblame', 'blame']
+    let g:which_key_map.v.c = ['Gcommit', 'commit']
+    let g:which_key_map.v.d = ['Gdelete', 'delete']
+    let g:which_key_map.v.f = ['Gfetch', 'fetch']
+    let g:which_key_map.v.l = ['Glog', 'log']
+    let g:which_key_map.v.m = ['Gmove', 'move']
+    let g:which_key_map.v.p = ['Gpull', 'pull']
+    let g:which_key_map.v.r = ['Grename', 'rename']
+    let g:which_key_map.v.s = ['Gstatus', 'status']
+
+
   "│-v-2 │ fzf                         - junegunn/fzf.vim (fuzzy searching)
   "└─────┴─────────
     " Install fzf for fuzzy searching
@@ -214,7 +283,7 @@
 
      " mappings
      nnoremap <silent> <leader><space> :Files<CR>
-     nnoremap <silent> <leader>c :Commands<CR>
+     "nnoremap <silent> <leader>c :Commands<CR>
 
      " use ripgrep if installed
       if executable('rg')
@@ -222,6 +291,18 @@
 
         set grepprg=rg\ --vimgrep
       endif
+
+    let g:which_key_map['?'] = ['Commands', 'fzf-commands']
+    let g:which_key_map.f['?'] = ['Files', 'fzf-files']
+
+    let g:which_key_map.s.b = ['Buffers', 'buffers']
+    let g:which_key_map.s.c = ['Commands', 'commands']
+    let g:which_key_map.s.f = ['Files', 'files']
+    let g:which_key_map.s.s = ['Snippets', 'snippets']
+    let g:which_key_map.s.w = ['Windows', 'windows']
+    let g:which_key_map.s.g = ['GFiles', 'git-files']
+    let g:which_key_map.s.G = ['GFiles?', 'modified-git-files']
+
 
   "│-v-2 │ go                          - fatih/vim-go (golang ide)
   "└─────┴─────────
@@ -237,10 +318,15 @@
     "let g:go_highlight_build_constraints = 1
     let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imports
     let g:go_list_type = "quickfix"
+
     "\s to list interfaces implemented by the type
-    au FileType go nmap <Leader>s <Plug>(go-implements)
+    "au FileType go nmap <Leader>s <Plug>(go-implements)
     "\i to show type info
-    au FileType go nmap <Leader>i <Plug>(go-info)
+    "au FileType go nmap <Leader>i <Plug>(go-info)
+    if (&filetype=='go')
+        let g:which_key_map.l.I = ['<Plug>go-implements', 'implements']
+        let g:which_key_map.l.i = ['<Plug>go-info', 'info']
+    endif
 
   "│-v-2 │ jade                        - digitaltoad/vim-jade (jade syntax highlighting)
   "└─────┴─────────
@@ -272,12 +358,15 @@
   "│-v-2 │ nerdtree                    - scrooloose/nerdtree (file browser)
   "└─────┴─────────
     " File Browser
-    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeTabsToggle' }
+    Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeTabsToggle', 'NERDTreeFind'] }
     " Open/close NERDTree Tabs (explorer tree) with \e
-    nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
+    "nmap <silent> <leader>e :NERDTreeTabsToggle<CR>
+
+    let g:which_key_map.f.e = ['NERDTreeTabsToggle', 'explore']
 
     " Open NERDTree at current file
-    nmap <silent> <leader>E :NERDTreeFind<CR>
+    "nmap <silent> <leader>E :NERDTreeFind<CR>
+    let g:which_key_map.f.E = ['NERDTreeFind', 'explore-at-current-file']
 
     " To have NERDTree always open on startup. 0 = disabled
     let g:nerdtree_tabs_open_on_console_startup = 0
@@ -313,7 +402,7 @@
     "
     Plug 'tpope/vim-repeat'
 
-  "│-v-2 │ rhubarb                            - tpope/vim-rhubarb (github integration)
+  "│-v-2 │ rhubarb                            - tpope/vim-rhubarb (github in]tegration)
   "└─────┴─────────
    Plug 'tpope/vim-rhubarb'
 
@@ -383,11 +472,18 @@
   "└─────┴─────────
     "Execute tests from inside vim
     Plug 'janko-m/vim-test'
-    nmap <silent> <leader>t :TestNearest<CR>
-    nmap <silent> <leader>T :TestFile<CR>
-    nmap <silent> <leader>a :TestSuite<CR>
-    nmap <silent> <leader>l :TestLast<CR>
-    nmap <silent> <leader>g :TestVisit<CR>
+    "nmap <silent> <leader>t :TestNearest<CR>
+    "nmap <silent> <leader>T :TestFile<CR>
+    "nmap <silent> <leader>a :TestSuite<CR>
+    "nmap <silent> <leader>l :TestLast<CR>
+    "nmap <silent> <leader>g :TestVisit<CR>
+
+    let g:which_key_map.t.t = ['TestNearest', 'nearest']
+    let g:which_key_map.t.T = ['TestFile', 'file']
+    let g:which_key_map.t.a = ['TestSuite', 'suite']
+    let g:which_key_map.t.l = ['TestLast', 'last']
+    let g:which_key_map.t.g = ['TestVisit', 'visit']
+
     " make test commands execute using dispatch.vim
     let test#strategy = "dispatch"
 
@@ -422,6 +518,7 @@
   "└─────┴─────────
     "Collects stats on programming
     Plug 'wakatime/vim-wakatime'
+
   "│-v-2 │ xterm-color-table           - guns/xterm-color-table.vim
   "└─────┴─────────
     " display a 256 color table
@@ -432,6 +529,12 @@
   "└─────┴─────────
     call plug#end()
 
+  "│-v-2 │ whichkey                    - liuchengxu/vim-which-key (key helper)
+  "└─────┴─────────
+    " Register the dictionary
+    call which_key#register('<Space>', "g:which_key_map")
+    nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+    vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
 
 
 "│-v-1 │ functions
@@ -530,9 +633,11 @@
 
   "│-v-2 │ layout
   "└─────┴─────────
-    nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
+    "nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
+    let g:which_key_map.w['>'] = ['vertical resize 123', 'resize-to-120-chars']
 
     command! BufOnly silent! execute "%bdelete|e#" "Delete all buffers except the current
+    let g:which_key_map.b.o = ['BufOnly', 'close-all-other']
 
     " Delete buffer without closing the tab
     nnoremap <C-c> :bprevious\|bdelete #<CR>
@@ -540,7 +645,9 @@
   "│-v-2 │ file shortcuts
   "└─────┴─────────
     " Quick settings access
-    nnoremap <silent> <F2> :tabedit $MYVIMRC<cr>
+    "nnoremap <silent> <F2> :tabedit $MYVIMRC<cr>
+    let g:which_key_map.f.d = ['tabedit $MYVIMRC', 'edit-vimrc']
+
     augroup myvimrc
       au!
       au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
