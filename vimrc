@@ -52,8 +52,8 @@
     endif
 
 
-    let g:which_key_map.v = {
-      \ 'name' : '+vim',
+    let g:which_key_map.m = {
+      \ 'name' : '+manage',
       \ 'p' : {
       \   'name': '+plugin',
       \   'S': ['PlugSnapshot', 'snapshot'],
@@ -223,6 +223,16 @@
       let g:deoplete#sources#ternjs#filetypes = [ 'jsx', 'javascript.jsx']
   endif
 
+  "│-v-2 │ detectindent                      - roryokane/detectindent (match indentation style)
+  "└─────┴─────────
+    "Match indentation style
+    Plug 'roryokane/detectindent'
+
+    augroup DetectIndent
+        autocmd!
+        autocmd BufReadPost *  DetectIndent
+    augroup END
+
   "│-v-2 │ devicons                    - ryanoasis/vim-devicons (filetype icons for nerdtree)
   "└─────┴─────────
     " Adds filetype glyphs (icons) to NerdTree and other plugins
@@ -244,6 +254,12 @@
         autocmd ColorScheme dracula hi DraculaComment ctermfg=63
     augroup END
     "color dracula "Set the color scheme
+
+  "│-v-2 │ editorconfig                - editorconfig/editorconfig-vim
+  "└─────┴─────────
+    Plug 'editorconfig/editorconfig-vim'
+
+    let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
   "│-v-2 │ fastfold                    - Konfekt/FastFold (faster folding without redraws)
   "└─────┴─────────
@@ -298,10 +314,10 @@
     let g:which_key_map.s.b = ['Buffers', 'buffers']
     let g:which_key_map.s.c = ['Commands', 'commands']
     let g:which_key_map.s.f = ['Files', 'files']
+    let g:which_key_map.s.g = ['GFiles?', 'modified-git-files']
+    let g:which_key_map.s.G = ['GFiles', 'git-files']
     let g:which_key_map.s.s = ['Snippets', 'snippets']
     let g:which_key_map.s.w = ['Windows', 'windows']
-    let g:which_key_map.s.g = ['GFiles', 'git-files']
-    let g:which_key_map.s.G = ['GFiles?', 'modified-git-files']
 
 
   "│-v-2 │ go                          - fatih/vim-go (golang ide)
@@ -353,7 +369,6 @@
   "└─────┴─────────
     "JSX support (React)
     Plug 'mxw/vim-jsx', {'for': 'jsx'}
-    let g:jsx_ext_required = 0
 
   "│-v-2 │ nerdtree                    - scrooloose/nerdtree (file browser)
   "└─────┴─────────
@@ -414,10 +429,6 @@
     let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
     let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
 
-  "│-v-2 │ sleuth                      - tpope/vim-sleuth (match indentation style)
-  "└─────┴─────────
-    "Match indentation style
-    Plug 'tpope/vim-sleuth'
 
   "│-v-2 │ startify                    - mhinz/vim-startify (start page)
   "└─────┴─────────
@@ -478,11 +489,11 @@
     "nmap <silent> <leader>l :TestLast<CR>
     "nmap <silent> <leader>g :TestVisit<CR>
 
-    let g:which_key_map.t.t = ['TestNearest', 'nearest']
-    let g:which_key_map.t.T = ['TestFile', 'file']
     let g:which_key_map.t.a = ['TestSuite', 'suite']
-    let g:which_key_map.t.l = ['TestLast', 'last']
+    let g:which_key_map.t.f = ['TestFile', 'file']
     let g:which_key_map.t.g = ['TestVisit', 'visit']
+    let g:which_key_map.t.l = ['TestLast', 'last']
+    let g:which_key_map.t.t = ['TestNearest', 'nearest']
 
     " make test commands execute using dispatch.vim
     let test#strategy = "dispatch"
@@ -636,11 +647,14 @@
     "nnoremap <silent> <leader>> :vertical resize 123<CR> "Automatically resize split to fit 120 chars
     let g:which_key_map.w['>'] = ['vertical resize 123', 'resize-to-120-chars']
 
-    command! BufOnly silent! execute "%bdelete|e#" "Delete all buffers except the current
+    "Delete all buffers except the current
+    command! BufOnly silent! execute "%bdelete|e #"
     let g:which_key_map.b.o = ['BufOnly', 'close-all-other']
 
     " Delete buffer without closing the tab
-    nnoremap <C-c> :bprevious\|bdelete #<CR>
+    "nnoremap <C-c> :bprevious\|bdelete #<CR>
+    command! BufClose silent! execute "%bprevious|bdelete #"
+    let g:which_key_map.b.d = ['BufClose', 'close']
 
   "│-v-2 │ file shortcuts
   "└─────┴─────────
