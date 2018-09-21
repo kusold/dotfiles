@@ -27,9 +27,9 @@ if [[ -d "$HOME/.zplug" ]]; then
 fi
 
 # Development Directory Shortcut
-if [[ -d "$HOME/Development" ]]; then
-  alias -g dev=$HOME/Development/
-fi
+#if [[ -d "$HOME/Development" ]]; then
+#  alias -g dev=$HOME/Development/
+#fi
 
 # Use Custom Key Map (Map L Ctrl -> Capslock. Map Capslock -> R Menu)
 if [ -f $HOME/.Xmodmap ]; then
