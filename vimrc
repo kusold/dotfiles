@@ -365,6 +365,10 @@
    let g:javascript_conceal_super          = "Ω"
    let g:javascript_conceal_arrow_function = "⇒"
 
+  "│-v-2 │ jenkinsfile syntx           - martinda/Jenkinsfile-vim-syntax
+  "└─────┴─────────
+   Plug 'martinda/Jenkinsfile-vim-syntax'
+
   "│-v-2 │ jsx                         - mxw/vim-jsx (jsx support)
   "└─────┴─────────
     "JSX support (React)
