@@ -15,7 +15,5 @@ if [ "$system_type" = "Darwin" ]; then
 	source $YADM_BOOTSTRAP/brew.sh
 fi
 
-source $YADM_BOOTSTRAP/vim.sh
-source $YADM_BOOTSTRAP/tmux.sh
 source $YADM_BOOTSTRAP/npm.sh
 
