@@ -45,6 +45,7 @@ zplug "chriskempson/base16-shell", use:"base16-shell.plugin.zsh", defer:0
 zplug "chriskempson/base16-shell", use:"scripts/base16-$BASE16_SCHEME.sh", defer:0
 zplug "chriskempson/base16-shell", use:colortest, as:command
 
+zplug "fcambus/ansiweather", as:command
 
 #
 # Load everything up

@@ -1,7 +1,3 @@
-[submodule "ansiweather"]
-	path = ansiweather
-	shallow = true
-	url = https://github.com/fcambus/ansiweather.git
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	shallow = true
@@ -15,7 +11,7 @@
 	shallow = true
 	url = https://github.com/korzhyk/base16-terminal-app.git
 [submodule "zplug"]
-	path = zplug
+	path = .zplug
 	shallow = true
 	url = https://github.com/zplug/zplug.git
 [submodule "nerd-fonts"]
