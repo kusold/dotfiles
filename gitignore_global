@@ -1,9 +1,0 @@
-*~
-.DS_Store
-
-# vim
-*.swp
-# emacs
-.#*
-
-.tern-port
