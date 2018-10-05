@@ -27,6 +27,7 @@
 [diff]
   tool = meld
 	compactionHeuristic = true
+	wsErrorHighlight = all
 [difftool]
   prompt = false
 [difftool "webstorm"]
