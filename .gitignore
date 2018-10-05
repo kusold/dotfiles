@@ -1,14 +1,14 @@
-vim/bundle
-vim/plugged
-vim/.netrwhist
-tmux/plugins
-tmux/resurrect
-*.swp
-weechat/logs/*
-weechat/weechat.log
-weechat/certs/ca-bundle.crt
-
-secrets/decrypted
-
+*~
 .DS_Store
 
+# vim
+*.swp
+# emacs
+.#*
+
+# javascript LSP
+.tern-port
+
+# yadm encrypted files
+/bin/auth0-*
+/.env.private

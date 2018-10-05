@@ -58,8 +58,8 @@ alias ssh-keygen-strong='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(d
 alias backup-to-nas='rsync --archive --delete --progress --exclude-from="$HOME/dotfiles/rsync_exclude.txt" --verbose $HOME/ admin@coruscant:/share/Backups/$HOST'
 
 # Load private environment files
-if [ -f $HOME/.private-env ]; then
-  source $HOME/.private-env
+if [ -f $HOME/.env.private ]; then
+  source $HOME/.env.private
 fi
 
 # Use gpg-agent instead of ssh-agent if it is configured

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 autoload command_exists
 
-# Set a default in case `private-env` isn't decrypted
+# Set a default in case `.env.private` isn't decrypted
 export NPM_FONTAWESOME=""
 
 # Add nvm
