@@ -40,7 +40,6 @@
   autocrlf = input
   legacyheaders = false
   editor = vim
-  excludesfile = ~/.gitignore_global
 [gui]
   fontdiff = -family Monaco -size 12 -weight normal -slant roman -underline 0 -overstrike 0
 [repack]
