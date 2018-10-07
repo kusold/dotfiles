@@ -2,10 +2,7 @@
 
 ## Install
 ```
-curl -fLo ~/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm && chmod a+x ~/bin/yadm
-yadm clone git@github.com:kusold/dotfiles.git
-yadm bootstrap
-yadm decrypt
+https://raw.githubusercontent.com/kusold/dotfiles/master/bin/bootstrap | bash
 ```
 
 ## Terminal Colors

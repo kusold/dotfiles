@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+if [ -z "$(xcode-select -p)" ]; then
+	echo "install xcode cli tools"
+	xcode-select --install
+fi
+
+curl -fLo ~/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+chmod a+x ~/yadm
+~/yadm clone git@github.com:kusold/dotfiles.git
+mv ~/yadm ~/bin/yadm
+yadm boostrap
+yadm decrypt
+
