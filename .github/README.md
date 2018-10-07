@@ -2,7 +2,7 @@
 
 ## Install
 ```
-https://raw.githubusercontent.com/kusold/dotfiles/master/bin/bootstrap | bash
+curl --fail --silent --output ~/bootstrap https://raw.githubusercontent.com/kusold/dotfiles/master/bin/bootstrap && bash ~/bootstrap &&& rm ~/bootstrap
 ```
 
 ## Terminal Colors
