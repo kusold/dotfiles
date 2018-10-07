@@ -3,6 +3,14 @@
 if [ -z "$(xcode-select -p)" ]; then
 	echo "install xcode cli tools"
 	xcode-select --install
+	while true; do
+    read -p "Did the installation finish?" yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+	done
 fi
 
 curl -fLo ~/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
