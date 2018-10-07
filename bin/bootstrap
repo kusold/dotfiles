@@ -1,21 +1,21 @@
 #! /usr/bin/env bash
 
 if [ -z "$(xcode-select -p 2> /dev/null)" ]; then
-	echo "install xcode cli tools"
-	xcode-select --install
-	while true; do
+  echo "install xcode cli tools"
+  xcode-select --install
+  while true; do
     read -p "Did the installation finish?" yn
     case $yn in
         [Yy]* ) break;;
         [Nn]* ) exit;;
         * ) echo "Please answer yes or no.";;
     esac
-	done
+  done
 fi
 
-curl -fLo ~/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+curl --silent --fail --location --output ~/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
 chmod a+x ~/yadm
-~/yadm clone git@github.com:kusold/dotfiles.git
+~/yadm clone https://github.com/kusold/dotfiles.git
 mv ~/yadm ~/bin/yadm
 yadm boostrap
 yadm decrypt
