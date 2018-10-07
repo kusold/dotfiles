@@ -15,8 +15,5 @@ fi
 
 curl --silent --fail --location --output ~/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
 chmod a+x ~/yadm
-~/yadm clone https://github.com/kusold/dotfiles.git
-mv ~/yadm ~/bin/yadm
-yadm boostrap
-yadm decrypt
+echo "~/yadm clone https://github.com/kusold/dotfiles.git"
 

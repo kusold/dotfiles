@@ -62,8 +62,6 @@
   history-search = "!git rev-list --all | xargs git grep"
 [push]
 	default = simple
-[url "git@github.com:"]
-	insteadOf = https://github.com/
 
 [filter "remove-tokens"]
 clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expires =.*/d' | sed -e '/_authToken=.*/d'"
