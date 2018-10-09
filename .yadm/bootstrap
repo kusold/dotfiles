@@ -17,3 +17,11 @@ fi
 
 source $YADM_BOOTSTRAP/npm.sh
 
+if [ "$system_type" = "Darwin" ]; then
+	echo "configure macos"
+	source $YADM_BOOTSTRAP/macos.sh
+fi
+
+source $YADM_BOOTSTRAP/shell.sh
+source $YADM_BOOTSTRAP/home.sh
+
