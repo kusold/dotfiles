@@ -61,6 +61,7 @@ brew "vim", args: ["with-lua"]
 brew "watchman"
 brew "weechat", args: ["with-aspell", "with-curl", "with-lua", "with-perl", "with-python@2", "with-ruby"]
 brew "wget"
+brew "yadm"
 brew "yarn"
 brew "zsh"
 cask "1password"
