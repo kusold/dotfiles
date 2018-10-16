@@ -14,3 +14,23 @@
 # yadm encrypted files
 /bin/auth0-*
 /.env.private
+
+# Home directory
+/.cache/npm/
+/.config/nvim/plugged/
+/.config/wakatime/
+/.tmux/resurrect/
+/.vim/plugged/
+/.wakatime/
+/.yadm/repo.git/
+/.zoomus/
+/Applications/
+/Desktop/
+/Development/
+/Documents/
+/Downloads/
+/Library/
+/Movies/
+/Music/
+/Pictures/
+/Public/
