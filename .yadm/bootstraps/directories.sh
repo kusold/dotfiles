@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-mkdir -p $HOME/Development
+mkdir -p $HOME/Development/go
 
 mkdir -p $HOME/.config/wakatime
 
