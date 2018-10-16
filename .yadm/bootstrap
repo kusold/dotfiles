@@ -7,6 +7,9 @@ system_type=$(uname -s)
 echo "init submodules"
 yadm submodule update --init --recursive
 
+echo "creating directories"
+source $YADM_BOOTSTRAP/directories.sh
+
 echo "installing fonts"
 source $YADM_BOOTSTRAP/fonts.sh
 
