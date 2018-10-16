@@ -70,3 +70,5 @@ clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expir
 	fetchJobs = 4
 [gpg]
 	program = gpg
+[credential]
+	helper = osxkeychain
