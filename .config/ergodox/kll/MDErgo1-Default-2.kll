@@ -10,4 +10,13 @@ Variant = "";
 
 U"EQUALS" : flashMode();
 U"MINUS" : flashMode();
+U"Y" : mouseOut( 4, 0, 0 );
+U"U" : mouseOut( 0, 0, -1 );
+U"I" : mouseOut( 5, 0, 0 );
+U"H" : mouseOut( 0, -1, 0 );
+U"J" : mouseOut( 0, 0, 1 );
+U"K" : mouseOut( 0, 1, 0 );
+U"N" : mouseOut( 1, 0, 0 );
+U"M" : mouseOut( 2, 0, 0 );
+U"COMMA" : mouseOut( 3, 0, 0 );
 
