@@ -17,6 +17,16 @@ if command_exists fzf; then
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --exclude node_modules'
   fi
 
+  if command_exists bat; then
+		# Preview
+		alias preview="fzf --preview 'bat --color \"always\" {}'"
+  fi
+
+  if command_exists nvim; then
+		# add support for ctrl+o to open selected file in neovim
+		export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(nvim {})+abort'"
+  fi
+
 
   if command_exists git; then
     git-show() {
