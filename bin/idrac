@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+# usage: idrac
+
+if [ -z "$OP_SESSION_my" ]; then
+  eval $(op signin my);
+fi;
+
+# First try to fetch the region specific entry. Fallback to default entry
+item=$(op get item "Elbert")
+IP=$(echo $item | jq --raw-output '.details.sections[] | select(.title=="Admin Console").fields[] | select(.t=="ip").v')
+USERNAME=$(echo $item | jq --raw-output '.details.sections[] | select(.title=="Admin Console").fields[] | select(.n=="admin_console_username").v')
+PASSWORD=$(echo $item | jq --raw-output '.details.sections[] | select(.title=="Admin Console").fields[] | select(.n=="admin_console_password").v')
+
+echo $IP
+echo "Running on http://localhost:5800"
+docker run -p 5800:5800 -p 5900:5900 -e IDRAC_HOST=$IP -e IDRAC_USER=$USERNAME -e IDRAC_PASSWORD=$PASSWORD domistyle/idrac6
+
