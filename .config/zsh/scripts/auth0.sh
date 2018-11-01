@@ -17,3 +17,8 @@ if [[ -d "$HOME/Development/auth0" ]]; then
  fi
 fi
 
+local guardianScripts="$HOME/Development/auth0/guardian-scripts"
+if [[ -d $guardianScripts ]]; then
+	export PATH="${guardianScripts}:${PATH}"
+fi
+
