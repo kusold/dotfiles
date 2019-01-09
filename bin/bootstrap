@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-if [-x "$(command -v xcode-select)"] && [ -z "$(xcode-select -p 2> /dev/null)" ]; then
+if [ -x "$(command -v xcode-select)"] && [ -z "$(xcode-select -p 2> /dev/null)" ]; then
   echo "install xcode cli tools"
   xcode-select --install
   while true; do
