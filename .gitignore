@@ -17,6 +17,7 @@
 
 # Home directory
 /.cache/npm/
+/.cache/typescript/
 /.config/nvim/plugged/
 /.config/wakatime/
 /.tmux/resurrect/
@@ -34,3 +35,6 @@
 /Music/
 /Pictures/
 /Public/
+/.vscode/extensions/*/
+/.cache/
+/.bash_sessions/
