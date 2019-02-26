@@ -1,3 +1,4 @@
 bin/auth0-*
 .env.private
 .config/wakatime/.wakatime.cfg
+.aws/config

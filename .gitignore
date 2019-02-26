@@ -14,12 +14,14 @@
 # yadm encrypted files
 /bin/auth0-*
 /.env.private
+/.aws/config
 
 # Home directory
 /.cache/npm/
 /.cache/typescript/
 /.config/nvim/plugged/
 /.config/wakatime/
+/.config/.op/
 /.tmux/resurrect/
 /.vim/plugged/
 /.wakatime/
