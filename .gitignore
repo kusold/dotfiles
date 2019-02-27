@@ -17,15 +17,25 @@
 /.aws/config
 
 # Home directory
+/.bash_sessions/
+/.cache/
 /.cache/npm/
 /.cache/typescript/
+/.config/.op/
+/.config/asciinema/install-id
+/.config/configstore/update-notifier-npm.json
+/.config/gtk-2.0/gtkfilechooser.ini
 /.config/nvim/plugged/
 /.config/wakatime/
-/.config/.op/
+/.local/share/nvim/
+/.subversion/
 /.tmux/resurrect/
+/.vagrant.d/
 /.vim/plugged/
+/.vscode/extensions/*/
 /.wakatime/
 /.yadm/repo.git/
+/.yarnrc
 /.zoomus/
 /Applications/
 /Desktop/
@@ -37,6 +47,3 @@
 /Music/
 /Pictures/
 /Public/
-/.vscode/extensions/*/
-/.cache/
-/.bash_sessions/
