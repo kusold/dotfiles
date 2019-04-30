@@ -1,14 +1,20 @@
 " Refactored vimrc start
 
-"│-v-1 │ to-do's
+"│-v-1 │ notes
 "└─────┴─────────
-  " TODO Move all settings into folds
-  " TODO Convert most plugins to lazy load
-  " TODO evaluate if all plugins are necessary
-  " TODO expand on plugin descriptions
-  " TODO investigate https://github.com/reedes/vim-thematic
-  " TODO https://github.com/mbbill/undotree
-  " TODO https://github.com/godlygeek/tabular
+  " To debug config on neovim, use:
+  " :unsilent echom vim_plug_path
+  "
+
+  "│-v-2 │ to-do's
+  "└─────┴─────────
+    " TODO Move all settings into folds
+    " TODO Convert most plugins to lazy load
+    " TODO evaluate if all plugins are necessary
+    " TODO expand on plugin descriptions
+    " TODO investigate https://github.com/reedes/vim-thematic
+    " TODO https://github.com/mbbill/undotree
+    " TODO https://github.com/godlygeek/tabular
 
 "│-v-1 │ initiliaze
 "└─┬───┴─┬────────────────
@@ -40,7 +46,7 @@
   "└─────┴─────────
     " Install vim-plug
     if has('nvim')
-        let vim_plug_path = '~/.config/nvim/autoload/plug.vim'
+        let vim_plug_path = '~/.local/share/nvim/site/autoload/plug.vim'
     else
         let vim_plug_path = '~/.vim/autoload/plug.vim'
     endif
@@ -229,8 +235,10 @@
     Plug 'roryokane/detectindent'
 
     augroup DetectIndent
+      if exists("*DetectIndent")
         autocmd!
         autocmd BufReadPost *  DetectIndent
+      endif
     augroup END
 
   "│-v-2 │ devicons                    - ryanoasis/vim-devicons (filetype icons for nerdtree)
@@ -547,9 +555,11 @@
   "│-v-2 │ whichkey                    - liuchengxu/vim-which-key (key helper)
   "└─────┴─────────
     " Register the dictionary
-    call which_key#register('<Space>', "g:which_key_map")
-    nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
-    vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+    if exists("*which_key")
+      call which_key#register('<Space>', "g:which_key_map")
+      nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+      vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+    endif
 
 
 "│-v-1 │ functions
