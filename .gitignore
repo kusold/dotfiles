@@ -27,7 +27,8 @@
 /.config/gtk-2.0/gtkfilechooser.ini
 /.config/nvim/plugged/
 /.config/wakatime/
-/.local/share/nvim/
+/.local/share/
+/.rbenv/versions/
 /.subversion/
 /.tmux/resurrect/
 /.vagrant.d/
