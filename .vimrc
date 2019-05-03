@@ -545,7 +545,7 @@
   "│-v-2 │ xterm-color-table           - guns/xterm-color-table.vim
   "└─────┴─────────
     " display a 256 color table
-    Plug 'guns/xterm-color-table.vim'
+    Plug 'guns/xterm-color-table.vim', { 'on': 'XtermColorTable' }
 
 
   "│-v-2 │ vim-plug                    - junegunn/vim-plug (load plugins)
