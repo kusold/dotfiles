@@ -106,19 +106,19 @@
   "│-v-2 │ ack                         - mileszs/ack.vim (faster grep)
   "└─────┴─────────
     "Faster grep for code
-    Plug 'mileszs/ack.vim', {'on': 'Ack!'}
-
-    " if silver surfer is installed, use that instead
-    if executable('ag')
-        let g:ackprg = 'ag --vimgrep'
-    endif
-    if executable('rg')
-        let g:ackprg = 'rg --vimgrep'
-    endif
-
-    " Don't automatically jump to the first result
-    cnoreabbrev Ack Ack!
-    nnoremap <Leader>a :Ack!<Space>
+"    Plug 'mileszs/ack.vim', {'on': 'Ack!'}
+"
+"    " if silver surfer is installed, use that instead
+"    if executable('ag')
+"        let g:ackprg = 'ag --vimgrep'
+"    endif
+"    if executable('rg')
+"        let g:ackprg = 'rg --vimgrep'
+"    endif
+"
+"    " Don't automatically jump to the first result
+"    cnoreabbrev Ack Ack!
+"    nnoremap <Leader>a :Ack!<Space>
 
   "│-v-2 │ airline                     - vim-airline/vim-airline (fancy status line)
   "└─────┴─────────
