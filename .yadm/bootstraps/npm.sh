@@ -12,5 +12,6 @@ if command -v npm >/dev/null 2>&1; then
     lerna@latest \
     jshint-jsx@latest \
     jshint@latest \
-    tern@latest
+    tern@latest \
+    neovim@latest
 fi
