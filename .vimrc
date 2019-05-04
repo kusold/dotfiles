@@ -230,7 +230,7 @@
   "└─────┴─────────
     " Adds filetype glyphs (icons) to NerdTree and other plugins
     " Requires special fonts
-    Plug 'ryanoasis/vim-devicons'
+    Plug 'ryanoasis/vim-devicons', { 'on': ['NERDTreeTabsToggle', 'NERDTreeFind'] }
 
   "│-v-2 │ dispatch                    - tpope/vim-dispatch (async command running)
   "└─────┴─────────
@@ -414,7 +414,7 @@
     "
     Plug 'tpope/vim-repeat'
 
-  "│-v-2 │ rhubarb                            - tpope/vim-rhubarb (github in]tegration)
+  "│-v-2 │ rhubarb                            - tpope/vim-rhubarb (github integration)
   "└─────┴─────────
    Plug 'tpope/vim-rhubarb'
 
