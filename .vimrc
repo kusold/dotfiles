@@ -176,17 +176,6 @@
   " Shows a rough representation of color codes
   Plug 'ap/vim-css-color', {'for': ['css', 'scss', 'sass']}
 
-  "│-v-2 │ completorr                  - maralla/completor.vim (autocompletion)
-  "└─────┴─────────
-  if !has('nvim')
-    Plug 'maralla/completor.vim', {'do': 'make js'}
-
-    " Use Tab to select completion
-    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
-  endif
-
   "│-v-2 │ delimitMate                 - Raimondi/delimitMate (autoclose quotes and groupings)
   "└─────┴─────────
     " Autoclose quotes and groupings ()
@@ -204,30 +193,26 @@
   "│-v-2 │ deoplete                    - Shougo/deoplete.nvim (autocompletion)
   "└─────┴─────────
   if has('nvim')
-      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-      let g:deoplete#enable_at_startup = 1
-      " Use Tab to select completion
-      "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-      "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-      "inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  else
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
   endif
+
+  let g:deoplete#enable_at_startup = 1
 
   "│-v-2 │ deoplete-go                 - zchee/deoplete-go (go autocomplete)
   "└─────┴─────────
-  if has('nvim')
-      Plug 'zchee/deoplete-go', { 'do': 'make'}
-  endif
+  Plug 'zchee/deoplete-go', { 'do': 'make', 'for': ['go'] }
 
   "│-v-2 │ deoplete-ternjs             - carlitux/deoplete-ternjs (javascript autocomplete)
   "└─────┴─────────
-  if has('nvim')
-      Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
+  Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
 
-      let g:deoplete#sources#ternjs#timeout = 1
-      let g:deoplete#sources#ternjs#case_insensitive = 1
-      let g:deoplete#sources#ternjs#filetypes = [ 'jsx', 'javascript.jsx']
-  endif
+  let g:deoplete#sources#ternjs#timeout = 1
+  let g:deoplete#sources#ternjs#case_insensitive = 1
+  let g:deoplete#sources#ternjs#filetypes = [ 'jsx', 'javascript.jsx']
 
   "│-v-2 │ detectindent                      - roryokane/detectindent (match indentation style)
   "└─────┴─────────
