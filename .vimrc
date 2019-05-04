@@ -214,17 +214,6 @@
   let g:deoplete#sources#ternjs#case_insensitive = 1
   let g:deoplete#sources#ternjs#filetypes = [ 'jsx', 'javascript.jsx']
 
-  "│-v-2 │ detectindent                      - roryokane/detectindent (match indentation style)
-  "└─────┴─────────
-    "Match indentation style
-    Plug 'roryokane/detectindent'
-
-    augroup DetectIndent
-      if exists("*DetectIndent")
-        autocmd!
-        autocmd BufReadPost *  DetectIndent
-      endif
-    augroup END
 
   "│-v-2 │ devicons                    - ryanoasis/vim-devicons (filetype icons for nerdtree)
   "└─────┴─────────
@@ -426,6 +415,10 @@
     let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
     let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
 
+  "│-v-2 │ sleuth                      - tpope/vim-sleuth (match indentation style)
+  "└─────┴─────────
+    "Match indentation style
+    Plug 'tpope/vim-sleuth'
 
   "│-v-2 │ startify                    - mhinz/vim-startify (start page)
   "└─────┴─────────
