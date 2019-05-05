@@ -206,6 +206,12 @@
   "└─────┴─────────
   Plug 'zchee/deoplete-go', { 'do': 'make', 'for': ['go'] }
 
+  "│-v-2 │ deoplete-lsp                 - lighttiger2505/deoplete-vim-lsp (lsp)
+  "└─────┴─────────
+  Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/vim-lsp'
+  Plug 'lighttiger2505/deoplete-vim-lsp'
+
   "│-v-2 │ deoplete-ternjs             - carlitux/deoplete-ternjs (javascript autocomplete)
   "└─────┴─────────
   Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
