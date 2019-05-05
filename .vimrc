@@ -212,6 +212,16 @@
   Plug 'prabirshrestha/vim-lsp'
   Plug 'lighttiger2505/deoplete-vim-lsp'
 
+
+
+  if executable('docker-langserver')
+      au User lsp_setup call lsp#register_server({
+          \ 'name': 'docker-langserver',
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
+          \ 'whitelist': ['dockerfile'],
+          \ })
+  endif
+
   "│-v-2 │ deoplete-ternjs             - carlitux/deoplete-ternjs (javascript autocomplete)
   "└─────┴─────────
   Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern', 'for': ['javascript', 'javascript.jsx'] }
