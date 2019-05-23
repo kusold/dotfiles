@@ -40,6 +40,22 @@
 
     let g:which_key_map = {}
 
+"│-v-1 │ functions
+"└─────┴─────────
+  " Useful for setting the upperchase char to the same as the  lowercase char
+  function! SetupCommandAlias(from, to) abort
+    exec 'cnoreabbrev <expr> '.a:from
+    \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+    \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+  endfunction
+
+  function! PlugLoaded(name)
+    return (
+        \ has_key(g:plugs, a:name) &&
+        \ isdirectory(g:plugs[a:name].dir) &&
+        \ stridx(&rtp, g:plugs[a:name].dir) >= 0)
+  endfunction
+
 "│-v-1 │ plugin settings
 "└─┬───┴─┬────────────────
   "│-v-2 │ vim-plug                    - junegunn/vim-plug (init vim-plug)
@@ -549,21 +565,13 @@
   "│-v-2 │ whichkey                    - liuchengxu/vim-which-key (key helper)
   "└─────┴─────────
     " Register the dictionary
-    if exists("*which_key")
+    if PlugLoaded("vim-which-key")
       call which_key#register('<Space>', "g:which_key_map")
       nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
       vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
     endif
 
 
-"│-v-1 │ functions
-"└─────┴─────────
-  " Useful for setting the upperchase char to the same as the  lowercase char
-  function! SetupCommandAlias(from, to) abort
-    exec 'cnoreabbrev <expr> '.a:from
-    \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
-    \ .'? ("'.a:to.'") : ("'.a:from.'"))'
-  endfunction
 
 "│-v-1 │ settings
 "└─┬───┴─┬────────────────
