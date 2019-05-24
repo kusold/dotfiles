@@ -158,8 +158,23 @@
     Plug 'w0rp/ale'
     " :ALEFix
     let g:ale_fixers = {
-                \  'javascript': ['eslint'],
+                \  '*': ['trim_whitespace'],
+                \  'javascript': ['prettier', 'eslint'],
                 \}
+
+    let g:ale_linters = {
+          \ 'go': ['gopls'],
+          \}
+    " Set this variable to 1 to fix files when you save them.
+    let g:ale_fix_on_save = 1
+
+    " Do not lint or fix minified files.
+    let g:ale_pattern_options = {
+                \ '\.min\.js$': {'ale_linters': [], 'ale_fixers': []},
+                \ '\.min\.css$': {'ale_linters': [], 'ale_fixers': []},
+                \}
+    " If you configure g:ale_pattern_options outside of vimrc, you need this.
+    let g:ale_pattern_options_enabled = 1
 
     let g:ale_sign_error = '✘'
     let g:ale_sign_warning = '▲'
@@ -174,9 +189,11 @@
     let g:syntastic_loc_list_height=5
 
     let g:which_key_map.l.f = ['ALEFix', 'fix']
+    let g:which_key_map.l.F = ['ALEFixSuggest', 'suggest-supported-fixers']
     let g:which_key_map.l.g = ['ALEGoToDefinition', 'go-to-definition']
     let g:which_key_map.l.r = ['ALEFindReferences', 'find-references']
     let g:which_key_map.l.h = ['ALEHover', 'hover-information']
+    let g:which_key_map.l.s = ['ALESymbolSearch', 'symbol-search']
     let g:which_key_map.l.t = ['ALEToggle', 'toggle']
     let g:which_key_map.l.T = ['ALEToggleBuffer', 'toggle-buffer']
     let g:which_key_map.l.l = ['ALELint', 'lint']
