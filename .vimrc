@@ -21,10 +21,12 @@
   "│-v-2 │ compatibility settings
   "└─────┴─────────
     " Disable vi compatibility settings
+    " vint: next-line -ProhibitSetNoCompatible
     set nocompatible
 
     "For that which __requires_utf_8:
     set encoding=utf8
+    scriptencoding utf-8
 
   "│-v-2 │ filetype settings
   "└─────┴─────────
@@ -53,7 +55,7 @@
     return (
         \ has_key(g:plugs, a:name) &&
         \ isdirectory(g:plugs[a:name].dir) &&
-        \ stridx(&rtp, g:plugs[a:name].dir) >= 0)
+        \ stridx(&runtimepath, g:plugs[a:name].dir) >= 0)
   endfunction
 
 "│-v-1 │ plugin settings
@@ -70,7 +72,10 @@
     if empty(glob(vim_plug_path))
       silent execute '!curl -fLo ' . vim_plug_path . ' --create-dirs
             \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+      augroup plug_install
+          au!
+          autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+      augroup END
     endif
 
 
@@ -248,11 +253,14 @@
 
 
   if executable('docker-langserver')
-      au User lsp_setup call lsp#register_server({
-          \ 'name': 'docker-langserver',
-          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
-          \ 'whitelist': ['dockerfile'],
-          \ })
+      augroup deoplete_lsp
+          au!
+          au User lsp_setup call lsp#register_server({
+                      \ 'name': 'docker-langserver',
+                      \ 'cmd': {server_info->[&shell, &shellcmdflag, 'docker-langserver --stdio']},
+                      \ 'whitelist': ['dockerfile'],
+                      \ })
+      augroup END
   endif
 
   "│-v-2 │ deoplete-ternjs             - carlitux/deoplete-ternjs (javascript autocomplete)
@@ -363,14 +371,14 @@
     "let g:go_highlight_interfaces = 1
     "let g:go_highlight_operators = 1
     "let g:go_highlight_build_constraints = 1
-    let g:go_fmt_command = "goimports" "Use goimports instead of gofmt to insert imports
-    let g:go_list_type = "quickfix"
+    let g:go_fmt_command = 'goimports' "Use goimports instead of gofmt to insert imports
+    let g:go_list_type = 'quickfix'
 
     "\s to list interfaces implemented by the type
     "au FileType go nmap <Leader>s <Plug>(go-implements)
     "\i to show type info
     "au FileType go nmap <Leader>i <Plug>(go-info)
-    if (&filetype=='go')
+    if (&filetype==#'go')
         let g:which_key_map.l.I = ['<Plug>go-implements', 'implements']
         let g:which_key_map.l.i = ['<Plug>go-info', 'info']
     endif
@@ -385,16 +393,16 @@
    "Better Javascript syntax highlighting (Required by react)
    Plug 'pangloss/vim-javascript', {'for': ['javascript', 'jsx']}
 
-   let g:javascript_conceal_function       = "ƒ"
-   let g:javascript_conceal_null           = "ø"
-   let g:javascript_conceal_this           = "@"
-   let g:javascript_conceal_return         = "⇚"
-   let g:javascript_conceal_undefined      = "¿"
-   let g:javascript_conceal_NaN            = "ℕ"
-   let g:javascript_conceal_prototype      = "¶"
-   let g:javascript_conceal_static         = "•"
-   let g:javascript_conceal_super          = "Ω"
-   let g:javascript_conceal_arrow_function = "⇒"
+   let g:javascript_conceal_function       = 'ƒ'
+   let g:javascript_conceal_null           = 'ø'
+   let g:javascript_conceal_this           = '@'
+   let g:javascript_conceal_return         = '⇚'
+   let g:javascript_conceal_undefined      = '¿'
+   let g:javascript_conceal_NaN            = 'ℕ'
+   let g:javascript_conceal_prototype      = '¶'
+   let g:javascript_conceal_static         = '•'
+   let g:javascript_conceal_super          = 'Ω'
+   let g:javascript_conceal_arrow_function = '⇒'
 
   "│-v-2 │ jenkinsfile syntx           - martinda/Jenkinsfile-vim-syntax
   "└─────┴─────────
@@ -503,7 +511,7 @@
   "│-v-2 │ supertab                           - use tab for completions
   "└─────┴─────────
   Plug 'ervandew/supertab'
-  let g:SuperTabDefaultCompletionType = "<C-n>"
+  let g:SuperTabDefaultCompletionType = '<C-n>'
 
   "│-v-2 │ surround                    - tpope/vim-surround (keybindings for surrounding things)
   "└─────┴─────────
@@ -535,7 +543,7 @@
     let g:which_key_map.t.t = ['TestNearest', 'nearest']
 
     " make test commands execute using dispatch.vim
-    let test#strategy = "dispatch"
+    let test#strategy = 'dispatch'
 
     " Set the NODE_ENV correctly for tests
     "let test#javascript#mocha#executable = 'NODE_ENV=test ' . test#javascript#mocha#executable()
@@ -554,10 +562,10 @@
   "└─────┴─────────
    Plug 'SirVer/ultisnips'
    " make :UltiSnipsEdit to split the window.
-   let g:UltiSnipsEditSplit="horizontal"
+   let g:UltiSnipsEditSplit='horizontal'
 
    " Specify UltiSnips directory
-   let g:UltiSnipsSnippetDirectories=[$HOME."/.vim/UltiSnips"]
+   let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
 
   "│-v-2 │ unimpaired                  - tpope/vim-unimpaird (bracket maps)
   "└─────┴─────────
@@ -582,8 +590,8 @@
   "│-v-2 │ whichkey                    - liuchengxu/vim-which-key (key helper)
   "└─────┴─────────
     " Register the dictionary
-    if PlugLoaded("vim-which-key")
-      call which_key#register('<Space>', "g:which_key_map")
+    if PlugLoaded('vim-which-key')
+      call which_key#register('<Space>', 'g:which_key_map')
       nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
       vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
     endif
@@ -621,7 +629,7 @@
 
       " vim-shell automatically write the color theme to ~/.vimrc_background
       " this allows the terminal and vim to change themes together
-      if filereadable(expand("~/.vimrc_background"))
+      if filereadable(expand('~/.vimrc_background'))
           source ~/.vimrc_background
       endif
 
@@ -658,22 +666,25 @@
 
   "│-v-2 │ files
   "└─────┴─────────
-    " Triger `autoread` when files changes on disk
-    " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
-    " https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
-    autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
-    " Notification after file change
-    " https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
-    autocmd FileChangedShellPost *
-      \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+  augroup files_settings
+      au!
+      " Triger `autoread` when files changes on disk
+      " https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+      " https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+      autocmd FocusGained,BufEnter,CursorHold,CursorHoldI * if mode() != 'c' | checktime | endif
+      " Notification after file change
+      " https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+      autocmd FileChangedShellPost *
+                  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+  augroup END
 
 "│-v-1 │ mappings
 "└─┬───┴─┬────────────────
   "│-v-2 │ keys
   "└─────┴─────────
     set backspace=indent,eol,start "make backspace behave like normal
-    call SetupCommandAlias("Q", "q")
-    call SetupCommandAlias("W", "w")
+    call SetupCommandAlias('Q', 'q')
+    call SetupCommandAlias('W', 'w')
 
   "│-v-2 │ layout
   "└─────┴─────────
@@ -704,11 +715,17 @@
 "└─┬───┴─┬────────────────
   "│-v-2 │ .md - markdown
   "└─────┴─────────
-    autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
+      augroup markdown_filetype
+          au!
+          autocmd BufNewFile,BufFilePre,BufRead *.md set filetype=markdown " .md == markdown. .md != modula-2
+      augroup END
 
   "│-v-2 │ .ejs - embeddedjs)
   "└─────┴─────────
-    autocmd BufNewFile,BufRead *.ejs set filetype=html
+      augroup ejs_filetype
+          au!
+          autocmd BufNewFile,BufRead *.ejs set filetype=html
+      augroup END
 "│-v-1 │ footer
 "└─────┴─────────
 " vim: set fmr=-v-,-^- fdm=marker cms="%s et ts=2 sw=0 sts=0 :
