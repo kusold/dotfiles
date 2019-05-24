@@ -5,5 +5,5 @@ workflow "Lint" {
 
 action "Lint vimrc" {
   uses = "docker://upstreamable/vint"
-  args = "--color --style .vimrc"
+  args = "vint --color --style .vimrc"
 }
