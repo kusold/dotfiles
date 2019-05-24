@@ -11,5 +11,11 @@ if command -v pip3 >/dev/null 2>&1; then
 
   # vim script linting
   pip3 install vim-vint --upgrade
+
+  # ansible linting
+  pip3 install ansible-lint --upgrade
+
+  # git commit linting
+  pip3 install gitlint --upgrade
 fi
 
