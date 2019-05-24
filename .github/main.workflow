@@ -12,6 +12,6 @@ action "Lint vimrc" {
 }
 
 action "ShellCheck" {
-  uses = "docker://koalaman/shellcheck"
-  args = "shellcheck .yadm/bootstraps/*.sh"
+  uses = "docker://jess/shellcheck"
+  args = "sh -c ./.github/shellcheck_all.sh"
 }
