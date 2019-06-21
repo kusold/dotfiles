@@ -467,7 +467,7 @@
   "└─────┴─────────
     "Display which lines have changed for git
     Plug 'mhinz/vim-signify'
-    let g:signify_vcs_list = ['git'] " Limit support to git for speed. Why would I use anything else?
+    let g:signify_vcs_list = ['git', 'yadm'] " Limit support to git for speed. Why would I use anything else?
     let g:signify_mapping_next_hunk = '<leader>gj' " Go to next hunk
     let g:signify_mapping_prev_hunk = '<leader>gk' " Go to previous hunk
 
@@ -631,6 +631,11 @@
       if filereadable(expand('~/.vimrc_background'))
           source ~/.vimrc_background
       endif
+
+      " Make the signify changes stand out more
+      highlight SignifySignAdd    cterm=bold ctermbg=149  ctermfg=100
+      highlight SignifySignDelete cterm=bold ctermbg=9 ctermfg=160
+      highlight SignifySignChange cterm=bold ctermbg=11  ctermfg=237
 
   "│-v-2 │ commands
   "└─┬───┴─┬────────────────
