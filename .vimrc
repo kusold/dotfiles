@@ -507,7 +507,7 @@
     " of the VCS (if there is one).
     let g:startify_change_to_vcs_root = 1
 
-  "│-v-2 │ supertab                           - use tab for completions
+  "│-v-2 │ supertab                    - ervandew/supertab use tab for completions
   "└─────┴─────────
   Plug 'ervandew/supertab'
   let g:SuperTabDefaultCompletionType = '<C-n>'
@@ -594,8 +594,6 @@
       nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
       vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
     endif
-
-
 
 "│-v-1 │ settings
 "└─┬───┴─┬────────────────
