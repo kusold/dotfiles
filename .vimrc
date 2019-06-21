@@ -637,11 +637,10 @@
     "│-v-3 │ color scheme
     "└─────┴─────────
       set background=dark " Dark background friendly
-
       " vim-shell automatically write the color theme to ~/.vimrc_background
       " this allows the terminal and vim to change themes together
-      if filereadable(expand('~/.vimrc_background'))
-          source ~/.vimrc_background
+      if filereadable(expand("~/.vimrc_background"))
+          silent! source ~/.vimrc_background
       endif
 
       " Make the signify changes stand out more
