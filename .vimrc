@@ -271,12 +271,11 @@
   let g:deoplete#sources#ternjs#case_insensitive = 1
   let g:deoplete#sources#ternjs#filetypes = [ 'jsx', 'javascript.jsx']
 
-
   "│-v-2 │ devicons                    - ryanoasis/vim-devicons (filetype icons for nerdtree)
   "└─────┴─────────
-    " Adds filetype glyphs (icons) to NerdTree and other plugins
+    " Adds filetype glyphs (icons) to NerdTree, Startify, and other plugins
     " Requires special fonts
-    Plug 'ryanoasis/vim-devicons', { 'on': ['NERDTreeTabsToggle', 'NERDTreeFind'] }
+    Plug 'ryanoasis/vim-devicons'
 
   "│-v-2 │ dispatch                    - tpope/vim-dispatch (async command running)
   "└─────┴─────────
