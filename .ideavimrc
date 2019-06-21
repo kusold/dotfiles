@@ -1,0 +1,3 @@
+" Enable vim-surround support
+
+set surround
