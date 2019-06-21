@@ -105,6 +105,9 @@
     let g:which_key_map.b = {
       \ 'name' : '+buffer',
       \ }
+    let g:which_key_map.d = {
+      \ 'name' : '+display',
+      \ }
     let g:which_key_map.f = {
       \ 'name' : '+file',
       \ }
@@ -674,8 +677,20 @@
 
   "│-v-2 │ mouse
   "└─────┴─────────
-    "set mouse=a "Enable the mouse use in all modes
-    set mouse-=a "Disable the mouse use in all modes
+    set mouse=a "Enable the mouse use in all modes
+
+    function! ToggleMouse()
+      " check if mouse is enabled
+      if &mouse == 'a'
+        " "Disable the mouse use in all modes
+        set mouse-=a
+      else
+        " "Enable the mouse use in all modes
+        set mouse=a
+      endif
+    endfunc
+
+    let g:which_key_map.d['m'] = [':call ToggleMouse()', 'toggle mouse']
 
   "│-v-2 │ files
   "└─────┴─────────
@@ -698,6 +713,11 @@
     set backspace=indent,eol,start "make backspace behave like normal
     call SetupCommandAlias('Q', 'q')
     call SetupCommandAlias('W', 'w')
+
+  "│-v-2 │ whitespace
+  "└─────┴─────────
+
+    let g:which_key_map.d.w = ['set list!', 'toggle whitespace']
 
   "│-v-2 │ layout
   "└─────┴─────────
