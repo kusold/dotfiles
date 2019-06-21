@@ -737,6 +737,7 @@
     " Quick settings access
     "nnoremap <silent> <F2> :tabedit $MYVIMRC<cr>
     let g:which_key_map.f.d = ['tabedit $MYVIMRC', 'edit-vimrc']
+    let g:which_key_map.m.r = ['source $MYVIMRC', 'refresh config']
 
     augroup myvimrc
       au!
