@@ -525,6 +525,10 @@
     nmap <F8> :TagbarToggle<CR>
     let g:tagbar_autofocus = 1 "Automatically focus the tagbar when it is opened
 
+  "│-v-2 │ terraform                   - hashivim/vim-terraform (Terraform syntax and commands)
+  "└─────┴─────────
+    Plug 'hashivim/vim-terraform', {'for': 'terraform'}
+
   "│-v-2 │ test                        - janko-m/vim-test (test running)
   "└─────┴─────────
     "Execute tests from inside vim
@@ -556,6 +560,13 @@
   "└─────┴─────────
     "makes tmux + vim work with focus events
     Plug 'tmux-plugins/vim-tmux-focus-events'
+
+  "│-v-2 │ typescript                  - leafgarland/typescript-vim (typescript syntax)
+  "└─────┴─────────
+    "makes tmux + vim work with focus events
+    Plug 'leafgarland/typescript-vim'
+    " disable built-in indentation engine. No idea why this exists
+    let g:typescript_indent_disable = 0
 
   "│-v-2 │ ultisnips                   - SirVer/ultisnips (snippets)
   "└─────┴─────────
