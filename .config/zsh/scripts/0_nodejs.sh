@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+autoload command_missing
 autoload command_exists
 
 # Set a default in case `.env.private` isn't decrypted
@@ -17,6 +18,13 @@ fi
 
 if command_exists nodenv; then
   eval "$(nodenv init -)"
+fi
+
+if [[ -f "/usr/local/opt/node@10/bin/node" ]] && command_missing node; then
+  echo "ADDING NODE 10 TO PATH"
+  export PATH="/usr/local/opt/node@10/bin:$PATH"
+  export LDFLAGS="-L/usr/local/opt/node@10/lib"
+  export CPPFLAGS="-I/usr/local/opt/node@10/include"
 fi
 
 if command_exists npx; then
