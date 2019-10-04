@@ -2,9 +2,6 @@
 autoload command_missing
 autoload command_exists
 
-# Set a default in case `.env.private` isn't decrypted
-export NPM_FONTAWESOME=""
-
 # Add nvm
 if [[ -f "$HOME/.nvm/nvm.sh" ]]; then
   export NVM_DIR=$HOME/.nvm
