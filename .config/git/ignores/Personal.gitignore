@@ -1,0 +1,45 @@
+###
+# My Personal Ignores
+###
+
+# javascript LSP
+.tern-port
+
+# yadm encrypted files
+/bin/auth0-*
+/.env.private
+/.aws/config
+
+# Home directory (because I use yadm to manage my dotfiles)
+/.bash_sessions/
+/.cache/
+/.cache/npm/
+/.cache/typescript/
+/.config/.op/
+/.config/asciinema/install-id
+/.config/configstore/update-notifier-npm.json
+/.config/gtk-2.0/gtkfilechooser.ini
+/.config/nvim/plugged/
+/.config/wakatime/
+/.local/share/
+/.rbenv/versions/
+/.subversion/
+/.tmux/resurrect/
+/.vagrant.d/
+/.vim/plugged/
+/.vscode/extensions/*/
+/.wakatime/
+/.yadm/repo.git/
+/.yarnrc
+/.zoomus/
+/Applications/
+/Desktop/
+/Development/
+/Documents/
+/Downloads/
+/Library/
+/Movies/
+/Music/
+/Pictures/
+/Public/
+
