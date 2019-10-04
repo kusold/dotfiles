@@ -11,6 +11,7 @@
 /.aws/config
 
 # Home directory (because I use yadm to manage my dotfiles)
+/.Trash/
 /.bash_sessions/
 /.cache/
 /.cache/npm/
@@ -21,8 +22,10 @@
 /.config/gtk-2.0/gtkfilechooser.ini
 /.config/nvim/plugged/
 /.config/wakatime/
+/.jenv/
 /.local/share/
 /.rbenv/versions/
+/.ssh/
 /.subversion/
 /.tmux/resurrect/
 /.vagrant.d/
