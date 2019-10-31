@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#set -e # TODO: uncomment
+
+if [ "$#" -ne 2 ]; then
+  echo "unpackRoms.sh /path/to/source/folder /destination/path"
+  exit 1
+fi
+
+command -v 7z >/dev/null 2>&1 || { echo "7zip is required, but not instaleld. Aborting." >&2; exit 1; }
+
+args=("$@")
+source=${args[0]}
+destination=${args[1]}
+
+find "${source}" -type f -name '*.7z' -print0 | while IFS= read -r -d '' file; do
+  temp=$(mktemp -d /$TMPDIR/unpackRoms.XXXXXX)
+  7z x "$file" -o$temp > /dev/null
+  # Find all verified good rips of USA roms
+  results_count=$(find "$temp" -type f -name '*(U)*!*' | wc -l)
+  if [ $results_count -eq 0 ]; then
+    printf 'ERROR: Could not find any good roms from %s\n' "$file"
+    rm -rf $temp
+    continue
+  fi
+
+  find "$temp" -type f -name '*(U)*!*' -exec mv {} $destination \;
+  rm -rf $temp
+done
+
