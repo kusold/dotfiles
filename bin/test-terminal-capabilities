@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+echo "Test Color Support"
+for i in {0..255} ; do
+    printf "\x1b[48;5;%sm%3d\e[0m " "$i" "$i"
+    if (( i == 15 )) || (( i > 15 )) && (( (i-15) % 6 == 0 )); then
+        printf "\n";
+    fi
+done
+
+echo ""
+echo "Test Typeset Support"
+echo "$(tput sitm)italics$(tput ritm) $(tput smso)standout$(tput rmso)"
+
+echo ""
+echo "Test Powerline Glyph Support"
+echo -e "\ue0b0 \u00b1 \ue0a0 \u27a6 \u2718 \u26a1 \u2699"
+
