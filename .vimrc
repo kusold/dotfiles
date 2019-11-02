@@ -648,6 +648,9 @@
       highlight SignifySignDelete cterm=bold ctermbg=9 ctermfg=160
       highlight SignifySignChange cterm=bold ctermbg=11  ctermfg=237
 
+      highlight Comment gui=italic cterm=italic
+
+
   "│-v-2 │ commands
   "└─┬───┴─┬────────────────
     "│-v-3 │ wildmenu
