@@ -15,5 +15,5 @@ PASSWORD=$(echo $item | jq --raw-output '.details.sections[] | select(.title=="A
 
 echo $IP
 echo "Running on http://localhost:5800"
-docker run -p 5800:5800 -p 5900:5900 -e IDRAC_HOST=$IP -e IDRAC_USER=$USERNAME -e IDRAC_PASSWORD=$PASSWORD domistyle/idrac6
+docker run -p 5800:5800 -p 5901:5900 -e IDRAC_HOST=$IP -e IDRAC_USER=$USERNAME -e IDRAC_PASSWORD=$PASSWORD domistyle/idrac6
 
