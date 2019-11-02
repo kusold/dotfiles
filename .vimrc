@@ -285,16 +285,6 @@
     "Asynchronous command running. Useful for builds/tests
     Plug 'tpope/vim-dispatch'
 
-  "│-v-2 │ dracula                     - dracula/vim (dracula color scheme)
-  "└─────┴─────────
-    " Dracula color scheme
-    Plug 'dracula/vim', { 'as': 'dracula' }
-    let g:dracula_italic = 0 " Disable italics https://github.com/dracula/vim/issues/65
-    augroup dracula_customization
-        au!
-        autocmd ColorScheme dracula hi DraculaComment ctermfg=63
-    augroup END
-    "color dracula "Set the color scheme
 
   "│-v-2 │ editorconfig                - editorconfig/editorconfig-vim
   "└─────┴─────────
