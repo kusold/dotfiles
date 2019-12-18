@@ -446,6 +446,11 @@
     " Only change the color for extensions I commonly use
     let g:NERDTreeSyntaxEnabledExtensions = ['css', 'go', 'html', 'js', 'json', 'jsx', 'markdown', 'md', 'sh', 'vim', 'zsh']
 
+  "│-v-2 │ pug   - tiagofumo/vim-nerdtree-syntax-highlight
+  "└─────┴─────────
+    "Highlight devicons in nerdtree
+    Plug 'digitaltoad/vim-pug', { 'for': 'pug' }
+
   "│-v-2 │ repeat                      - tpope/vim-repeat (enable plugin bindings to repeat)
   "└─────┴─────────
     "Enable plugin bindings (such as vim-surround) to be repeated with `.`
