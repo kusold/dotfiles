@@ -18,11 +18,12 @@ if command_exists nodenv; then
 fi
 
 if [[ -f "/usr/local/opt/node@10/bin/node" ]] && command_missing node; then
-  echo "ADDING NODE 10 TO PATH"
   export PATH="/usr/local/opt/node@10/bin:$PATH"
   export LDFLAGS="-L/usr/local/opt/node@10/lib"
   export CPPFLAGS="-I/usr/local/opt/node@10/include"
 fi
+
+export PATH="$PATH:${XDG_DATA_HOME}/npm/bin"
 
 if command_exists npx; then
   alias npx="npx --no-install"
