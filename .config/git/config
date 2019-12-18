@@ -1,7 +1,7 @@
 [user]
   name = Mike Kusold
   email = git@mikekusold.com
-	signingkey = E7BB2BF9
+  signingkey = E7BB2BF9
 [color]
   branch = auto
   diff = auto
@@ -21,13 +21,13 @@
   untracked = cyan
 [merge]
   tool = fugitive
-	conflictstyle = diff3
+  conflictstyle = diff3
 [mergetool "fugitive"]
     cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [diff]
   tool = meld
-	compactionHeuristic = true
-	wsErrorHighlight = all
+  compactionHeuristic = true
+  wsErrorHighlight = all
 [difftool]
   prompt = false
 [difftool "webstorm"]
@@ -40,7 +40,7 @@
   autocrlf = input
   legacyheaders = false
   editor = vim
-	excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore
 [gui]
   fontdiff = -family Monaco -size 12 -weight normal -slant roman -underline 0 -overstrike 0
 [repack]
@@ -62,13 +62,13 @@
   subpull = !git submodule foreach git pull --tags origin master
   history-search = "!git rev-list --all | xargs git grep"
 [push]
-	default = simple
+  default = simple
 
 [filter "remove-tokens"]
 clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expires =.*/d' | sed -e '/_authToken=.*/d'"
 [submodule]
-	fetchJobs = 4
+  fetchJobs = 4
 [gpg]
-	program = gpg
+  program = gpg
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
