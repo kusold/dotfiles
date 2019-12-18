@@ -245,6 +245,7 @@ fabric.properties
 /.config/gtk-2.0/gtkfilechooser.ini
 /.config/nvim/plugged/
 /.config/wakatime/
+/.config/yadm/repo.git/
 /.jenv/
 /.local/share/
 /.rbenv/versions/
