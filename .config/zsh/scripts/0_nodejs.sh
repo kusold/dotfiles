@@ -23,7 +23,9 @@ if [[ -f "/usr/local/opt/node@10/bin/node" ]] && command_missing node; then
   export CPPFLAGS="-I/usr/local/opt/node@10/include"
 fi
 
-export PATH="$PATH:${XDG_DATA_HOME}/npm/bin"
+if command_exists npm; then
+  export PATH=$PATH:`npm bin -g`
+fi
 
 if command_exists npx; then
   alias npx="npx --no-install"
