@@ -1,3 +1,5 @@
+*.workspace
+
 ###
 # VSCode
 # Source: https://raw.githubusercontent.com/github/gitignore/master/Global/VisualStudioCode.gitignore
