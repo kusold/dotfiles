@@ -24,7 +24,7 @@ if [[ -f "/usr/local/opt/node@10/bin/node" ]] && command_missing node; then
 fi
 
 if command_exists npm; then
-  export PATH=$PATH:`npm bin -g`
+  export PATH="${PATH}:$(npm bin -g)"
 fi
 
 if command_exists npx; then
