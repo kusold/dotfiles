@@ -580,10 +580,6 @@
     "provides several pairs of bracket maps.
     Plug 'tpope/vim-unimpaired'
 
-  "│-v-2 │ wakatime                    - wakatime/vim-wakatime (productivity stats)
-  "└─────┴─────────
-    "Collects stats on programming
-    Plug 'wakatime/vim-wakatime'
 
   "│-v-2 │ xterm-color-table           - guns/xterm-color-table.vim
   "└─────┴─────────
