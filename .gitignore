@@ -117,7 +117,7 @@ dist/
 flycheck_*.el
 
 # server auth directory
-/server/
+#/server/
 
 # projectiles files
 .projectile
@@ -127,6 +127,12 @@ flycheck_*.el
 
 # network security
 /network-security.data
+
+.idea/aws.xml
+.idea/intellij-javadocs-*.xml
+
+# Checkstyle maintains the plugin version inside the file
+idea/checkstyle-idea.xml
 
 ###
 # JetBrains / IntelliJ
