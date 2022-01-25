@@ -1,3 +1,7 @@
+if exists('g:vscode')
+    " VSCode extension
+    " Use bare minimum until I better understand capabilities and limitations
+else
 " Refactored vimrc start
 
 "│-v-1 │ notes
@@ -753,6 +757,9 @@
           au!
           autocmd BufNewFile,BufRead *.ejs set filetype=html
       augroup END
+
+endif
 "│-v-1 │ footer
 "└─────┴─────────
 " vim: set fmr=-v-,-^- fdm=marker cms="%s et ts=2 sw=0 sts=0 :
+
