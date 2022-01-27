@@ -1,2 +1,4 @@
 npmrc filter=remove-tokens
 
+.ssh/config.d/marqeta.conf  filter=crypt diff=crypt merge=crypt
+secret_test.txt  filter=crypt diff=crypt merge=crypt
