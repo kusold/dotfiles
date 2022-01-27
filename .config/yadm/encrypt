@@ -3,3 +3,6 @@ bin/auth0-*
 .config/wakatime/.wakatime.cfg
 .aws/config
 Library/Fonts
+
+.ssh/config.d/marqeta.conf
+
