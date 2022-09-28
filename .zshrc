@@ -19,12 +19,24 @@ for script in $DOTFILES/zsh/scripts/*.sh; do
   fi
 done
 
-# Source zplug and plugins
-if [[ -d "$HOME/.zplug" ]]; then
-  export ZPLUG_HOME=$HOME/.zplug
-  source "$ZPLUG_HOME/init.zsh"
-  source "$DOTFILES/zsh/zplugins.zsh"
-fi
+# Install antidote if it is not found
+[[ -f $DOTFILES/zsh/.antidote/antidote.zsh ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ${DOTFILES:-~}/zsh/.antidote
+
+source ${DOTFILES}/zsh/.antidote/antidote.zsh
+zstyle ':antidote:bundle' use-friendly-names 'yes'
+
+# Source plugin configurations
+for script in $DOTFILES/zsh/plugins/*.zsh; do
+  if [ -x "${script}" ]; then
+    source ${script}
+  fi
+done
+
+antidote load
+
+# Load the prompt
+autoload -Uz promptinit && promptinit
+prompt pure
 
 # Development Directory Shortcut
 #if [[ -d "$HOME/Development" ]]; then

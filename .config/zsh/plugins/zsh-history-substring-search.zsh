@@ -1,4 +1,4 @@
-if zplug check zsh-users/zsh-history-substring-search; then
+#if zplug check zsh-users/zsh-history-substring-search; then
   # Bind up/down arrows
   bindkey '^[[A' history-substring-search-up
   bindkey '^[[B' history-substring-search-down
@@ -8,5 +8,5 @@ if zplug check zsh-users/zsh-history-substring-search; then
   # Vim
   bindkey -M vicmd 'k' history-substring-search-up
   bindkey -M vicmd 'j' history-substring-search-down
-fi
+#fi
 
