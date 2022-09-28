@@ -1,0 +1,45 @@
+################################################################################
+# Directory of ZSH Plugins                                                     #
+# https://github.com/unixorn/awesome-zsh-plugins                               #
+#                                                                              #
+# antidote documentation                                                          #
+# https://getantidote.github.io
+################################################################################
+
+#
+# Completions
+#
+zsh-users/zsh-completions
+
+#
+# Plugins
+#
+
+# Syntax highlighting
+zdharma-continuum/fast-syntax-highlighting kind:defer
+# Type command from history and then use the arrow keys to cylce through
+zsh-users/zsh-history-substring-search kind:defer
+
+zsh-users/zsh-autosuggestions
+chrissicool/zsh-256color
+# supercrabtree/k
+
+# A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
+djui/alias-tips
+
+# Make working with colors easier
+sorin-ionescu/prezto path:modules/spectrum
+
+#
+# Theme
+#
+
+# Async for zsh, used by pure
+#"mafredri/zsh-async", from:github, defer:0
+sindresorhus/pure kind:fpath
+
+#BASE16_SCHEME="eighties"
+chriskempson/base16-shell
+#zplug "chriskempson/base16-shell", use:"scripts/base16-$BASE16_SCHEME.sh", defer:0
+#zplug "chriskempson/base16-shell", use:colortest, as:command
+
