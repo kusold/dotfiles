@@ -1,3 +1,7 @@
+# load zprof first if we need to profile
+[[ ${ZPROFILE:-0} -eq 0 ]] || zmodload zsh/zprof
+alias zprofile="ZPROFILE=1 zsh"
+
 # Set default text editor
 export VISUAL=vim
 export EDITOR="$VISUAL"
@@ -101,3 +105,5 @@ then
   unfunction preexec
   PS1='$ '
 fi
+
+[[ ${ZPROFILE:-0} -eq 0 ]] || { unset ZPROFILE && zprof }
