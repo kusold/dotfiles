@@ -1,7 +1,3 @@
-[submodule "zplug"]
-	path = .zplug
-	shallow = true
-	url = https://github.com/zplug/zplug.git
 [submodule "nerd-fonts"]
 	path = nerd-fonts
 	shallow = true
