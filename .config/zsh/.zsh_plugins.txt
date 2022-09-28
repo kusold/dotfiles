@@ -22,7 +22,7 @@ zdharma-continuum/fast-syntax-highlighting kind:defer
 zsh-users/zsh-history-substring-search kind:defer
 
 zsh-users/zsh-autosuggestions
-chrissicool/zsh-256color
+chrissicool/zsh-256color kind:defer
 # supercrabtree/k
 
 # A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
@@ -36,7 +36,6 @@ sorin-ionescu/prezto path:modules/spectrum
 #
 
 # Async for zsh, used by pure
-#"mafredri/zsh-async", from:github, defer:0
 sindresorhus/pure kind:fpath
 
 #BASE16_SCHEME="eighties"
