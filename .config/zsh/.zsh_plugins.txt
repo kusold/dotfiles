@@ -38,7 +38,6 @@ sorin-ionescu/prezto path:modules/spectrum
 # Async for zsh, used by pure
 sindresorhus/pure kind:fpath
 
-#BASE16_SCHEME="eighties"
 chriskempson/base16-shell
 #zplug "chriskempson/base16-shell", use:"scripts/base16-$BASE16_SCHEME.sh", defer:0
 #zplug "chriskempson/base16-shell", use:colortest, as:command
