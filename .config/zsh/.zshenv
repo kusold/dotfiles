@@ -14,22 +14,23 @@ export DOTFILES="$HOME/.config"
 if [[ "$OSTYPE" == darwin* ]]; then
   export BROWSER='open'
 fi
+#
+#
+# Language
+#
+
+export LANG="${LANG:-en_US.UTF-8}"
+export LANG="${LANGUAGE:-en}"
+export LANG="${LC_ALL:-en_US.UTF-8}"
 
 #
 # Editors
 #
 
-export EDITOR='vim'
-export VISUAL='vim'
+export EDITOR='nvim'
+export VISUAL='code'
 export PAGER='less'
 
-#
-# Language
-#
-
-if [[ -z "$LANG" ]]; then
-  export LANG='en_US.UTF-8'
-fi
 
 #
 # Paths
@@ -49,20 +50,6 @@ path=(
 )
 
 #
-# Less
-#
-
-# Set the default Less options.
-# Mouse-wheel scrolling has been disabled by -X (disable screen clearing).
-# Remove -X and -F (exit if the content fits on one screen) to enable it.
-export LESS='-F -g -i -M -R -S -w -X -z-4'
-
-# Set the Less input preprocessor.
-if (( $+commands[lesspipe.sh] )); then
-  export LESSOPEN='| /usr/bin/env lesspipe.sh %s 2>&-'
-fi
-
-#
 # Temporary Files
 #
 
@@ -77,7 +64,7 @@ if [[ ! -d "$TMPPREFIX" ]]; then
 fi
 
 # Source all envs
-for script in $DOTFILES/zsh/env/*.sh; do
+for script in $ZDOTDIR/env/*.sh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi
