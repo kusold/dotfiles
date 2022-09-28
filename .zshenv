@@ -1,5 +1,7 @@
 export DOTFILES="$HOME/.config"
 
+export ZDOTDIR=${ZDOTDIR:-~/.config/zsh}
+
 #
 # Defines environment variables.
 #

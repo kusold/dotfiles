@@ -3,26 +3,26 @@ export VISUAL=vim
 export EDITOR="$VISUAL"
 
 # Source functions
-fpath=($DOTFILES/zsh/functions $fpath)
+fpath=($ZDOTDIR/functions $fpath)
 
 # Source all utilities
-for script in $DOTFILES/zsh/utilities/*.sh; do
+for script in $ZDOTDIR/utilities/*.sh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi
 done
 
 # Source all scripts
-for script in $DOTFILES/zsh/scripts/*.sh; do
+for script in $ZDOTDIR/scripts/*.sh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi
 done
 
 # Install antidote if it is not found
-[[ -f $DOTFILES/zsh/.antidote/antidote.zsh ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ${DOTFILES:-~}/zsh/.antidote
+[[ -f $ZDOTDIR/.antidote/antidote.zsh ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ${ZDOTDIR:-~}/.antidote
 
-source ${DOTFILES}/zsh/.antidote/antidote.zsh
+source ${ZDOTDIR}/.antidote/antidote.zsh
 zstyle ':antidote:bundle' use-friendly-names 'yes'
 
 # Source plugin configurations
