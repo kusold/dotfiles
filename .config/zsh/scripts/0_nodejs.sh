@@ -17,19 +17,5 @@ if command_exists nodenv; then
   eval "$(nodenv init -)"
 fi
 
-if [[ -f "/usr/local/opt/node@10/bin/node" ]] && command_missing node; then
-  export PATH="/usr/local/opt/node@10/bin:$PATH"
-  export LDFLAGS="-L/usr/local/opt/node@10/lib"
-  export CPPFLAGS="-I/usr/local/opt/node@10/include"
-fi
-
-if command_exists npm; then
-  export PATH="${PATH}:$(npm bin -g)"
-fi
-
-if command_exists npx; then
-  alias npx="npx --no-install"
-fi
-
 alias node-grep="grep -R --exclude-dir=node_modules --exclude-dir=public"
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 autoload command_exists
 
+# TODO: deferred loading means these don't get set
+
 if command_exists base16_eighties; then
   alias dark=base16_eighties
 fi
