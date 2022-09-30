@@ -2,6 +2,9 @@
 # Makes working with docker easier
 autoload command_exists
 
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
+export MACHINE_STORAGE_PATH="${XDG_DATA_HOME}/docker-machine"
+
 if command_exists docker; then
   # Kill all running containers.
   alias dockerkillall='docker kill $(docker ps -q)'
