@@ -6,8 +6,9 @@ if ! command -v brew >/dev/null 2>&1; then
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
-if [ -f "$HOME/.Brewfile" ]; then
-  echo "installing brew packages from ~/.Brewfile"
-  brew bundle --global
-fi
+# I don't keep this file in sync regularly
+#if [ -f "$HOME/.Brewfile" ]; then
+#  echo "installing brew packages from ~/.Brewfile"
+#  brew bundle --global
+#fi
 
