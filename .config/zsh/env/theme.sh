@@ -1,0 +1,1 @@
+export BASE16_SCHEME="${BASE16_SCHEME:-eighties}"
