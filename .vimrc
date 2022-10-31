@@ -243,6 +243,10 @@ else
     Plug 'Shougo/deoplete.nvim'
     Plug 'roxma/nvim-yarp'
     Plug 'roxma/vim-hug-neovim-rpc'
+    if has('pythonx')
+      set pyxversion=3
+      pythonx import pynvim
+    endif
   endif
 
   let g:deoplete#enable_at_startup = 1
