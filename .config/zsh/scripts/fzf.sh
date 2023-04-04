@@ -3,7 +3,7 @@
 autoload command_exists
 
 # Source fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
 if command_exists fzf; then
   # Use ripgrep
