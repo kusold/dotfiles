@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+zstyle :prompt:pure:git:stash show yes
+
 _update_ruby_version() {
   typeset -g ruby_version=''
   if which rbenv &> /dev/null; then
