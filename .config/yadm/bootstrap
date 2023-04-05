@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-YADM_BOOTSTRAP="${XDG_CONFIG_HOME}/yadm/bootstraps"
+YADM_BOOTSTRAP="${XDG_CONFIG_HOME:-~/.config}/yadm/bootstraps"
 system_type=$(uname -s)
 
 

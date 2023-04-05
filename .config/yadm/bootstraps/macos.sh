@@ -12,3 +12,6 @@ defaults write com.apple.dock tilesize -int 75
 
 # Set the dock to be on the right
 defaults write com.apple.dock orientation -string right
+
+#restart Dock
+killall Dock
