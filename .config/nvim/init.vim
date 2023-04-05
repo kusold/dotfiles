@@ -33,3 +33,5 @@ require('lspconfig-config')
 require('nvim-treesitter-config')
 EOF
 
+colorscheme tokyonight-storm
+

@@ -58,6 +58,74 @@ return require('packer').startup(function(use)
        ts_update()
      end,
   }
+  -- git
+  use {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup({
+        yadm = {
+          enable = true
+        }
+      })
+    end
+  }
+  -- UI
+  use {
+    'j-hui/fidget.nvim',
+    config = function()
+      require"fidget".setup{}
+    end
+  }
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup({
+        'css';
+	'javascript';
+      })
+    end
+  }
+  use {
+    'kosayoda/nvim-lightbulb',
+    requires = 'antoinemadec/FixCursorHold.nvim',
+    config = function()
+      require('nvim-lightbulb').setup({autocmd = {enabled = true}})
+    end
+  }
+  -- Lua
+  use {
+    "folke/trouble.nvim",
+    requires = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("trouble").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
+  }
+  use {
+    "nvim-telescope/telescope-file-browser.nvim",
+    requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require('telescope').setup()
+      require("telescope").load_extension "file_browser"
+
+      vim.api.nvim_set_keymap(
+        "n",
+        "<space>fb",
+        ":Telescope file_browser",
+        { noremap = true }
+      )
+    end
+  }
+  -- themes
+  use { 'folke/tokyonight.nvim' }
+  use { 'morhetz/gruvbox' }
+  use { 'catppuccin/nvim' }
+  use { 'projekt0n/github-nvim-theme' }
+  use { 'ray-x/aurora' }
+  use { 'Mofiqul/dracula.nvim' }
 
 
   -- Automatically set up your configuration after cloning packer.nvim
