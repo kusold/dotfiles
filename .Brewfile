@@ -20,6 +20,7 @@ brew "bat"
 #brew "cmake"
 #brew "ctags"
 brew "go"
+brew "gopls"
 #brew "dep"
 #brew "dfu-util"
 #brew "dos2unix"
@@ -32,6 +33,7 @@ brew "htop"
 #brew "hub"
 #brew "ispell"
 brew "jq"
+brew "lua-language-server"
 brew "mas"
 #brew "mercurial"
 brew "namebench"
@@ -47,7 +49,8 @@ brew "shellcheck"
 brew "speedtest-cli"
 brew "ssh-copy-id"
 brew "terminal-notifier"
-#brew "the_silver_searcher"
+brew "terraform-ls"
+brew "tflint"
 brew "tmux"
 brew "tree"
 brew "unrar"
@@ -76,7 +79,7 @@ cask "font-source-code-pro"
 #cask "xquartz"
 #cask "inkscape"
 cask "iterm2"
-cask "jetbrains-toolbox"
+#cask "jetbrains-toolbox"
 #cask "little-snitch"
 #cask "plex-media-player"
 #cask "plexamp"
@@ -93,6 +96,6 @@ mas "Divvy", id: 413857545
 #mas "Keynote", id: 409183694
 #mas "Numbers", id: 409203825
 #mas "Pages", id: 409201541
-mas "Paprika Recipe Manager 3", id: 1303222628
-mas "Todoist", id: 585829637
-mas "Xcode", id: 497799835
+#mas "Paprika Recipe Manager 3", id: 1303222628
+#mas "Todoist", id: 585829637
+#mas "Xcode", id: 497799835
