@@ -21,6 +21,7 @@ cmp.setup({
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    
     -- SuperTab Behaivor
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -48,10 +49,9 @@ cmp.setup({
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    --{ name = 'vsnip' }, -- For vsnip users.
     { name = 'luasnip' }, -- For luasnip users.
-    -- { name = 'ultisnips' }, -- For ultisnips users.
-    -- { name = 'snippy' }, -- For snippy users.
+    { name = 'nvim_lsp_signature_help' }, -- Provides hints about function arguments
+    { name = 'nvim_lua' }, -- nvim-cmp source for neovim Lua API.
   }, {
     { name = 'buffer' },
   })
