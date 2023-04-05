@@ -192,6 +192,7 @@ fabric.properties
 /.config/gtk-2.0/gtkfilechooser.ini
 /.config/inkscape/
 /.config/nvim/plugged/
+/.config/nvim/plugin/
 /.config/wakatime/
 /.config/yadm/repo.git/
 /.config/zsh/.antidote/
