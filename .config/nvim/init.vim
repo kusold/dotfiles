@@ -1,3 +1,6 @@
+if exists('g:vscode')
+    " VSCode extension
+else
 "│-v-1 │ configure plugins
 "└─────┴──────────────────
 """ Core plugin configuration (lua)
@@ -34,4 +37,6 @@ require('nvim-treesitter-config')
 EOF
 
 colorscheme tokyonight-storm
+
+endif
 
