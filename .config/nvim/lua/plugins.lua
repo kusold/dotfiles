@@ -41,6 +41,13 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/nvim-cmp'
+  -- comments
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+        require('Comment').setup()
+    end
+  }
   -- snippets
   use {
     'L3MON4D3/LuaSnip',
