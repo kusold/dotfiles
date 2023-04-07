@@ -34,6 +34,7 @@ require('mason-config')
 require('nvim-cmp-config')
 require('lspconfig-config')
 require('nvim-treesitter-config')
+
 EOF
 
 colorscheme tokyonight-storm
