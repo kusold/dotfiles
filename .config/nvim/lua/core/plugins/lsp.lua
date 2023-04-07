@@ -1,3 +1,4 @@
+-- TODO(cleanup): Unsure if this is still needed with null-ls
 ---Common format-on-save for lsp servers that implements formatting
 ---@param client table
 local function lsp_fmt_on_save(client)
@@ -15,12 +16,12 @@ local function null_ls_config()
   -- if you want to set up formatting on save, you can use this as a callback
   local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
   local null_ls = require("null-ls")
-  null_ls.setup({
+  require("mason-null-ls").setup({
     automatic_setup = true,
     ensure_installed = formatters,
-    sources = {
-      null_ls.builtins.formatting.stylua,
-    },
+  })
+  null_ls.setup({
+    -- sources = { null_ls.builtins.formatting.stylua, },
     -- you can reuse a shared lspconfig on_attach callback here
     on_attach = function(client, bufnr)
       if client.supports_method("textDocument/formatting") then
@@ -35,9 +36,10 @@ local function null_ls_config()
       end
     end,
   })
+  require("mason-null-ls").setup_handlers()
 end
 
-function add_capabilities()
+function add_capabilities(capabilities)
   for _, lsp in ipairs(lsp_servers) do
     require("lspconfig")[lsp].setup({
       capabilities = capabilities,
@@ -150,7 +152,7 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
-      add_capabilities()
+      add_capabilities(capabilities)
     end,
   },
   {
