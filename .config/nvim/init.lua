@@ -2,7 +2,7 @@ if vim.g.vscode then
 -- VSCode extension
 else
 -- ordinary Neovim
-  servers = {
+  lsp_servers = {
     'ansiblels',
     'bashls',
     'diagnosticls',
@@ -22,17 +22,7 @@ else
     'yamlls',
     -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md for other language servers
   }
-  -- Load plugins
-  require('plugins')
-  -- Load filetypes
-  require('filetypes')
-  -- Configure
-  require('mason-config')
-  require('nvim-cmp-config')
-  require('lspconfig-config')
-  require('nvim-treesitter-config')
+  require('core')
+
 end
-
-vim.cmd('colorscheme tokyonight-storm')
-
 
