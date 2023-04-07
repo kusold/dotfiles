@@ -1,36 +1,36 @@
 return {
   {
-    'j-hui/fidget.nvim',
+    "j-hui/fidget.nvim",
     config = function()
-      require"fidget".setup{}
-    end
+      require("fidget").setup({})
+    end,
   },
   {
-    'norcalli/nvim-colorizer.lua',
+    "norcalli/nvim-colorizer.lua",
     config = function()
-      require('colorizer').setup({
-        'css';
-	'javascript';
+      require("colorizer").setup({
+        "css",
+        "javascript",
       })
-    end
+    end,
   },
   {
-    'kosayoda/nvim-lightbulb',
-    dependencies = 'antoinemadec/FixCursorHold.nvim',
+    "kosayoda/nvim-lightbulb",
+    dependencies = "antoinemadec/FixCursorHold.nvim",
     config = function()
-      require('nvim-lightbulb').setup({autocmd = {enabled = true}})
-    end
+      require("nvim-lightbulb").setup({ autocmd = { enabled = true } })
+    end,
   },
   {
     "folke/trouble.nvim",
     dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
-      require("trouble").setup {
+      require("trouble").setup({
         -- your configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
-      }
-    end
+      })
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -40,16 +40,16 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     config = function()
-      require('telescope').setup()
-      require("telescope").load_extension "file_browser"
+      require("telescope").setup()
+      require("telescope").load_extension("file_browser")
     end,
     keys = {
-      { "<space>fb", "<cmd>Telescope file_browser<cr>", "Open file browser" }
+      { "<space>fb", "<cmd>Telescope file_browser<cr>", "Open file browser" },
     },
   },
   {
     "folke/which-key.nvim",
-    config = function (_, opts)
+    config = function(_, opts)
       local wk = require("which-key")
       wk.setup(opts)
       local keymaps = {
@@ -70,10 +70,10 @@ return {
         ["<leader>w"] = { name = "+windows" },
         ["<leader>x"] = { name = "+diagnostics/quickfix" },
       }
---      if Util.has("noice.nvim") then
- --       keymaps["<leader>sn"] = { name = "+noice" }
-  --    end
-      wk.register(keymaps) 
-    end
-  }
+      --      if Util.has("noice.nvim") then
+      --       keymaps["<leader>sn"] = { name = "+noice" }
+      --    end
+      wk.register(keymaps)
+    end,
+  },
 }
