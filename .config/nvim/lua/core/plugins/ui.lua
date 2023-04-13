@@ -33,6 +33,23 @@ return {
     end,
   },
   {
+    "nvim-neo-tree/neo-tree.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+      "MunifTanjim/nui.nvim",
+    },
+    keys = {
+      { "<leader>ft", "<cmd>Neotree toggle<cr>", desc = "NeoTree" },
+      { "<leader>bt", "<cmd>Neotree buffers toggle<cr>", desc = "NeoTree" },
+    },
+    branch = "v2.x",
+    config = function()
+      vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+      require("neo-tree").setup()
+    end,
+  },
+  {
     "nvim-telescope/telescope.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -44,7 +61,7 @@ return {
       require("telescope").load_extension("file_browser")
     end,
     keys = {
-      { "<space>fb", "<cmd>Telescope file_browser<cr>", "Open file browser" },
+      { "<space>fb", "<cmd>Telescope file_browser<cr>", desc = "Telescope file browser" },
     },
   },
   {
