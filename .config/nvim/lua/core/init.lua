@@ -25,6 +25,7 @@ formatters = {
 
 require("core.ensure-plugin-manager")
 require("core.options")
+require("core.helpers")
 require("lazy").setup("core.plugins", opts)
 require("core.filetypes")
 require("core.mappings")
