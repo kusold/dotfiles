@@ -68,7 +68,7 @@ else
   "└─────┴─────────
     " Install vim-plug
     if has('nvim')
-        let vim_plug_path = '~/.local/share/nvim/site/autoload/plug.vim'
+        " let vim_plug_path = '~/.local/share/nvim/site/autoload/plug.vim'
     else
         let vim_plug_path = '~/.vim/autoload/plug.vim'
     endif
