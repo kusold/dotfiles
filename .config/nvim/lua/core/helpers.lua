@@ -20,3 +20,11 @@ function SetColorScheme(scheme)
     vim.notify("colorscheme " .. scheme .. " not found!")
   end
 end
+
+function GetTableKeys(tab)
+  local keyset = {}
+  for k, _ in pairs(tab) do
+    keyset[#keyset + 1] = k
+  end
+  return keyset
+end
