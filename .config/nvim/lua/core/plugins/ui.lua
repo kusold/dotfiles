@@ -58,7 +58,8 @@ return {
     },
     keys = {
       { "<leader>ft", "<cmd>Neotree toggle<cr>", desc = "NeoTree" },
-      { "<leader>bt", "<cmd>Neotree buffers toggle<cr>", desc = "NeoTree" },
+      { "<leader>bt", "<cmd>Neotree float buffers<cr>", desc = "NeoTree" },
+      { "<leader>gt", "<cmd>Neotree float git_status<cr>", desc = "NeoTree" },
     },
     branch = "v2.x",
     config = function()
