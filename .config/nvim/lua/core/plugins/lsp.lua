@@ -73,7 +73,15 @@ return {
     },
     config = function(_, opts)
       local servers = opts.servers
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require("cmp_nvim_lsp").default_capabilities({
+        textDocument = {
+          -- used by nvim-ufo
+          foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true,
+          },
+        },
+      })
 
       local function setup(server, server_config)
         local server_opts = vim.tbl_deep_extend("force", {
