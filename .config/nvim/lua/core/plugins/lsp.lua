@@ -1,15 +1,38 @@
+local lsp_formatting = function(bufnr)
+  vim.lsp.buf.format({
+    filter = function(client)
+      -- apply whatever logic you want (in this example, we'll only use null-ls)
+      return client.name == "null-ls"
+    end,
+    bufnr = bufnr,
+  })
+end
+
+-- if you want to set up formatting on save, you can use this as a callback
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
 -- TODO(cleanup): Unsure if this is still needed with null-ls
 ---Common format-on-save for lsp servers that implements formatting
 ---@param client table
-local function lsp_fmt_on_save(client)
-  if client.server_capabilities.documentFormattingProvider then
-    vim.cmd([[
-            augroup FORMATTING
-                autocmd! * <buffer>
-                autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
-            augroup END
-        ]])
+local function lsp_fmt_on_save(client, bufnr)
+  if client.supports_method("textDocument/formatting") then
+    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = augroup,
+      buffer = bufnr,
+      callback = function()
+        lsp_formatting(bufnr)
+      end,
+    })
   end
+  -- if client.server_capabilities.documentFormattingProvider then
+  --   vim.cmd([[
+  --           augroup FORMATTING
+  --               autocmd! * <buffer>
+  --               autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
+  --           augroup END
+  --       ]])
+  -- end
 end
 
 return {
@@ -88,7 +111,7 @@ return {
           capabilities = vim.deepcopy(capabilities),
           on_attach = function(client, bufnr)
             if opts.autoformat then
-              lsp_fmt_on_save(client)
+              lsp_fmt_on_save(client, bufnr)
             end
           end,
         }, server_config or {})
