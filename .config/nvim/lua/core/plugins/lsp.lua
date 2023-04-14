@@ -64,6 +64,7 @@ return {
     "neovim/nvim-lspconfig",
     dependencies = {
       {
+        "b0o/schemastore.nvim",
         "williamboman/mason-lspconfig.nvim",
         dependencies = {
           "williamboman/mason.nvim",
@@ -93,6 +94,24 @@ return {
         ensure_installed = GetTableKeys(servers),
       })
       for server, conf in pairs(servers) do
+        if server == "jsonls" then
+          conf = {
+            settings = {
+              json = {
+                schemas = require("schemastore").json.schemas(),
+                validate = { enable = true },
+              },
+            },
+          }
+        elseif server == "yamlls" then
+          conf = {
+            settings = {
+              yaml = {
+                schemas = require("schemastore").yaml.schemas(),
+              },
+            },
+          }
+        end
         setup(server, conf)
       end
     end,
@@ -107,7 +126,9 @@ return {
         eslint = {},
         gopls = {},
         jdtls = {},
-        jsonls = {},
+        jsonls = {
+          -- Set dynamically
+        },
         lua_ls = {
           settings = {
             Lua = {
@@ -136,7 +157,9 @@ return {
         taplo = {},
         tflint = {},
         tsserver = {},
-        yamlls = {},
+        yamlls = {
+          -- Set dynamically
+        },
         -- See https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md for other language servers
       },
     },
