@@ -6,6 +6,23 @@ return {
     end,
   },
   {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      vim.opt.list = true
+      vim.opt.listchars:append("space:⋅")
+      vim.opt.listchars:append("eol:↴")
+
+      require("indent_blankline").setup({
+        -- Highlights current indentation level
+        show_current_context = true,
+        show_current_context_start = true,
+        -- Shows characters for whitespace
+        show_end_of_line = true,
+        space_char_blankline = " ",
+      })
+    end,
+  },
+  {
     "norcalli/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({
@@ -55,13 +72,31 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-tree/nvim-web-devicons",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      },
     },
     config = function()
-      require("telescope").setup()
+      require("telescope").setup({
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+          },
+        },
+      })
       require("telescope").load_extension("file_browser")
+      require("telescope").load_extension("fzf")
     end,
     keys = {
       { "<space>fb", "<cmd>Telescope file_browser<cr>", desc = "Telescope file browser" },
+      { "<space>ff", "<cmd>Telescope find_files<cr>", desc = "Telescope file finder" },
+      { "<space>fs", "<cmd>Telescope live_grep<cr>", desc = "Telescope find string" },
+      { "<space>bf", "<cmd>Telescope buffers<cr>", desc = "Telescope find buffers" },
+      { "<space>fh", "<cmd>Telescope help_tags<cr>", desc = "Telescope find help tags" },
     },
   },
   {
