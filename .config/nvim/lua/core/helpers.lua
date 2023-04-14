@@ -11,3 +11,12 @@ function ReloadConfig(ns)
 
   dofile(vim.env.MYVIMRC)
 end
+
+--
+-- Gracefully handle missing colorschemes
+function SetColorScheme(scheme)
+  local status_ok, _ = pcall(vim.cmd, "colorscheme " .. scheme)
+  if not status_ok then
+    vim.notify("colorscheme " .. scheme .. " not found!")
+  end
+end
