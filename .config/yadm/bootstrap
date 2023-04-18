@@ -18,9 +18,9 @@ if [ "$system_type" = "Darwin" ]; then
 	source $YADM_BOOTSTRAP/brew.sh
 fi
 
-source $YADM_BOOTSTRAP/npm.sh
-source $YADM_BOOTSTRAP/pip.sh
-source $YADM_BOOTSTRAP/gem.sh
+#source $YADM_BOOTSTRAP/npm.sh
+#source $YADM_BOOTSTRAP/pip.sh
+#source $YADM_BOOTSTRAP/gem.sh
 
 if [ "$system_type" = "Darwin" ]; then
 	echo "configure macos"
