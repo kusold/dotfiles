@@ -88,16 +88,26 @@ return {
             case_mode = "smart_case",
           },
         },
+        defaults = {
+          mappings = {
+            i = {
+              -- map actions.which_key to <C-h> (default: <C-/>)
+              -- actions.which_key shows the mappings for your picker,
+              -- e.g. git_{create, delete, ...}_branch for the git_branches picker
+              ["<C-h>"] = "which_key",
+            },
+          },
+        },
       })
       require("telescope").load_extension("file_browser")
       require("telescope").load_extension("fzf")
     end,
     keys = {
-      { "<space>fb", "<cmd>Telescope file_browser<cr>", desc = "Telescope file browser" },
-      { "<space>ff", "<cmd>Telescope find_files<cr>", desc = "Telescope file finder" },
-      { "<space>fs", "<cmd>Telescope live_grep<cr>", desc = "Telescope find string" },
-      { "<space>bf", "<cmd>Telescope buffers<cr>", desc = "Telescope find buffers" },
-      { "<space>fh", "<cmd>Telescope help_tags<cr>", desc = "Telescope find help tags" },
+      { "<leader>fb", "<cmd>Telescope file_browser<cr>", desc = "Telescope file browser" },
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Telescope file finder" },
+      { "<leader>fs", "<cmd>Telescope live_grep<cr>", desc = "Telescope find string" },
+      { "<leader>bf", "<cmd>Telescope buffers<cr>", desc = "Telescope find buffers" },
+      { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Telescope find help tags" },
     },
   },
   {

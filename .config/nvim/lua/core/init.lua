@@ -1,4 +1,5 @@
 local opts = {}
+require("core.ftdetect")
 require("core.ensure-plugin-manager")
 require("core.options")
 require("core.helpers")
