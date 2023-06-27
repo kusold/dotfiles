@@ -2,10 +2,6 @@
 [[ ${ZPROFILE:-0} -eq 0 ]] || zmodload zsh/zprof
 alias zprofile="ZPROFILE=1 zsh"
 
-# Set default text editor
-export VISUAL=vim
-export EDITOR="$VISUAL"
-
 # Source functions
 fpath=($ZDOTDIR/functions $fpath)
 
