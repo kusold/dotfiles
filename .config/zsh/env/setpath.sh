@@ -8,6 +8,10 @@ if [[ -d "$HOME/bin/" ]]; then
   export PATH=$HOME/bin:$PATH
 fi
 
+# Add homebrew
+if [[ -d "/opt/homebrew/bin/" ]]; then
+  export PATH=/opt/homebrew/bin:$PATH
+fi
 # Add locally bins
 if [[ -d "/opt/local/bin/" ]]; then
   export PATH=/opt/local/bin:$PATH

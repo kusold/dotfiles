@@ -1,11 +1,11 @@
 #! /usr/bin/env bash
 
-YADM_BOOTSTRAP="${XDG_CONFIG_HOME:-~/.config}/yadm/bootstraps"
+YADM_BOOTSTRAP="${XDG_CONFIG_HOME:-$HOME/.config}/yadm/bootstraps"
 system_type=$(uname -s)
 
 
 echo "init submodules"
-yadm submodule update --init --recursive
+#yadm submodule update --init --recursive
 
 echo "creating directories"
 source $YADM_BOOTSTRAP/directories.sh
@@ -28,5 +28,6 @@ if [ "$system_type" = "Darwin" ]; then
 fi
 
 source $YADM_BOOTSTRAP/shell.sh
+source $YADM_BOOTSTRAP/terminfo.sh
 source $YADM_BOOTSTRAP/home.sh
 
