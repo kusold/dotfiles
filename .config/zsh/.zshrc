@@ -66,7 +66,8 @@ fi
 #alias myip="ifconfig | grep '^[a-z0-1]*:' | cut '-d:' -f1 | xargs -I {} ipconfig getifaddr {}"
 alias myip="curl https://icanhazip.com"
 alias weather="~/dotfiles/ansiweather/ansiweather"
-alias ssh-keygen-strong='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date +%Y-%m-%dT%H:%M:%S%z)" -f "$HOME/.ssh/$(whoami)@$(hostname)-$(date +%Y-%m-%dT%H:%M:%S%z)"'
+alias ssh-keygen-strong-rsa='ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date +%Y-%m-%dT%H:%M:%S%z)" -f "$HOME/.ssh/$(whoami)@$(hostname)-$(date +%Y-%m-%dT%H:%M:%S%z)"'
+alias ssh-keygen-strong='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)-$(date +%Y-%m-%dT%H:%M:%S%z)" -f "$HOME/.ssh/$(whoami)@$(hostname)-$(date +%Y-%m-%dT%H:%M:%S%z)"'
 alias backup-to-nas='rsync --archive --delete --progress --exclude-from="$HOME/dotfiles/rsync_exclude.txt" --verbose $HOME/ admin@coruscant:/share/Backups/$HOST'
 
 # Load private environment files

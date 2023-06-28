@@ -89,6 +89,7 @@ cask "iterm2"
 #cask "signal"
 #cask "slack"
 #cask "spotify"
+cask "syncthing"
 cask "visual-studio-code"
 #cask "vlc"
 mas "Amphetamine", id: 937984704
@@ -99,5 +100,6 @@ mas "Amphetamine", id: 937984704
 #mas "Numbers", id: 409203825
 #mas "Pages", id: 409201541
 #mas "Paprika Recipe Manager 3", id: 1303222628
+mas "Tailscale", id: 1475387142
 #mas "Todoist", id: 585829637
 #mas "Xcode", id: 497799835
