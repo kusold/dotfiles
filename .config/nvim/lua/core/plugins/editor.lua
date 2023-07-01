@@ -14,4 +14,11 @@ return {
       require("ufo").setup()
     end,
   },
+  {
+    -- Match indentation to file
+    "nmac427/guess-indent.nvim",
+    config = function()
+      require("guess-indent").setup()
+    end,
+  },
 }
