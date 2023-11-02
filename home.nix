@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   home.username = "mkusold";
   home.homeDirectory = "/Users/mkusold";
-  home.stateVersion = "23.11";
+  home.stateVersion = "23.05";
   programs.home-manager.enable = true;
 
   home.packages = [
@@ -12,4 +12,5 @@
     enable = true;
     includes = [{ path = "~/.config/home-manager/config/git/config"; }];
   };
+
 }
