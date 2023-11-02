@@ -26,12 +26,10 @@
       home-manager.defaultPackage.${arch};
 
     darwinConfigurations."mq-mmkusold" = nix-darwin.lib.darwinSystem {
-      modules = [ ./darwin-configuration.nix ];
+      modules = [
+        home-manager.darwinModules.home-manager
+        ./darwin-configuration.nix
+      ];
     };
-    homeConfigurations.mkusold = 
-      home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${arch};
-        modules = [ ./home.nix ];
-      };
-    };
+  };
 }
