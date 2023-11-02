@@ -7,4 +7,9 @@
   home.packages = [
     pkgs.ponysay
   ];
+
+  programs.git = {
+    enable = true;
+    includes = [{ path = "~/.config/home-manager/config/git/config"; }];
+  };
 }
