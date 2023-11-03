@@ -55,6 +55,7 @@
     enable = true;
     casks = [
       "1password"
+      "docker"
     ];
     masApps = {
       "Amphetamine" = 937984704;
@@ -63,7 +64,7 @@
 
   nixpkgs.config = {
     allowUnfree = true;
-    allowUnfreePredicate = (_: true);
+    #allowUnfreePredicate = (_: true);
   };
 #  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
 #    "code"
@@ -72,6 +73,10 @@
   users.users.mkusold = {
     name = "mkusold";
     home = "/Users/mkusold";
+    openssh.authorizedKeys.keys = [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9Gr/FM9ZbYxHm8pULpsvAhCsJj1AGYP+BVNU2hR1awY77KyOPu95elA2kfi2+0n0sl2gK9yeU2GwfS+L9SkZxEl5Tw8nzac1DZ07KU0GVnORkXMPjnkSKMtUKahmRYzAQCtgcflLhTDL5HAAcIhdFGGnnGtGscoYXqTaWkCf8mQTshIaG3XPGT1nxk2qJDPl8Svaw4RLnQ1hKZLR2BoJO911hhXnlWRpIp+3O+sYqglM63mHFtO6m4IeUwfmO9VF90TTysP2dAPrHXH1Yz1gYwg0JuaWohUs7DJM9255r13Mt++MKy5F+Owuv855Bl99xY3fB2TgZ9hDrQRZV8qJ9W7WvJZNWIuuCkfOfIBKIJNtx95qdGPN41FbHNX7rBwwVH/SHPpIDEfUeOW+80lL2xNIZINMQzFnsX6cqT1s+p7nu3bI5kSFydcEz1Of5CUTEVex2q3bErOxzDSNAVXgGy9gzSRsesAxI50cTswR8vU7YGQphrWN0tgduSxN3tcM="
+    ];
+
   };
   home-manager.users.mkusold = { config, pkgs, lib, ... }: {
     # Home Manager apps aren't indexed by Spotlight
@@ -109,6 +114,11 @@
       font.name = "FiraCode Nerd Font";
       font.size = 11;
       theme = "Dark One Nuanced";
+      settings = {
+        update_check_interval = 0;
+        tab_bar_edge = "top";
+        tab_bar_style = "powerline";
+      };
     };
     programs.neovim = {
       enable = true;
@@ -121,5 +131,24 @@
      source = ./config/nvim;
      recursive = true;
     };
+    programs.zsh = {
+      enable = true;
+      # dotDir doesn't allow me to manage that directory myself
+      #dotDir = ".config/zsh";
+      initExtraFirst = ''
+        export ZDOTDIR=~/.config/zsh
+        . $ZDOTDIR/.zshenv
+        . $ZDOTDIR/.zlogin
+        . $ZDOTDIR/.zprofile
+      '';
+      initExtraBeforeCompInit = ''
+        . $ZDOTDIR/.zshrc
+      '';
+    };
+    home.file."./.config/zsh/" = {
+     source = ./config/zsh;
+     recursive = true;
+    };
+
   };
 }
