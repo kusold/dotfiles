@@ -93,6 +93,8 @@
     # Home Manager apps aren't indexed by Spotlight
     # https://github.com/nix-community/home-manager/issues/1341
     home.activation = {
+      # Makes apps show up in Spotlight
+      # https://github.com/nix-community/home-manager/issues/1341#issuecomment-1791545015
       trampolineApps = let
         apps = pkgs.buildEnv {
           name = "home-manager-applications";

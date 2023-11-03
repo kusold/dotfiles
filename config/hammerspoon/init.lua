@@ -1,3 +1,4 @@
+-- Kitty Dropdown: https://github.com/kovidgoyal/kitty/issues/45
 -- Copied from https://gist.github.com/truebit/d79b8018666d65e95970f208d8f5d149
 
 local spaces = require("hs.spaces") -- https://github.com/asmagill/hs._asm.spaces
