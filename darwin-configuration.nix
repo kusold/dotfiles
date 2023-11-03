@@ -1,11 +1,28 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 {
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [ 
+      pkgs-unstable.jetbrains.idea-ultimate
       pkgs.vim
       pkgs.vscode
+
+      # required for neovim
+      pkgs.luajit
+      pkgs.nodePackages.diagnostic-languageserver
+      pkgs.nodePackages.eslint
+      pkgs.nodePackages.dockerfile-language-server-nodejs
+      pkgs.sqls
+      pkgs.gopls
+      pkgs.docker-compose-language-service
+      pkgs.nodePackages.bash-language-server
+      pkgs.ansible-language-server
+      pkgs.nodePackages.vscode-json-languageserver
+      pkgs.nodePackages.typescript-language-server
+      pkgs.nodePackages.yaml-language-server
+      pkgs.nodejs_20
+      pkgs.go
     ];
 
   environment.darwinConfig = "$HOME/.config/home-manager/darwin-configuration.nix";
@@ -51,6 +68,17 @@
     programs.git = {
       enable = true;
       includes = [{ path = "~/.config/home-manager/config/git/config"; }];
+    };
+    programs.neovim = {
+      enable = true;
+      defaultEditor = true;
+      viAlias = true;
+      vimAlias = true;
+      vimdiffAlias = true;
+    };
+    home.file."./.config/nvim/" = {
+     source = ./config/nvim;
+     recursive = true;
     };
   };
 }

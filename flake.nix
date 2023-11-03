@@ -18,18 +18,24 @@
     };
   };
 
-  outputs = { nixpkgs, nix-darwin, home-manager, ... }: let
+  outputs = inputs@{ nixpkgs, nixpkgs-unstable, nix-darwin, home-manager, ... }: let
     #arch = "x86_64-darwin";
     arch = "aarch64-darwin";
+    pkgs = nixpkgs.legacyPackages.${arch};
+    pkgs-unstable = nixpkgs-unstable.legacyPackages.${arch};
   in {
     defaultPackage.${arch} =
       home-manager.defaultPackage.${arch};
 
+    inherit pkgs;
     darwinConfigurations."mq-mmkusold" = nix-darwin.lib.darwinSystem {
       modules = [
-        home-manager.darwinModules.home-manager
+        inputs.home-manager.darwinModules.home-manager
         ./darwin-configuration.nix
       ];
+      specialArgs = {
+        inherit pkgs-unstable;
+      };
     };
   };
 }
