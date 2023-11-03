@@ -39,6 +39,12 @@
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
+  system.defaults.CustomUserPreferences = {
+  #defaults write org.hammerspoon.Hammerspoon MJConfigFile "~/.config/hammerspoon/init.lua"
+    "org.hammerspoon.Hammerspoon" = {
+      MJConfigFile = "~/.config/hammerspoon/init.lua";
+    };
+  };
   system.defaults.dock = {
     orientation = "right";
     magnification = true;
@@ -58,6 +64,7 @@
       "1password"
       "docker"
       "focus"
+      "hammerspoon"
       "openlens"
       "qbserve"
     ];
@@ -132,6 +139,8 @@
         update_check_interval = 0;
         tab_bar_edge = "top";
         tab_bar_style = "powerline";
+        macos_quit_when_last_window_closed = true;
+        confirm_os_window_close = 0;
       };
     };
     programs.neovim = {
@@ -161,6 +170,11 @@
     };
     home.file."./.config/zsh/" = {
      source = ./config/zsh;
+     recursive = true;
+    };
+
+    home.file."./.config/hammerspoon/" = {
+     source = ./config/hammerspoon;
      recursive = true;
     };
 
