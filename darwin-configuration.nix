@@ -25,6 +25,11 @@
       pkgs.go
     ];
 
+  fonts.fontDir.enable = true;
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "FiraCode" "Hack" "JetBrainsMono" "SourceCodePro" "NerdFontsSymbolsOnly" ]; })
+  ];
+
   environment.darwinConfig = "$HOME/.config/home-manager/darwin-configuration.nix";
 
   # Auto upgrade nix package and the daemon service.
@@ -32,6 +37,16 @@
   nix.package = pkgs.nix;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
+
+  system.keyboard.enableKeyMapping = true;
+  system.keyboard.remapCapsLockToEscape = true;
+  system.defaults.dock = {
+    orientation = "right";
+    magnification = true;
+    largesize = 16;
+    mru-spaces = false;
+    show-recents = false;
+  };
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
