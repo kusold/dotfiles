@@ -46,6 +46,7 @@
     mru-spaces = false;
     show-recents = false;
   };
+  security.pam.enableSudoTouchIdAuth = true;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
@@ -56,6 +57,8 @@
     casks = [
       "1password"
       "docker"
+      "focus"
+      "qbserve"
     ];
     masApps = {
       "Amphetamine" = 937984704;
@@ -97,9 +100,18 @@
     };
     home.stateVersion = "23.05";
     home.packages = [
-      pkgs.ponysay
-      pkgs.vscode
       pkgs-unstable.jetbrains.idea-ultimate
+      pkgs.awscli2
+      pkgs.bat
+      pkgs.htop
+      pkgs.jq
+      pkgs.ponysay
+      pkgs.ripgrep
+      pkgs.ssh-copy-id
+      pkgs.tree
+      pkgs.unar
+      pkgs.vscode
+      pkgs.wget
     ];
     programs.home-manager.enable = true;
     programs.git = {
