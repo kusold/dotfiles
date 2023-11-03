@@ -58,6 +58,7 @@
       "1password"
       "docker"
       "focus"
+      "openlens"
       "qbserve"
     ];
     masApps = {
@@ -105,6 +106,7 @@
       pkgs.bat
       pkgs.htop
       pkgs.jq
+      pkgs.k9s
       pkgs.ponysay
       pkgs.ripgrep
       pkgs.ssh-copy-id
