@@ -16,9 +16,11 @@
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  outputs = inputs@{ nixpkgs, nixpkgs-unstable, nix-darwin, home-manager, ... }: let
+  outputs = inputs@{ nixpkgs, nixpkgs-unstable, nix-darwin, home-manager, mac-app-util, ... }: let
     #arch = "x86_64-darwin";
     arch = "aarch64-darwin";
     pkgs = nixpkgs.legacyPackages.${arch};
@@ -35,6 +37,7 @@
       ];
       specialArgs = {
         inherit pkgs-unstable;
+        inherit inputs;
       };
     };
   };
