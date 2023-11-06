@@ -67,6 +67,7 @@
       "hammerspoon"
       "openlens"
       "qbserve"
+      "vlc"
     ];
     masApps = {
       "Amphetamine" = 937984704;
@@ -113,16 +114,20 @@
       pkgs-unstable.jetbrains.idea-ultimate
       pkgs.awscli2
       pkgs.bat
+      pkgs.gh
       pkgs.htop
       pkgs.jq
       pkgs.k9s
       pkgs.ponysay
+      pkgs.restic
       pkgs.ripgrep
       pkgs.ssh-copy-id
       pkgs.tree
       pkgs.unar
       pkgs.vscode
       pkgs.wget
+      pkgs-unstable.yt-dlp
+      pkgs.shellcheck
     ];
     programs.home-manager.enable = true;
     programs.git = {
@@ -177,6 +182,11 @@
 
     home.file."./.config/hammerspoon/" = {
      source = ./config/hammerspoon;
+     recursive = true;
+    };
+
+    home.file."./bin/" = {
+     source = ./bin;
      recursive = true;
     };
 
