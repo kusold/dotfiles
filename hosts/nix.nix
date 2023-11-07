@@ -104,7 +104,7 @@
     # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.mike = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel", "docker" ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
     ];
@@ -115,4 +115,6 @@
       };
       in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
   };
+  
+  virtualisation.docker.enable = true;
 }
