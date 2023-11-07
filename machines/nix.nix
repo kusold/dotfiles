@@ -3,7 +3,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      ./hardware/nix.nix
     ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -112,5 +112,7 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
+  
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.allowReboot = true;
 }

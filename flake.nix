@@ -3,7 +3,7 @@
 
   inputs = {
     # Default to using stable for most packages
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-23.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-23.05-darwin";
     # For packages that we want the latest, use unstable
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -21,22 +21,31 @@
     mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, nix-darwin, home-manager, mac-app-util, ... }@inputs: let
+  outputs = { nixpkgs, nixpkgs-unstable, nixpkgs-darwin, nix-darwin, home-manager, mac-app-util, ... }@inputs: let
     #arch = "x86_64-darwin";
 #    arch = "aarch64-darwin";
 #    pkgs = nixpkgs.legacyPackages.${arch};
 #    pkgs-unstable = nixpkgs-unstable.legacyPackages.${arch};
-  in {
-    nixosConfigurations."nix" = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./nix-configuration.nix
-      ];
-      specialArgs = {
-        inherit pkgs-unstable;
-        inherit inputs;
-      };
+
+    mkSystem = import ./lib/mksystem.nix {
+      inherit nixpkgs inputs;
     };
+  in {
+    
+    nixosConfigurations."nix" = mkSystem "nix" rec {
+      system = "x86_64-linux";
+    };
+    darwinConfigurations."mq-mmkusold" = mkSystem "mq-mmkusold" rec {
+      system = "x86_64-linux";
+    };
+    #nixosConfigurations."nix" = nixpkgs.lib.nixosSystem {
+    #  system = "x86_64-linux";
+    #  modules = [
+    #    ./nix-configuration.nix
+    #  ];
+    #  specialArgs = inputs;
+    #  };
+    #};
 
 #    defaultPackage.${arch} =
 #      home-manager.defaultPackage.${arch};
@@ -53,5 +62,5 @@
 #        inherit inputs;
 #      };
 #    };
-#  };
+  };
 }
