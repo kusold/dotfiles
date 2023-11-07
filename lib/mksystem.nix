@@ -5,15 +5,15 @@
 name:
 {
   system,
-  # user,
+  user,
   darwin ? false,
 }:
 
 let
   # The config files for this system.
   machineConfig = ../machines/${name}.nix;
-  # userOSConfig = ../users/${user}/${if darwin then "darwin" else "nixos" }.nix;
-  # userHMConfig = ../users/${user}/home-manager.nix;
+  userOSConfig = ../users/${user}/${if darwin then "darwin" else "nixos" }.nix;
+  userHMConfig = ../users/${user}/home.nix;
 
   # NixOS vs nix-darwin functionst
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
@@ -28,7 +28,7 @@ in systemFunc rec {
     # { nixpkgs.overlays = overlays; }
 
     machineConfig
-    # userOSConfig
+    userOSConfig
     # home-manager.home-manager {
       # home-manager.useGlobalPkgs = true;
       # home-manager.useUserPackages = true;
@@ -43,7 +43,7 @@ in systemFunc rec {
       config._module.args = {
         currentSystem = system;
         currentSystemName = name;
-        # currentSystemUser = user;
+        currentSystemUser = user;
         inputs = inputs;
       };
     }
