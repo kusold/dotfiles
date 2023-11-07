@@ -52,6 +52,7 @@
     mru-spaces = false;
     show-recents = false;
   };
+  system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = true;
   security.pam.enableSudoTouchIdAuth = true;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
