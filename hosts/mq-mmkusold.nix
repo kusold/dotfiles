@@ -31,9 +31,11 @@
 
   environment.darwinConfig = "$HOME/.config/home-manager/hosts/${currentSystemName}.nix";
 
+  # This kept triggering security alerts
+  # A process attempted to stop or kill the Background Task Management Agent, possibly to establish persistence without user notification.
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
+  #services.nix-daemon.enable = true;
+  #nix.package = pkgs.nix;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
