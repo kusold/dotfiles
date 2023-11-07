@@ -34,20 +34,10 @@
     
     nixosConfigurations."nix" = mkSystem "nix" rec {
       system = "x86_64-linux";
-      user = "mike";
     };
     darwinConfigurations."mq-mmkusold" = mkSystem "mq-mmkusold" rec {
       system = "x86_64-linux";
-      user = "mkusold";
     };
-    #nixosConfigurations."nix" = nixpkgs.lib.nixosSystem {
-    #  system = "x86_64-linux";
-    #  modules = [
-    #    ./nix-configuration.nix
-    #  ];
-    #  specialArgs = inputs;
-    #  };
-    #};
 
 #    defaultPackage.${arch} =
 #      home-manager.defaultPackage.${arch};
