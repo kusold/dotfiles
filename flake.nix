@@ -34,9 +34,13 @@
     
     nixosConfigurations."nix" = mkSystem "nix" rec {
       system = "x86_64-linux";
+      user = "mike";
+      gui = false;
     };
     darwinConfigurations."mq-mmkusold" = mkSystem "mq-mmkusold" rec {
-      system = "x86_64-linux";
+      system = "aarch64-darwin";
+      user = "mkusold";
+      gui = true;
     };
 
 #    defaultPackage.${arch} =
