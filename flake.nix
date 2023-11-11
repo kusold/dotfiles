@@ -37,6 +37,11 @@
       user = "mike";
       gui = false;
     };
+    nixosConfigurations."yuki" = mkSystem "yuki" rec {
+      system = "x86_64-linux";
+      user = "mike";
+      gui = true;
+    };
     darwinConfigurations."mq-mmkusold" = mkSystem "mq-mmkusold" rec {
       system = "aarch64-darwin";
       user = "mkusold";

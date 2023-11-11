@@ -22,8 +22,17 @@ let
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
 
   # Linux vs Darwin Packages
-  pkgs = if darwin then inputs.nixpkgs-darwin.legacyPackages.${system} else nixpkgs.legacyPackages.${system};
-  pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+  pkgs = if darwin then inputs.nixpkgs-darwin.legacyPackages.${system} else import nixpkgs {
+    system = system; 
+    config.allowUnfree = true;
+  };
+  pkgs-unstable = import inputs.nixpkgs-unstable {
+    system = system;
+    config.allowUnfree = true;
+    config.permittedInsecurePackages = [
+      "googleearth-pro-7.3.4.8248"
+    ];
+  };
 in systemFunc rec {
   inherit system;
 
@@ -54,6 +63,7 @@ in systemFunc rec {
         currentSystem = system;
         currentSystemName = name;
         inputs = inputs;
+        pkgs-unstable = pkgs-unstable;
       };
     }
   ];
