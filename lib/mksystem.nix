@@ -25,6 +25,9 @@ let
   pkgs = if darwin then inputs.nixpkgs-darwin.legacyPackages.${system} else import nixpkgs {
     system = system; 
     config.allowUnfree = true;
+    config.packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    };
   };
   pkgs-unstable = import inputs.nixpkgs-unstable {
     system = system;
