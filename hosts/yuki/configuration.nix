@@ -2,19 +2,19 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware/mikes-desktop.nix
+      ./hardware-configuration.nix
     ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "mikes-desktop"; # Define your hostname.
+  networking.hostName = "yuki"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -84,18 +84,52 @@
     description = "Mike";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+    firefox
+    #  kate
+    #  vim
+    #  thunderbird
+    ] ++ [ pkgs-unstable.google-chrome ];
+    openssh.authorizedKeys.keys = let
+      authorizedKeys = pkgs.fetchurl {
+        url = "https://github.com/kusold.keys";
+        sha256 = "7Wt+i5OWJAVLKnZu8BoDgRHqQL0APJIBU5TSQ5TbsQE=";
+      };
+      in pkgs.lib.splitString "\n" (builtins.readFile authorizedKeys);
+  };
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.katie = {
+    hashedPassword = "$6$MeywIJ7KJmA0JwmV$T8Ilw1eOA6puMYATGDwOEga5kRlHQBeFO.CCd/jDKTJ/lumpEpN4C.q.daCkh/EDsYJ69XDtmABIEzjmFeUxv/";
+    isNormalUser = true;
+    description = "Katie";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
       firefox
       kate
+      vim
+      googleearth-pro
     #  thunderbird
+    ] ++ [ 
+      pkgs-unstable.google-chrome 
+      pkgs-unstable.googleearth-pro
     ];
   };
 
+  # Enable automatic login for the user.
+  services.xserver.displayManager.autoLogin.enable = true;
+  services.xserver.displayManager.autoLogin.user = "katie";
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "googleearth-pro-7.3.4.8248"
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    git
+    vim
+    pciutils
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
@@ -107,14 +141,13 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
+  
   programs.steam = {
     enable = true;
     # remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     # dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
   hardware.opengl.driSupport32Bit = true; # Enables support for 32bit libs that steam uses
-
 
   # List services that you want to enable:
 

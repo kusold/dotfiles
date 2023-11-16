@@ -41,6 +41,7 @@
       system = "x86_64-linux";
       user = "mike";
       gui = false;
+    };
     nixosConfigurations."mikes-desktop" = mkSystem "mikes-desktop" rec {
       system = "x86_64-linux";
       user = "mike";

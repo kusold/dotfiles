@@ -13,7 +13,7 @@ let
   in
 let
   # The config files for this system.
-  hostConfig = ../hosts/${name}.nix;
+  hostConfig = ../hosts/${name}/configuration.nix;
   homeConfig = ../home.nix;
 
 
