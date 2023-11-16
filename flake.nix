@@ -37,6 +37,11 @@
       user = "mike";
       gui = false;
     };
+    nixosConfigurations."mallard" = mkSystem "mallard" rec {
+      system = "x86_64-linux";
+      user = "mike";
+      gui = false;
+    };
     nixosConfigurations."yuki" = mkSystem "yuki" rec {
       system = "x86_64-linux";
       user = "mike";
