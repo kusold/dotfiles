@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../_common/hardware-dell-7060.nix
     ];
 
   # Bootloader.
