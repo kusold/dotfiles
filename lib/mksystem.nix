@@ -20,6 +20,7 @@ let
   # NixOS vs nix-darwin functionst
   systemFunc = if darwin then inputs.nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
+  agenix = if darwin then inputs.agenix.darwinModules else inputs.agenix.nixosModules;
 
   # Linux vs Darwin Packages
   pkgs = if darwin then inputs.nixpkgs-darwin.legacyPackages.${system} else import nixpkgs {
@@ -44,8 +45,13 @@ in systemFunc rec {
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
     # { nixpkgs.overlays = overlays; }
-
+    { nixpkgs.config.allowUnfree = true; }
     hostConfig
+    agenix.default
+    {
+      age.secrets.smb-media-credentials.file = ../secrets/smb-media-credentials.age;
+    }
+
     home-manager.home-manager {
       # home-manager.useGlobalPkgs = true;
       # home-manager.useUserPackages = true;

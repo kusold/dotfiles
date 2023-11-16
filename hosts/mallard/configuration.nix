@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../_common/hardware-dell-7060.nix
+      ./plex.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
@@ -89,6 +90,7 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+  services.openssh.settings.PermitRootLogin = "yes";
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

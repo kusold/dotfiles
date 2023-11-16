@@ -19,6 +19,7 @@
     };
 
     mac-app-util.url = "github:hraban/mac-app-util";
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs = { nixpkgs, nixpkgs-unstable, nixpkgs-darwin, nix-darwin, home-manager, mac-app-util, ... }@inputs: let
