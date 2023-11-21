@@ -5,6 +5,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../../modules/linux.nix
+      ../../modules/base-pkgs.nix
       ../../modules/autoupgrade.nix
       ../../modules/time-utc.nix
     ];

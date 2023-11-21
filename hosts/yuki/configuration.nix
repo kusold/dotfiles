@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       ../../modules/hardware-dell-7060.nix
       ../../modules/linux.nix
+      ../../modules/base-pkgs.nix
       ../../modules/time-denver.nix
       ../../modules/autoupgrade.nix
     ];
@@ -116,8 +117,6 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    git
-    vim
     pciutils
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
