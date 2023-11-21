@@ -7,6 +7,7 @@ let
   systems = [ mallard ];
 in
 {
-  "smb-media-credentials.age".publicKeys = [ mike-mba mallard ];
-  "secret2.age".publicKeys = users ++ systems;
+  "smb-media-credentials.age".publicKeys = users ++ [ mallard ];
+  "watchlist.txt.age".publicKeys = users ++ systems;
+  "notes.age".publicKeys = users;
 }

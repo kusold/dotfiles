@@ -14,6 +14,7 @@
       ../../modules/plex.nix
       ../../modules/autoupgrade.nix
       ../../modules/time-utc.nix
+      #../../modules/yt-dlp.nix
     ];
 
   # Use the systemd-boot EFI boot loader.

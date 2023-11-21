@@ -50,6 +50,7 @@ in systemFunc rec {
     agenix.default
     {
       age.secrets.smb-media-credentials.file = ../secrets/smb-media-credentials.age;
+      age.secrets.watchlist.file = ../secrets/watchlist.txt.age;
     }
 
     home-manager.home-manager {
