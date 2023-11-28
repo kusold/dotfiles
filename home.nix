@@ -1,22 +1,9 @@
-{ config, lib, pkgs, pkgs-unstable, gui, inputs, ... }: {
-    # Home Manager apps aren't indexed by Spotlight
-    # https://github.com/nix-community/home-manager/issues/1341
-   #home.activation = {
-   #  # Makes apps show up in Spotlight
-   #  # https://github.com/nix-community/home-manager/issues/1341#issuecomment-1791545015
-   #  trampolineApps = let
-   #    apps = pkgs.buildEnv {
-   #      name = "home-manager-applications";
-   #      paths = config.home.packages;
-   #      pathsToLink = "/Applications";
-   #    };
-   #    mac-app-util = inputs.mac-app-util.packages.${pkgs.stdenv.system}.default;
-   #  in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-   #    fromDir="${apps}/Applications/"
-   #    toDir="$HOME/Applications/Home Manager Trampolines"
-   #    ${mac-app-util}/bin/mac-app-util sync-trampolines "$fromDir" "$toDir"
-   #'';
-   #};
+{ config, lib, pkgs, pkgs-unstable, gui, darwin, inputs, ... }@args: {
+    imports = [] 
+      ++ lib.optionals(darwin) [
+        ( import ./home/darwin.nix (args) )
+      ];
+
     home.stateVersion = "23.05";
     home.packages = [
       pkgs.awscli2
@@ -35,6 +22,13 @@
       pkgs.wget
       pkgs-unstable.yt-dlp
       pkgs.shellcheck
+
+      # Added while trying to get neovim working well
+      pkgs.gnumake
+      pkgs.gcc
+      pkgs.nodejs_20
+      pkgs.unzip
+      pkgs.go
     ] ++ lib.optionals (gui) [
         pkgs-unstable.jetbrains.idea-ultimate
         pkgs.vscode
@@ -69,7 +63,7 @@
       vimdiffAlias = true;
     };
     home.file."./.config/nvim/" = {
-     source = ./config/nvim;
+     source = ../config/nvim;
      recursive = true;
     };
     programs.zsh = {
@@ -87,17 +81,12 @@
       '';
     };
     home.file."./.config/zsh/" = {
-     source = ./config/zsh;
-     recursive = true;
-    };
-
-    home.file."./.config/hammerspoon/" = {
-     source = ./config/hammerspoon;
+     source = ../config/zsh;
      recursive = true;
     };
 
     home.file."./bin/" = {
-     source = ./bin;
+     source = ../bin;
      recursive = true;
     };
 }

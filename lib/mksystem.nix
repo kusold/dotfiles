@@ -58,6 +58,7 @@ in systemFunc rec {
         inputs = inputs;
         config = config;
         lib = lib;
+        darwin = darwin;
       })];
     }
 
