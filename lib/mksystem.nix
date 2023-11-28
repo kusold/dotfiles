@@ -48,11 +48,6 @@ in systemFunc rec {
     { nixpkgs.config.allowUnfree = true; }
     hostConfig
     agenix.default
-    {
-      age.secrets.smb-media-credentials.file = ../secrets/smb-media-credentials.age;
-      age.secrets.watchlist.file = ../secrets/watchlist.txt.age;
-    }
-
     home-manager.home-manager {
       # home-manager.useGlobalPkgs = true;
       # home-manager.useUserPackages = true;

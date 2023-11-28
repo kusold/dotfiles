@@ -16,6 +16,8 @@
       ../../modules/time-utc.nix
       #../../modules/yt-dlp.nix
     ];
+  age.secrets.smb-media-credentials.file = ../../secrets/smb-media-credentials.age;
+  age.secrets.watchlist.file = ../../secrets/watchlist.txt.age;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
