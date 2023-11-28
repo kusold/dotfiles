@@ -64,9 +64,18 @@
       vimdiffAlias = true;
     };
     home.file."./.config/nvim/" = {
-     source = ../config/nvim;
-     recursive = true;
+    #  source = ../config/nvim;
+     source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/config/nvim";
+     recursive = false;
     };
+    #home.file."./.config/nvim/" = {
+    # source = ../config/nvim;
+    # recursive = true;
+    #};
+    #home.file."./.config/nvim/lazy-lock.json" = {
+    # source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/home-manager/config/nvim/lazy-lock.rw.json";
+    # recursive = false;
+    #};
     programs.zsh = {
       enable = true;
       # dotDir doesn't allow me to manage that directory myself
