@@ -7,19 +7,13 @@ return {
   },
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     config = function()
       vim.opt.list = true
       vim.opt.listchars:append("space:⋅")
       vim.opt.listchars:append("eol:↴")
 
-      require("indent_blankline").setup({
-        -- Highlights current indentation level
-        show_current_context = true,
-        show_current_context_start = true,
-        -- Shows characters for whitespace
-        show_end_of_line = true,
-        space_char_blankline = " ",
-      })
+      require("ibl").setup({ })
     end,
   },
   {
