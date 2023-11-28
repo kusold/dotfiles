@@ -7,6 +7,7 @@
     home.stateVersion = "23.05";
     home.packages = [
       pkgs.awscli2
+      pkgs.aws-sam-cli
       pkgs.bat
       pkgs.gh
       pkgs.htop
@@ -31,7 +32,7 @@
       pkgs.go
     ] ++ lib.optionals (gui) [
         pkgs-unstable.jetbrains.idea-ultimate
-        pkgs.vscode
+        pkgs-unstable.vscode
     ];
     programs.home-manager.enable = true;
     programs.git = {

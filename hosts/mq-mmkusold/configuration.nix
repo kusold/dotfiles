@@ -71,6 +71,7 @@
       "openlens"
       "qbserve"
       "vlc"
+      "zoom"
     ];
     masApps = {
       "Amphetamine" = 937984704;
