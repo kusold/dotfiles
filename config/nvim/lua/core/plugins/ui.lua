@@ -55,9 +55,9 @@ return {
       { "<leader>bt", "<cmd>Neotree float buffers<cr>", desc = "NeoTree" },
       { "<leader>gt", "<cmd>Neotree float git_status<cr>", desc = "NeoTree" },
     },
-    branch = "v2.x",
+    branch = "v3.x",
     config = function()
-      vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+      -- vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
       require("neo-tree").setup()
     end,
   },
