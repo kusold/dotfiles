@@ -1,7 +1,7 @@
 { config, lib, pkgs, pkgs-unstable, gui, darwin, inputs, ... }@args: {
     imports = [] 
       ++ lib.optionals(darwin) [
-        ( import ./home/darwin.nix (args) )
+        ( import ./darwin.nix (args) )
       ];
 
     home.stateVersion = "23.05";

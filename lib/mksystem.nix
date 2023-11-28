@@ -14,7 +14,7 @@ let
 let
   # The config files for this system.
   hostConfig = ../hosts/${name}/configuration.nix;
-  homeConfig = ../home.nix;
+  homeConfig = ../home-manager/home.nix;
 
 
   # NixOS vs nix-darwin functionst
