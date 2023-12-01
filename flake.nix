@@ -32,7 +32,7 @@
       inherit nixpkgs inputs;
     };
   in {
-    
+
     nixosConfigurations."nix" = mkSystem "nix" rec {
       system = "x86_64-linux";
       user = "mike";
@@ -51,6 +51,12 @@
     nixosConfigurations."yuki" = mkSystem "yuki" rec {
       system = "x86_64-linux";
       user = "mike";
+      gui = true;
+    };
+    darwinConfigurations."Mikes-MacBook-Air" = mkSystem "mikes-macbook-air" rec {
+      system = "aarch64-darwin";
+      #user = "mike";
+      user = "";
       gui = true;
     };
     darwinConfigurations."mq-mmkusold" = mkSystem "mq-mmkusold" rec {
