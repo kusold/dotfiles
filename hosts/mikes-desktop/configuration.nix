@@ -28,6 +28,11 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.extraConfig = ''
+  [connection]
+  ethernet.wake-on-lan = magic
+  wifi.wake-on-lan = magic
+  '';
 
   # Set your time zone.
   time.timeZone = "America/Denver";
