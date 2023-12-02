@@ -5,13 +5,6 @@
 # antidote documentation                                                          #
 # https://getantidote.github.io
 ################################################################################
-
-#
-# Completions
-#
-zsh-users/zsh-completions
-belak/zsh-utils path:completion
-
 #
 # Plugins
 #
@@ -42,4 +35,10 @@ spaceship-prompt/spaceship-prompt kind:fpath
 chriskempson/base16-shell
 #zplug "chriskempson/base16-shell", use:"scripts/base16-$BASE16_SCHEME.sh", defer:0
 #zplug "chriskempson/base16-shell", use:colortest, as:command
+
+#
+# Completions
+#
+zsh-users/zsh-completions
+belak/zsh-utils path:completion
 

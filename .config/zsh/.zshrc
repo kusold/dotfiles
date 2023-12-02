@@ -33,6 +33,12 @@ for script in $DOTFILES/zsh/plugins/*.zsh; do
 done
 
 antidote load
+#
+# Completions
+autoload -Uz compinit bashcompinit
+#compinit
+bashcompinit
+
 
 # Load the prompt
 autoload -Uz promptinit && promptinit
