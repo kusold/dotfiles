@@ -8,24 +8,44 @@
         ( import ../_modules/darwin.nix (args) )
       ];
     home.stateVersion = "23.05";
+    nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowUnfreePredicate = _: true;
+    
     home.packages = [
+      pkgs.ansible
+      pkgs.aspell
       pkgs.awscli2
-      pkgs.aws-sam-cli
       pkgs.bat
+      pkgs.bfg-repo-cleaner
       pkgs.gh
+      pkgs.go-migrate
+      pkgs.go-task
       pkgs.htop
       pkgs.jq
+      pkgs.k3sup
       pkgs.k9s
+      pkgs.kompose
+      pkgs.kubernetes-helm
+      pkgs.kustomize
+      pkgs.nodejs_20
       pkgs.ponysay
+      pkgs.pre-commit
       pkgs.restic
+      #pkgs.resticprofile
       pkgs.ripgrep
+      pkgs.shellcheck
+      pkgs.sops
+      pkgs.sqlite
       pkgs.ssh-copy-id
+      pkgs.ssh-copy-id
+      pkgs.terraform
+      pkgs.tmux
       pkgs.tree
       pkgs.unar
-      
       pkgs.wget
+      pkgs.yadm
+      
       pkgs-unstable.yt-dlp
-      pkgs.shellcheck
 
       # Added while trying to get neovim working well
       # pkgs.gnumake

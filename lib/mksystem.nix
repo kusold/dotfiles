@@ -18,7 +18,11 @@ let
   systemFunc = if darwin then inputs.nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
   agenix = if darwin then inputs.agenix.darwinModules else inputs.agenix.nixosModules;
-  pkgs = if darwin then inputs.nixpkgs-darwin.legacyPackages.${system} else import nixpkgs {
+  darwin-pkgs = import inputs.nixpkgs-darwin {
+    system = system;
+    config.allowUnfree = true;
+  };
+  pkgs = if darwin then darwin-pkgs else import nixpkgs {
     system = system;
     config.allowUnfree = true;
     config.packageOverrides = pkgs: {
@@ -62,8 +66,8 @@ in systemFunc rec {
     }
   ] ++ lib.optionals(user != "") [
     home-manager.home-manager {
-      # home-manager.useGlobalPkgs = true;
-      # home-manager.useUserPackages = true;
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
       home-manager.users.${user}.imports = [({config, lib, ... }: import homeConfig {
         pkgs = pkgs;
         pkgs-unstable = pkgs-unstable;

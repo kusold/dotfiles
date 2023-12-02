@@ -9,38 +9,16 @@
     [
       # Copied from Existing homebrew
       #pkgs.age
-      pkgs.ansible
-      pkgs.aspell
-      pkgs.awscli
-      pkgs.bat
-      pkgs.bfg-repo-cleaner
-      pkgs.go
-      pkgs.go-task
-      pkgs.go-migrate
       pkgs.htop
-      pkgs.jq
-      pkgs.k3sup
-      pkgs.k9s
+   
       pkgs.kompose
       pkgs.kubernetes-helm
       pkgs.kustomize
       pkgs.lua
       pkgs.neovim
-      pkgs.nodejs_20
-      pkgs.pre-commit
-      pkgs.restic
-      #pkgs.resticprofile
       pkgs.ripgrep
-      pkgs.sqlite
-      pkgs.sops
-      pkgs.ssh-copy-id
-      pkgs.terraform
-      pkgs.tmux
       pkgs.vim
       pkgs.wget
-      pkgs.yadm
-      pkgs.yt-dlp
-#      pkgs.vim
 #
 #
 #      # required for neovim
@@ -125,6 +103,8 @@
   '';
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate = _: true;
+
 #
 #  nixpkgs.config = {
 #    allowUnfree = true;
