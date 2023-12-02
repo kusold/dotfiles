@@ -13,6 +13,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     nix-darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,12 +37,12 @@
       inherit nixpkgs inputs;
     };
   in {
-
     nixosConfigurations."nix" = mkSystem "nix" rec {
       system = "x86_64-linux";
       user = "mike";
       gui = false;
     };
+
     nixosConfigurations."mallard" = mkSystem "mallard" rec {
       system = "x86_64-linux";
       user = "mike";
@@ -55,8 +60,8 @@
     };
     darwinConfigurations."Mikes-MacBook-Air" = mkSystem "mikes-macbook-air" rec {
       system = "aarch64-darwin";
-      #user = "mike";
-      user = "";
+      user = "mike";
+      # user = "";
       gui = true;
     };
     darwinConfigurations."mq-mmkusold" = mkSystem "mq-mmkusold" rec {
@@ -64,21 +69,5 @@
       user = "mkusold";
       gui = true;
     };
-
-#    defaultPackage.${arch} =
-#      home-manager.defaultPackage.${arch};
-#
-#    inherit pkgs;
-#    darwinConfigurations."mq-mmkusold" = nix-darwin.lib.darwinSystem {
-#      system = "aarch64-darwin";
-#      modules = [
-#        inputs.home-manager.darwinModules.home-manager
-#        ./darwin-configuration.nix
-#      ];
-#      specialArgs = {
-#        inherit pkgs-unstable;
-#        inherit inputs;
-#      };
-#    };
   };
 }

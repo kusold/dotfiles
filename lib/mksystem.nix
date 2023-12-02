@@ -10,20 +10,14 @@ name:
 }:
 let
   darwin = nixpkgs.lib.strings.hasInfix "darwin" system;
-  in
-let
-  # The config files for this system.
-  hostConfig = ../hosts/${name}/configuration.nix;
-  homeConfig = ../home-manager/home.nix;
 
 
-  # NixOS vs nix-darwin functionst
+
+
+  # Get the proper versions depending on if it is darwin or linux.
   systemFunc = if darwin then inputs.nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
-  lib = nixpkgs.lib;
   agenix = if darwin then inputs.agenix.darwinModules else inputs.agenix.nixosModules;
-
-  # Linux vs Darwin Packages
   pkgs = if darwin then inputs.nixpkgs-darwin.legacyPackages.${system} else import nixpkgs {
     system = system;
     config.allowUnfree = true;
@@ -38,6 +32,12 @@ let
       "googleearth-pro-7.3.4.8248"
     ];
   };
+  lib = pkgs.lib;
+
+  # The config files for this system.
+  hostConfig = ../hosts/${name}/configuration.nix;
+  homeConfig = ../home-manager/${user}/home.nix;
+
 in systemFunc rec {
   inherit system;
 
@@ -46,7 +46,7 @@ in systemFunc rec {
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
     # { nixpkgs.overlays = overlays; }
-    { nixpkgs.config.allowUnfree = true; }
+    # { nixpkgs.config.allowUnfree = true; }
     hostConfig
     agenix.default
 

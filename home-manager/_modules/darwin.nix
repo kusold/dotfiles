@@ -20,7 +20,7 @@
 
   # Hammerspoon is a macOS automation tool that allows you to write Lua scripts
   home.file."./.config/hammerspoon/" = {
-   source = ../config/hammerspoon;
+   source = ../../config/hammerspoon;
    recursive = true;
   };
 }
