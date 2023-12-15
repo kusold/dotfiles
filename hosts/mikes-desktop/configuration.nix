@@ -34,9 +34,6 @@
   wifi.wake-on-lan = magic
   '';
 
-  # Set your time zone.
-  time.timeZone = "America/Denver";
-
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 

@@ -27,6 +27,8 @@
   fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "FiraCode" "Hack" "JetBrainsMono" "SourceCodePro" "NerdFontsSymbolsOnly" ]; })
+    iosevka
+    monaspace
   ];
 
   environment.darwinConfig = "$HOME/.config/home-manager/hosts/${currentSystemName}.nix";
