@@ -37,6 +37,7 @@
       inherit nixpkgs inputs;
     };
   in {
+    # Runs System & Home Configurations
     nixosConfigurations."nix" = mkSystem "nix" rec {
       system = "x86_64-linux";
       user = "mike";
@@ -69,5 +70,22 @@
       user = "mkusold";
       gui = true;
     };
+
+    # Allows for updating just the user `nix build .#<USER>`
+    homeConfigurations.mike = home-manager.lib.homeManagerConfiguration {
+      inherit nixpkgs;
+      modules = [
+        ./home-manager/mike/home.nix
+      ];
+    };
+    homeConfigurations.mkusold = home-manager.lib.homeManagerConfiguration {
+      inherit nixpkgs;
+      modules = [
+        ./home-manager/mkusold/home.nix
+      ];
+    };
   };
+
+  
+
 }
