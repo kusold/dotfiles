@@ -5,13 +5,15 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  lockfile:
+  flake-lockfile:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
+      - name: Setup Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@main
         with:
