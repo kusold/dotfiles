@@ -27,7 +27,7 @@
     agenix.url = "github:ryantm/agenix";
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, nixpkgs-darwin, nix-darwin, home-manager, mac-app-util, ... }@inputs: let
+  outputs = { nixpkgs, nixpkgs-unstable, nixpkgs-darwin, nix-darwin, home-manager, mac-app-util, agenix, ... }@inputs: let
     #arch = "x86_64-darwin";
 #    arch = "aarch64-darwin";
 #    pkgs = nixpkgs.legacyPackages.${arch};

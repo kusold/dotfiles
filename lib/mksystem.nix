@@ -53,6 +53,11 @@ in systemFunc rec {
     # { nixpkgs.config.allowUnfree = true; }
     hostConfig
     agenix.default
+    {
+      environment.systemPackages = [
+        inputs.agenix.packages."${system}".default
+      ];
+    }
 
     # We expose some extra arguments so that our modules can parameterize
     # better based on these values.
