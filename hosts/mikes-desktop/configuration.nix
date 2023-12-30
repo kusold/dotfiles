@@ -13,6 +13,7 @@
       ../../modules/base-pkgs.nix
       ../../modules/autoupgrade.nix
       ../../modules/time-denver.nix
+      ../../modules/tailscale.nix
     ];
 
   # Bootloader.
