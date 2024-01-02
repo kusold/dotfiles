@@ -54,6 +54,11 @@
       user = "mike";
       gui = true;
     };
+    nixosConfigurations."scannerpi" = mkSystem "scannerpi" rec {
+      system = "aarch64-linux";
+      user = "";
+      gui = false;
+    };
     nixosConfigurations."yuki" = mkSystem "yuki" rec {
       system = "x86_64-linux";
       user = "mike";
