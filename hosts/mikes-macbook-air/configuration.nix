@@ -3,6 +3,21 @@
 {
   environment.darwinConfig = "$HOME/Development/dotfiles/hosts/${currentSystemName}.nix";
   nixpkgs.hostPlatform = "aarch64-darwin";
+
+  imports = [
+    ../../pkgs/restic-darwin.nix
+  ];
+
+  services.restic.backups = {
+    "truenas" = {
+      repository = "sftp:truenas.local:/mnt/tank/Backups/Restic";
+      passwordFile = "/Users/mike/.config/resticprofile/truenas-sftp-password.txt";
+      paths = [
+        "/Users/mike/Documents"
+      ];
+    };
+  };
+
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
@@ -91,6 +106,7 @@
     ];
     masApps = {
       "Amphetamine" = 937984704;
+      "Tailscale" = 1475387142;
     };
   };
 	# Enable experimental nix command and flakes
