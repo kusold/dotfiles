@@ -95,6 +95,7 @@
       "docker"
       "element"
       "focus"
+      "fujitsu-scansnap-home"
       "iterm2"
       "ledger-live"
       "obsidian"

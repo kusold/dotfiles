@@ -7,8 +7,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/scanservjs.nix
       ../../modules/tailscale.nix
-
     ];
 
   boot.loader = {
@@ -91,6 +91,7 @@
   environment.systemPackages = with pkgs; [
     curl
     git
+    usbutils # lsusb - useful for ensuring the scanner is connected
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
   ];
@@ -118,6 +119,8 @@
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
+
+  nixpkgs.config.allowUnfree = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

@@ -10,6 +10,7 @@ let
 in
 {
   "smb-media-credentials.age".publicKeys = users ++ [ mallard ];
+  "smb-scannerpi-credentials.age".publicKeys = users ++ [ scannerpi ];
   "watchlist.txt.age".publicKeys = users ++ systems;
   "notes.age".publicKeys = users;
   "wifi-home.age".publicKeys = users ++ [scannerpi];
