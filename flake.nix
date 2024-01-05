@@ -25,9 +25,10 @@
 
     mac-app-util.url = "github:hraban/mac-app-util";
     agenix.url = "github:ryantm/agenix";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { nixpkgs, nixpkgs-unstable, nixpkgs-darwin, nix-darwin, home-manager, mac-app-util, agenix, ... }@inputs: let
+  outputs = { nixpkgs, nixpkgs-unstable, nixpkgs-darwin, nix-darwin, home-manager, mac-app-util, agenix, nixos-hardware, ... }@inputs: let
     #arch = "x86_64-darwin";
 #    arch = "aarch64-darwin";
 #    pkgs = nixpkgs.legacyPackages.${arch};
