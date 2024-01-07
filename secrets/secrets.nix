@@ -14,4 +14,5 @@ in
   "watchlist.txt.age".publicKeys = users ++ systems;
   "notes.age".publicKeys = users;
   "wifi-home.age".publicKeys = users ++ [scannerpi];
+  "app-jellyplex-watched.age".publicKeys = users ++ [mallard];
 }
