@@ -15,6 +15,7 @@
       ../../modules/plex.nix
       ../../modules/autoupgrade.nix
       ../../modules/time-utc.nix
+      ../../modules/tailscale.nix
       ../../modules/jellyfin.nix
       #../../modules/yt-dlp.nix
     ];
