@@ -15,6 +15,7 @@
       ../../modules/plex.nix
       ../../modules/autoupgrade.nix
       ../../modules/time-utc.nix
+      ../../modules/jellyfin.nix
       #../../modules/yt-dlp.nix
     ];
   age.secrets.smb-media-credentials.file = ../../secrets/smb-media-credentials.age;
