@@ -44,7 +44,14 @@ let
 
 in systemFunc rec {
   inherit system;
-
+  # We expose some extra arguments so that our modules can parameterize
+  # better based on these values.
+  specialArgs = {
+    currentSystem = system;
+    currentSystemName = name;
+    inputs = inputs;
+    pkgs-unstable = pkgs-unstable;
+  };
   modules = [
     # Apply our overlays. Overlays are keyed by system type so we have
     # to go through and apply our system type. We do this first so
@@ -61,14 +68,6 @@ in systemFunc rec {
 
     # We expose some extra arguments so that our modules can parameterize
     # better based on these values.
-    {
-      config._module.args = {
-        currentSystem = system;
-        currentSystemName = name;
-        inputs = inputs;
-        pkgs-unstable = pkgs-unstable;
-      };
-    }
   ] ++ lib.optionals(user != "") [
     home-manager.home-manager {
       home-manager.useGlobalPkgs = true;
