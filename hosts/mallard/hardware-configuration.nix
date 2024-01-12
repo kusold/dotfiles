@@ -8,12 +8,43 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
+  boot.initrd.supportedFilesystems = [ "btrfs" ];
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
 
+  fileSystems."/persistant_disk" =
+    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+      fsType = "btrfs";
+    };
+  fileSystems."/persist" =
+    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+      fsType = "btrfs";
+      options = [ "subvol=persist" ];
+    };
+  fileSystems."/etc/nixos" =
+    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+      fsType = "btrfs";
+      options = [ "subvol=nixos-config" "compress=zstd" ];
+    };
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+      fsType = "btrfs";
+      options = [ "subvol=home" "compress=zstd" ];
+    };
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+      fsType = "btrfs";
+      options = [ "subvol=nix" "compress=zstd" ];
+    };
+  fileSystems."/var/log" =
+    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+      fsType = "btrfs";
+      options = [ "subvol=log" ];
+      neededForBoot = true;
+    };
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/89bdb331-653b-4da2-9f8b-292155f213e4";
       fsType = "ext4";
