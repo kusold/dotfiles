@@ -2,12 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running `nixos-help`).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      inputs.impermanence.nixosModules.impermanence
       ../../modules/hardware-dell-7060.nix
       ../../modules/linux.nix
       ../../modules/nix.nix
@@ -19,8 +20,16 @@
       ../../modules/jellyfin.nix
       #../../modules/yt-dlp.nix
     ];
+
   age.secrets.smb-media-credentials.file = ../../secrets/smb-media-credentials.age;
   age.secrets.watchlist.file = ../../secrets/watchlist.txt.age;
+
+  environment.persistence."/persist" = {
+    files = [
+      "/tmp/test"
+    ];
+    hideMounts = true;
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
