@@ -9,14 +9,14 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       inputs.impermanence.nixosModules.impermanence
-      ../../modules/hardware-dell-7060.nix
       ../../modules/linux.nix
       ../../modules/nix.nix
       ../../modules/base-pkgs.nix
-      ../../modules/plex.nix
       ../../modules/autoupgrade.nix
       ../../modules/time-utc.nix
       ../../modules/tailscale.nix
+
+      ../../modules/plex.nix
       ../../modules/jellyfin.nix
       #../../modules/yt-dlp.nix
     ];

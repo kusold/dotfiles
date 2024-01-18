@@ -7,6 +7,7 @@ name:
   system,
   user,
   gui,
+  impermanence ? false,
 }:
 let
   darwin = nixpkgs.lib.strings.hasInfix "darwin" system;
@@ -18,6 +19,9 @@ let
   systemFunc = if darwin then inputs.nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
   agenix = if darwin then inputs.agenix.darwinModules else inputs.agenix.nixosModules;
+  impermanenceModule = if darwin then {} else inputs.impermanence.nixosModules.impermanence;
+  impermanenceFunc = if !impermanence && !darwin then { environment.persistence = lib.mkForce {}; } else {};
+
   darwin-pkgs = import inputs.nixpkgs-darwin {
     system = system;
     config.allowUnfree = true;
@@ -65,6 +69,8 @@ in systemFunc rec {
         inputs.agenix.packages."${system}".default
       ];
     }
+    impermanenceModule
+    impermanenceFunc
 
     # We expose some extra arguments so that our modules can parameterize
     # better based on these values.
