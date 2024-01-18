@@ -21,4 +21,7 @@
     # Deduplicate and optimize nix store
     auto-optimise-store = true;
   };
+
+  # Only allow users with sudo access to interact with nix
+  nix.allowedUsers = [ "@wheel" ];
 }
