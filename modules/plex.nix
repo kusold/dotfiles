@@ -39,28 +39,28 @@
   #   user = "media";
   #   group = "media";
   # };
-  config.virtualisation.oci-containers.containers.plex = {
-    #image = "plexinc/pms-docker";
-    image = "lscr.io/linuxserver/plex";
-    extraOptions = [
-      "--network=host"
-      "--device=/dev/dri:/dev/dri"
-    ];
-    volumes = [
-      "/mnt/storage/Media:/mnt/storage/Media"
-      "/var/lib/plex/Plex\ Media\ Server:/config"
-      "/dev/shm:/transcode"
-    ];
-    #user = "101337:101337";
-    ports = [
-      "32400:32400/tcp"
-    ];
-    autoStart = true;
-    environment = {
-      TZ = "Etc/UTC";
-      PUID = "101337";
-      PGID = "101337";
-      VERSION = "docker";
-    };
-  };
+  # config.virtualisation.oci-containers.containers.plex = {
+  #   #image = "plexinc/pms-docker";
+  #   image = "lscr.io/linuxserver/plex";
+  #   extraOptions = [
+  #     "--network=host"
+  #     "--device=/dev/dri:/dev/dri"
+  #   ];
+  #   volumes = [
+  #     "/mnt/storage:/mnt/storage"
+  #     "/var/lib/plex/Plex\ Media\ Server:/config"
+  #     "/dev/shm:/transcode"
+  #   ];
+  #   #user = "101337:101337";
+  #   ports = [
+  #     "32400:32400/tcp"
+  #   ];
+  #   autoStart = true;
+  #   environment = {
+  #     TZ = "Etc/UTC";
+  #     PUID = "101337";
+  #     PGID = "101337";
+  #     VERSION = "docker";
+  #   };
+  # };
 }
