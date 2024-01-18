@@ -20,6 +20,8 @@
     experimental-features = "nix-command flakes";
     # Deduplicate and optimize nix store
     auto-optimise-store = true;
+    # Allows nix to access private github repos
+    access-tokens = "github.com=${builtins.readFile config.age.secrets.github-access-token.path}";
   };
 
   # Only allow users with sudo access to interact with nix
