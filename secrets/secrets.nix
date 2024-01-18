@@ -15,4 +15,5 @@ in
   "notes.age".publicKeys = users;
   "wifi-home.age".publicKeys = users ++ [scannerpi];
   "app-jellyplex-watched.age".publicKeys = users ++ [mallard];
+  "user-mike-hashed-passwd.age".publicKeys = users ++ systems;
 }

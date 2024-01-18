@@ -21,15 +21,33 @@
       #../../modules/yt-dlp.nix
     ];
 
+  # Read from /persist because that's available on boot for impermanence
+  age.identityPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
+
   age.secrets.smb-media-credentials.file = ../../secrets/smb-media-credentials.age;
   age.secrets.watchlist.file = ../../secrets/watchlist.txt.age;
+  age.secrets.user-mike-hashed-passwd.file = ../../secrets/user-mike-hashed-passwd.age;
+
 
   environment.persistence."/persist" = {
     files = [
-      "/tmp/test"
+      "/etc/adjtime"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
+      "/etc/machine-id"
+    ];
+    directories = [
+      "/var/lib/containers/"
+      "/var/lib/jellyfin/"
+      "/var/lib/nixos/"
+      "/var/lib/plex/"
+      "/var/lib/tailscale/"
     ];
     hideMounts = true;
   };
+  users.mutableUsers = false;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -44,6 +62,7 @@
     packages = with pkgs; [
       tree
     ];
+    hashedPasswordFile = "${config.age.secrets.user-mike-hashed-passwd.path}";
     openssh.authorizedKeys.keys = let
       authorizedKeys = pkgs.fetchurl {
         url = "https://github.com/kusold.keys";

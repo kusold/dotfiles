@@ -15,45 +15,80 @@
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
 
-  fileSystems."/persistant_disk" =
-    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
-      fsType = "btrfs";
-    };
-  fileSystems."/persist" =
-    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
-      fsType = "btrfs";
-      options = [ "subvol=persist" ];
-    };
-  fileSystems."/etc/nixos" =
-    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
-      fsType = "btrfs";
-      options = [ "subvol=nixos-config" "compress=zstd" ];
-    };
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
-      fsType = "btrfs";
-      options = [ "subvol=home" "compress=zstd" ];
-    };
-  fileSystems."/nix" =
-    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
-      fsType = "btrfs";
-      options = [ "subvol=nix" "compress=zstd" ];
-    };
-  fileSystems."/var/log" =
-    { device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
-      fsType = "btrfs";
-      options = [ "subvol=log" ];
-      neededForBoot = true;
-    };
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/89bdb331-653b-4da2-9f8b-292155f213e4";
-      fsType = "ext4";
-    };
+  # Resets root to a blank state after each reboot
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    # If this causes issues, check out the following links:
+    # https://guekka.github.io/nixos-server-1/
+    # https://github.com/nix-community/impermanence/issues/119
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/F4F5-6A1D";
-      fsType = "vfat";
-    };
+    mkdir /btrfs_tmp
+    mount /dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71 /btrfs_tmp
+    if [[ -e /btrfs_tmp/root ]]; then
+        mkdir -p /btrfs_tmp/old_roots
+        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+        mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+    fi
+
+    delete_subvolume_recursively() {
+        IFS=$'\n'
+        for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+            delete_subvolume_recursively "/btrfs_tmp/$i"
+        done
+        btrfs subvolume delete "$1"
+    }
+
+    for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+        delete_subvolume_recursively "$i"
+    done
+
+    btrfs subvolume create /btrfs_tmp/root
+    umount /btrfs_tmp
+  '';
+
+  fileSystems."/persistant_disk" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+  };
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+    options = [ "subvol=root" ];
+  };
+  fileSystems."/persist" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+    options = [ "subvol=persist" ];
+    neededForBoot = true;
+  };
+  fileSystems."/etc/nixos" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+    options = [ "subvol=nixos-config" "compress=zstd" ];
+  };
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+    options = [ "subvol=home" "compress=zstd" ];
+  };
+  fileSystems."/nix" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+    options = [ "subvol=nix" "compress=zstd" ];
+  };
+  fileSystems."/var/log" = {
+    device = "/dev/disk/by-uuid/c09e5c9a-dc32-43ac-8a4b-6759f8aa1b71";
+    fsType = "btrfs";
+    options = [ "subvol=log" ];
+    neededForBoot = true;
+  };
+  fileSystems."/mnt/root-ext4" = {
+    device = "/dev/disk/by-uuid/89bdb331-653b-4da2-9f8b-292155f213e4";
+    fsType = "ext4";
+  };
+
+  fileSystems."/boot" = { device = "/dev/disk/by-uuid/F4F5-6A1D";
+    fsType = "vfat";
+  };
 
   swapDevices = [ ];
 

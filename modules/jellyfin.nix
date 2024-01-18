@@ -48,7 +48,7 @@
       DRYRUN = "False";
       ## If set to true then the script will only run once and then exit
       RUN_ONLY_ONCE = "False";
-      DEBUG = "True";
+      DEBUG = "False";
       DEBUG_LEVEL = "debug";
       # Specify a different version because we are setting the user on the container
       LOGFILE = "/tmp/log.log";
