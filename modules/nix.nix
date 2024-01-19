@@ -27,5 +27,5 @@
   '';
 
   # Only allow users with sudo access to interact with nix
-  nix.allowedUsers = [ "@wheel" ];
+  nix.allowed-users = [ "@wheel" ];
 }
