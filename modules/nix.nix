@@ -16,6 +16,8 @@
     config.nix.registry;
 
   nix.settings = {
+    # Only allow users with sudo access to interact with nix
+    allowed-users = [ "@wheel" ];
     # Enable flakes and new 'nix' command
     experimental-features = "nix-command flakes";
     # Deduplicate and optimize nix store
@@ -25,7 +27,4 @@
     # Allows nix to access private github repos
     !include ${config.age.secrets.github-access-token.path}
   '';
-
-  # Only allow users with sudo access to interact with nix
-  nix.allowed-users = [ "@wheel" ];
 }
