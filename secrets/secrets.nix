@@ -5,8 +5,11 @@ let
 
   # ssh-keyscan $HOSTNAME | grep ssh-ed25519
   mallard = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG2VPmzg+vmEN38S8Cm0BtcBlV8Y77Vyl+MIFlXFQKcS";
+  mikes-desktop = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMof6NGotLBvNCLe0oyztMPknA/03G/ffv3qIhYy2jXY";
+  nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK8m9ij1lBkQ9K7s3zAsr1Wu39+BvLAY9dIJHZO8/544";
   scannerpi = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDAnCLPXfX8FoEDNmeBXk9/24KfT4/+pU9sF2XipGTT/";
-  systems = [ mallard scannerpi ];
+  yuki = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPk8CzUdrOtOqqJdTs1q7VOwZlC731ZEFYl6XVxmR3pd";
+  systems = [ mallard mikes-desktop nix scannerpi yuki ];
 in
 {
   "smb-media-credentials.age".publicKeys = users ++ [ mallard ];
