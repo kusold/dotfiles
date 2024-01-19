@@ -12,6 +12,7 @@
       ../../modules/nix.nix
       ../../modules/base-pkgs.nix
       ../../modules/autoupgrade.nix
+      ../../modules/healthchecks-io-monitor.nix
       ../../modules/time-utc.nix
       ../../modules/tailscale.nix
 

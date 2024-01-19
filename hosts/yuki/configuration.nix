@@ -14,6 +14,7 @@
       ../../modules/base-pkgs.nix
       ../../modules/time-denver.nix
       ../../modules/autoupgrade.nix
+      ../../modules/healthchecks-io-monitor.nix
     ];
 
   # Bootloader.

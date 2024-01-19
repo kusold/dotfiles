@@ -20,4 +20,5 @@ in
   "app-jellyplex-watched.age".publicKeys = users ++ [mallard];
   "user-mike-hashed-passwd.age".publicKeys = users ++ systems;
   "github-access-token.age".publicKeys = users ++ systems; # Expires 2025-01-18
+  "monitoring-healthchecks-url.age".publicKeys = users ++ systems;
 }

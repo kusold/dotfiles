@@ -9,6 +9,7 @@
       ./hardware-configuration.nix
       ../../modules/nix.nix
       ../../modules/autoupgrade.nix
+      ../../modules/healthchecks-io-monitor.nix
 
       ../../modules/scanservjs.nix
       ../../modules/tailscale.nix
