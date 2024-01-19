@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       ../../modules/hardware-dell-7060.nix
       ../../modules/linux.nix
+      ../../modules/nix.nix
       ../../modules/base-pkgs.nix
       ../../modules/time-denver.nix
       ../../modules/autoupgrade.nix

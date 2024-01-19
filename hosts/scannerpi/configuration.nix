@@ -7,6 +7,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/nix.nix
       ../../modules/autoupgrade.nix
 
       ../../modules/scanservjs.nix

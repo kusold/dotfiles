@@ -23,7 +23,6 @@
   # Read from /persist because that's available on boot for impermanence
   age.identityPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
 
-  age.secrets.github-access-token.file = ../../secrets/github-access-token.age;
   age.secrets.smb-media-credentials.file = ../../secrets/smb-media-credentials.age;
   age.secrets.watchlist.file = ../../secrets/watchlist.txt.age;
   age.secrets.user-mike-hashed-passwd.file = ../../secrets/user-mike-hashed-passwd.age;

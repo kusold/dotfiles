@@ -1,5 +1,7 @@
 { config, pkgs, pkgs-unstable, lib, inputs, ... }:
 {
+  age.secrets.github-access-token.file = ../secrets/github-access-token.age;
+
   # This will add each flake input as a registry
   # To make nix3 commands consistent with your flake
   nix.registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
