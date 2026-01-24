@@ -10,24 +10,27 @@ echo "init submodules"
 echo "creating directories"
 source $YADM_BOOTSTRAP/directories.sh
 
-echo "installing fonts"
-source $YADM_BOOTSTRAP/fonts.sh
+# Install via home-manager
+# echo "installing fonts"
+# source $YADM_BOOTSTRAP/fonts.sh
 
-if [ "$system_type" = "Darwin" ]; then
-	echo "installing homebrew packages"
-	source $YADM_BOOTSTRAP/brew.sh
-fi
+# Install via home-manager
+# if [ "$system_type" = "Darwin" ]; then
+# 	echo "installing homebrew packages"
+# 	source $YADM_BOOTSTRAP/brew.sh
+# fi
 
 #source $YADM_BOOTSTRAP/npm.sh
 #source $YADM_BOOTSTRAP/pip.sh
 #source $YADM_BOOTSTRAP/gem.sh
 
-if [ "$system_type" = "Darwin" ]; then
-	echo "configure macos"
-	source $YADM_BOOTSTRAP/macos.sh
-fi
+# Manage via nix-darwin
+# if [ "$system_type" = "Darwin" ]; then
+# 	echo "configure macos"
+# 	source $YADM_BOOTSTRAP/macos.sh
+# fi
 
-source $YADM_BOOTSTRAP/shell.sh
-source $YADM_BOOTSTRAP/terminfo.sh
+# source $YADM_BOOTSTRAP/shell.sh
+# source $YADM_BOOTSTRAP/terminfo.sh
+
 source $YADM_BOOTSTRAP/home.sh
-
