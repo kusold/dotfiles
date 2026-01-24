@@ -53,7 +53,7 @@ return {
     --		event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
-      "jose-elias-alvarez/null-ls.nvim",
+      "nvimtools/none-ls.nvim",
       "nvim-lua/plenary.nvim",
     },
     config = function(_, opts)
@@ -173,6 +173,7 @@ return {
               workspace = {
                 -- Make the server aware of Neovim runtime files
                 library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
               },
               telemetry = {
                 enable = false,
@@ -186,7 +187,7 @@ return {
         terraformls = {},
         taplo = {},
         tflint = {},
-        tsserver = {},
+        ts_ls = {},
         yamlls = {
           -- Set dynamically
         },

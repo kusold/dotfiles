@@ -27,3 +27,7 @@ if [[ -d "/usr/local/" ]]; then
   export PATH=$PATH:/usr/local
 fi
 
+# Add home-manager
+if [[ -d "${HOME}/.nix-profile/bin" ]]; then
+  export PATH=${HOME}/.nix-profile/bin:$PATH
+fi

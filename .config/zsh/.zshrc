@@ -1,3 +1,6 @@
+# Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
 # load zprof first if we need to profile
 [[ ${ZPROFILE:-0} -eq 0 ]] || zmodload zsh/zprof
 alias zprofile="ZPROFILE=1 zsh"
@@ -109,4 +112,8 @@ then
   PS1='$ '
 fi
 
+
 [[ ${ZPROFILE:-0} -eq 0 ]] || { unset ZPROFILE && zprof }
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"

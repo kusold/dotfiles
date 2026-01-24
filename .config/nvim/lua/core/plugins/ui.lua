@@ -7,19 +7,13 @@ return {
   },
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     config = function()
       vim.opt.list = true
       vim.opt.listchars:append("space:⋅")
       vim.opt.listchars:append("eol:↴")
 
-      require("indent_blankline").setup({
-        -- Highlights current indentation level
-        show_current_context = true,
-        show_current_context_start = true,
-        -- Shows characters for whitespace
-        show_end_of_line = true,
-        space_char_blankline = " ",
-      })
+      require("ibl").setup({ })
     end,
   },
   {
@@ -61,9 +55,9 @@ return {
       { "<leader>bt", "<cmd>Neotree float buffers<cr>", desc = "NeoTree" },
       { "<leader>gt", "<cmd>Neotree float git_status<cr>", desc = "NeoTree" },
     },
-    branch = "v2.x",
+    branch = "v3.x",
     config = function()
-      vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+      -- vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
       require("neo-tree").setup()
     end,
   },
@@ -112,32 +106,36 @@ return {
   },
   {
     "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      spec = {
+        mode = { "n", "v" },
+        { "g", group = "goto" },
+        { "gz", group = "surround" },
+        { "]", group = "next" },
+        { "[", group = "prev" },
+        { "<leader><tab>", group = "tabs" },
+        { "<leader>b", group = "buffer" },
+        { "<leader>c", group = "code" },
+        { "<leader>f", group = "file/find" },
+        { "<leader>g", group = "git" },
+        { "<leader>gh", group = "hunks" },
+        { "<leader>q", group = "quit/session" },
+        { "<leader>s", group = "search" },
+        { "<leader>u", group = "ui" },
+        { "<leader>w", group = "windows" },
+        { "<leader>x", group = "diagnostics/quickfix" },
+        { "<leader>a", group = "admin" },
+      }
+    },
     config = function(_, opts)
       local wk = require("which-key")
       wk.setup(opts)
-      local keymaps = {
-        mode = { "n", "v" },
-        ["g"] = { name = "+goto" },
-        ["gz"] = { name = "+surround" },
-        ["]"] = { name = "+next" },
-        ["["] = { name = "+prev" },
-        ["<leader><tab>"] = { name = "+tabs" },
-        ["<leader>b"] = { name = "+buffer" },
-        ["<leader>c"] = { name = "+code" },
-        ["<leader>f"] = { name = "+file/find" },
-        ["<leader>g"] = { name = "+git" },
-        ["<leader>gh"] = { name = "+hunks" },
-        ["<leader>q"] = { name = "+quit/session" },
-        ["<leader>s"] = { name = "+search" },
-        ["<leader>u"] = { name = "+ui" },
-        ["<leader>w"] = { name = "+windows" },
-        ["<leader>x"] = { name = "+diagnostics/quickfix" },
-        ["<leader>a"] = { name = "+admin" },
-      }
+      local keymaps = { }
       --      if Util.has("noice.nvim") then
-      --       keymaps["<leader>sn"] = { name = "+noice" }
+      --       keymaps{"<leader>sn", group = "noice" }
       --    end
-      wk.register(keymaps)
+      wk.add(keymaps)
     end,
   },
 }
