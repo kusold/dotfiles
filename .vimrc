@@ -576,12 +576,12 @@ else
 
   "│-v-2 │ ultisnips                   - SirVer/ultisnips (snippets)
   "└─────┴─────────
-   Plug 'SirVer/ultisnips'
-   " make :UltiSnipsEdit to split the window.
-   let g:UltiSnipsEditSplit='horizontal'
-
-   " Specify UltiSnips directory
-   let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+"   Plug 'SirVer/ultisnips'
+"   " make :UltiSnipsEdit to split the window.
+"   let g:UltiSnipsEditSplit='horizontal'
+"
+"   " Specify UltiSnips directory
+"   let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
 
   "│-v-2 │ unimpaired                  - tpope/vim-unimpaird (bracket maps)
   "└─────┴─────────
