@@ -51,8 +51,12 @@ init_ssh_agent() {
     if ! update_ssh_agent_symlink "$SSH_AUTH_SOCK"; then
       # Forwarded socket doesn't work, try existing symlink
       if [[ -S "$HOME/.ssh/ssh_auth_sock" ]]; then
-        if update_ssh_agent_symlink "$HOME/.ssh/ssh_auth_sock"; then
-          return
+        # Resolve symlink to its actual target
+        local existing_sock="$(readlink "$HOME/.ssh/ssh_auth_sock")"
+        if [[ -n "$existing_sock" && -S "$existing_sock" ]]; then
+          if update_ssh_agent_symlink "$existing_sock"; then
+            return
+          fi
         fi
       fi
 
