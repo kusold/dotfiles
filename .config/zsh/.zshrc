@@ -92,11 +92,7 @@ if [ -f "${HOME}/.gpg-agent-info" ]; then
 fi
 export GPG_TTY=$(tty)
 
-# Always set the ssh agent in the same place
-if [[ ! -z $SSH_AUTH_SOCK &&  "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]]; then
-  ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
-  export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
-fi
+# SSH agent socket management is now handled in scripts/ssh.sh
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
