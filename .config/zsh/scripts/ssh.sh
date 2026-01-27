@@ -64,10 +64,25 @@ init_ssh_agent() {
       start-local-ssh-agent
     fi
   else
-    # Local session - use current approach
-    if [[ -n "$SSH_AUTH_SOCK" && "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]]; then
-      ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
-      export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+    # Local session - ensure symlink points to a working socket
+    if [[ -n "$SSH_AUTH_SOCK" ]]; then
+      # If SSH_AUTH_SOCK is already our symlink, resolve it to check if it's valid
+      if [[ "$SSH_AUTH_SOCK" == "$HOME/.ssh/ssh_auth_sock" ]]; then
+        if [[ -L "$HOME/.ssh/ssh_auth_sock" ]]; then
+          local target="$(readlink "$HOME/.ssh/ssh_auth_sock")"
+          # Check if symlink is circular or points to non-existent socket
+          if [[ "$target" == "$HOME/.ssh/ssh_auth_sock" ]] || [[ ! -S "$target" ]]; then
+            # Broken symlink - find real socket or unset to trigger fallback
+            unset SSH_AUTH_SOCK
+          fi
+        fi
+      fi
+
+      # If we have a valid socket (not our symlink), create/update the symlink
+      if [[ -n "$SSH_AUTH_SOCK" && "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]]; then
+        ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+        export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+      fi
     fi
   fi
 }
