@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
 
 command_exists () {
-  command -v "$1" &> /dev/null ;
+  (( $+commands[$1] ))
 }

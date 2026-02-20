@@ -14,30 +14,22 @@ zdharma-continuum/fast-syntax-highlighting kind:defer
 # Type command from history and then use the arrow keys to cylce through
 zsh-users/zsh-history-substring-search kind:defer
 
-zsh-users/zsh-autosuggestions
-chrissicool/zsh-256color kind:defer
-# supercrabtree/k
+zsh-users/zsh-autosuggestions kind:defer
 
-# A Zsh plugin to help remembering those shell aliases and Git aliases you once defined.
+# Remind you of aliases you've defined
 djui/alias-tips
-
-# Make working with colors easier
-sorin-ionescu/prezto path:modules/spectrum
 
 #
 # Theme
 #
 
-# Async for zsh, used by pure
-sindresorhus/pure kind:fpath
+#romkatv/powerlevel10k kind:fpath
+romkatv/powerlevel10k
 
-chriskempson/base16-shell
-#zplug "chriskempson/base16-shell", use:"scripts/base16-$BASE16_SCHEME.sh", defer:0
-#zplug "chriskempson/base16-shell", use:colortest, as:command
+tinted-theming/tinted-shell
 
 #
 # Completions
 #
 zsh-users/zsh-completions
-belak/zsh-utils path:completion
-
+mattmc3/zephyr path:plugins/completion

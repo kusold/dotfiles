@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
@@ -36,16 +43,17 @@ for script in $DOTFILES/zsh/plugins/*.zsh; do
 done
 
 antidote load
-#
-# Completions
-autoload -Uz compinit bashcompinit
-#compinit
-bashcompinit
+
+# Override zephyr's matcher-list to add boundary matching on . _ -
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# Run bashcompinit after zephyr's deferred compinit
+function _run_bashcompinit { autoload -Uz bashcompinit && bashcompinit }
+post_zshrc_hook+=(_run_bashcompinit)
+
+alias zsh-completions-regen='rm -f ${ZSH_COMPDUMP} && exec zsh'
 
 
-# Load the prompt
-autoload -Uz promptinit && promptinit
-prompt pure
 
 # Development Directory Shortcut
 #if [[ -d "$HOME/Development" ]]; then
@@ -113,3 +121,6 @@ fi
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
