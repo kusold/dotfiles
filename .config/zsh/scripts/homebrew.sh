@@ -1,9 +1,5 @@
 #!/usr/bin/env zsh
-autoload command_exists
-
-if command_exists brew; then
-  # Don't let homebrew report google analytics
+if [[ -d /opt/homebrew ]]; then
   export HOMEBREW_NO_ANALYTICS=1
-
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  FPATH="/opt/homebrew/share/zsh/site-functions:${FPATH}"
 fi
