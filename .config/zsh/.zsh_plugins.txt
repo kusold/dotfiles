@@ -17,7 +17,7 @@ zsh-users/zsh-history-substring-search kind:defer
 zsh-users/zsh-autosuggestions kind:defer
 
 # Remind you of aliases you've defined
-djui/alias-tips
+djui/alias-tips kind:defer
 
 #
 # Theme

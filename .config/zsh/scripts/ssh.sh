@@ -91,8 +91,8 @@ _ssh_agent_auto_init() {
     _ssh_agent_update_symlink
 }
 
-# Run the auto-initialization for the shell session.
-_ssh_agent_auto_init
+# Run the auto-initialization for the shell session (deferred to not block startup).
+zsh-defer _ssh_agent_auto_init
 
 # =============================================================================
 # User-facing Helper Function
@@ -123,8 +123,11 @@ if [[ "$TERM" == "xterm-256color-italic" ]]; then
     alias ssh="TERM=xterm-256color ssh"
 fi
 
-# On macOS, load keys from keychain if no keys are loaded
+# On macOS, load keys from keychain if no keys are loaded (deferred, depends on agent)
 autoload is_darwin
-if is_darwin && [[ -z "$(ssh-add -l 2>/dev/null)" ]]; then
-    ssh-add --apple-load-keychain
-fi
+_ssh_load_apple_keychain() {
+    if is_darwin && [[ -z "$(ssh-add -l 2>/dev/null)" ]]; then
+        ssh-add --apple-load-keychain
+    fi
+}
+zsh-defer _ssh_load_apple_keychain

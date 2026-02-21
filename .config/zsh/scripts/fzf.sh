@@ -2,8 +2,8 @@
 
 autoload command_exists
 
-# Source fzf
-[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
+# Source fzf (deferred - keybindings and completion don't need to block startup)
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh ] && zsh-defer source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh
 
 if command_exists fzf; then
   # Use ripgrep

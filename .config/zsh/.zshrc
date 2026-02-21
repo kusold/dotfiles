@@ -22,8 +22,8 @@ for script in $ZDOTDIR/utilities/*.sh; do
   fi
 done
 
-# Source all scripts
-for script in $ZDOTDIR/scripts/*.sh; do
+# Source prescripts (must run before antidote load)
+for script in $ZDOTDIR/prescripts/*.sh; do
   if [ -x "${script}" ]; then
     source ${script}
   fi
@@ -43,6 +43,13 @@ for script in $DOTFILES/zsh/plugins/*.zsh; do
 done
 
 antidote load
+
+# Source all scripts (after antidote, so zsh-defer is available)
+for script in $ZDOTDIR/scripts/*.sh; do
+  if [ -x "${script}" ]; then
+    source ${script}
+  fi
+done
 
 # Override zephyr's matcher-list to add boundary matching on . _ -
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
@@ -103,7 +110,6 @@ export GPG_TTY=$(tty)
 # SSH agent socket management is now handled in scripts/ssh.sh
 
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Emacs tramp fix
 if [[ "$TERM" == "dumb" ]]
