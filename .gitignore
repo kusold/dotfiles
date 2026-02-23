@@ -193,6 +193,7 @@ fabric.properties
 /.config/inkscape/
 /.config/nvim/plugged/
 /.config/nvim/plugin/
+/.config/tmux/plugins/
 /.config/wakatime/
 /.config/yadm/repo.git/
 /.config/zsh/.antidote/
