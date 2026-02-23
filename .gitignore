@@ -208,6 +208,8 @@ fabric.properties
 /.node-gyp/
 /.platformio/
 /.rbenv/versions/
+# https://github.com/rust-lang/rustup/issues/247
+/.rustup/
 /.ssh/
 /.subversion/
 /.tmux/resurrect/
@@ -219,6 +221,7 @@ fabric.properties
 /.yarnrc
 /.zoomus/
 /Applications/
+/Calibre Library/
 /Desktop/
 /Development/
 /Documents/
