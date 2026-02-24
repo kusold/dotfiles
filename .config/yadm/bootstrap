@@ -1,10 +1,13 @@
 #! /usr/bin/env bash
 
-YADM_BOOTSTRAP="${XDG_CONFIG_HOME:-$HOME/.config}/yadm/bootstraps"
+YADM_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/yadm"
+YADM_BOOTSTRAP="${YADM_CONFIG}/bootstraps"
 system_type=$(uname -s)
 
+echo "Setup YADM ignores"
+yadm gitconfig core.excludesFile ${YADM_CONFIG}/gitignore
 
-echo "init submodules"
+#echo "init submodules"
 #yadm submodule update --init --recursive
 
 echo "creating directories"
