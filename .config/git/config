@@ -61,7 +61,7 @@
   prune-merged = !git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d
   subpull = !git submodule foreach git pull --tags origin master
   history-search = "!git rev-list --all | xargs git grep"
-  
+
   # Support for stacked PRs
   # gitext-rs/git-stack - https://github.com/gitext-rs/git-stack
   next = stack next
@@ -79,8 +79,8 @@ clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expir
   fetchJobs = 4
 [gpg]
   program = gpg
-[credential]
-  helper = osxkeychain
+[include]
+  path = ~/.config/git/config.os
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
