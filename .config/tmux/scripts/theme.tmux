@@ -134,9 +134,10 @@ zoom_suffix="#{?window_zoomed_flag, ${zoom_icon} ,}"
 # --- Build SSH-aware window content ---
 # When SSH is detected, show icon + hostname (truncated); otherwise show #W
 if [ "$ssh_enabled" = "true" ]; then
-  # Extract hostname from pane title or SSH command args
-  # pane_current_command detects ssh; #T (pane_title) often has user@host
-  ssh_hostname="#{=/${ssh_max_length}/…:pane_title}"
+  # Extract hostname from SSH command args via pane_pid
+  # Uses a helper script to get the actual SSH hostname from the command line
+  ssh_script="$HOME/.config/tmux/scripts/ssh-hostname.sh"
+  ssh_hostname="#($ssh_script #{pane_pid} #{pane_current_command} $ssh_max_length)"
   if [ "$ssh_icon_only" = "true" ]; then
     ssh_display="${ssh_icon}"
   else

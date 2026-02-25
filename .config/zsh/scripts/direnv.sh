@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
+autoload command_exists
 
-if command -v direnv >/dev/null 2>&1; then
+if command_exists direnv; then
   zsh-defer eval "$(direnv hook zsh)"
 fi

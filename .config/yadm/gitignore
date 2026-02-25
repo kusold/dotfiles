@@ -1,3 +1,5 @@
+# MacOS
+.DS_Store
 # yadm encrypted files
 /bin/auth0-*
 /.env.private
@@ -22,6 +24,7 @@
 /.config/darktable/
 /.config/docker/
 /.config/github-copilot/
+/.config/goose/history.txt
 /.config/gtk-2.0/gtkfilechooser.ini
 /.config/inkscape/
 /.config/nvim/plugged/
@@ -47,6 +50,11 @@
 /.local/state/
 /.logseq/
 /.m2/
+/.nix-channels
+/.nix-defexpr/
+/.nix-profile
+/.oci/keys/
+/.oci/sessions/
 /.platformio/
 # https://github.com/rust-lang/rustup/issues/247
 /.rustup/
@@ -56,19 +64,24 @@
 /.vs-kubernetes/
 /.vscode-cli/
 /.vscode/extensions/
+/.zai/*.log
 /Applications/
 /Calibre Library/
+/DeLorme/inReachSync/
 /Desktop/
 /Development/
 /Documents/
 /Downloads/
 /Library/
+/Monero/
 /Movies/
 /Music/
 /Pictures/
 /Public/
+/Sync/
 /code/
 /go/
+/notes/
 
 # Marqeta Specific
 /.cisco/
