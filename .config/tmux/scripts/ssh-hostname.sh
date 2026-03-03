@@ -101,6 +101,11 @@ if [[ "$hostname" == *@* ]]; then
   hostname="${hostname#*@}"
 fi
 
+# Strip domain suffix unless hostname is an IP address
+if [[ ! "$hostname" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  hostname="${hostname%%.*}"
+fi
+
 # Truncate if needed
 if [ ${#hostname} -gt "$max_length" ]; then
   hostname="${hostname:0:$max_length}…"

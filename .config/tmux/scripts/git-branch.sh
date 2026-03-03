@@ -2,11 +2,17 @@
 # mintt - Git branch for status-left
 # Called via #() from tmux status-left
 #
-# Args: pane_current_path
+# Args: pane_current_path client_width min_width
 
 pane_path="${1:-$HOME}"
+client_width="${2:-0}"
+min_width="${3:-200}"
 
 if [ ! -d "$pane_path" ]; then
+  exit 0
+fi
+
+if [ "$client_width" -lt "$min_width" ] 2>/dev/null; then
   exit 0
 fi
 

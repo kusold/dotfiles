@@ -124,3 +124,14 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+
+# Re-source p10k config when terminal width crosses the narrow/wide threshold
+# (e.g., attaching to tmux from a phone vs desktop).
+_p10k_responsive_last=$COLUMNS
+TRAPWINCH() {
+  local threshold=60
+  if (( (COLUMNS < threshold) != (_p10k_responsive_last < threshold) )); then
+    [[ -f ~/.config/zsh/.p10k.zsh ]] && source ~/.config/zsh/.p10k.zsh
+  fi
+  _p10k_responsive_last=$COLUMNS
+}

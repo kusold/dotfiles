@@ -1733,6 +1733,51 @@
   # really need it.
   typeset -g POWERLEVEL9K_DISABLE_HOT_RELOAD=true
 
+  # Narrow terminal overrides (e.g., phone with ~38 columns).
+  # These run after all other config, so they win.
+  if (( COLUMNS < 60 )); then
+    # Drop nerd-font icons entirely.
+    typeset -g POWERLEVEL9K_MODE=ascii
+
+    # Simpler left prompt — no os_icon.
+    typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+      dir
+      vcs
+      newline
+    )
+
+    # Keep only the essentials on the right.
+    typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+      status
+      command_execution_time
+    )
+
+    # Remove the frame.
+    typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
+    typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX=''
+    typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='> '
+    typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX=''
+    typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX=''
+    typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX=''
+
+    # Remove powerline end-caps and separators.
+    typeset -g POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR=''
+    typeset -g POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR=''
+    typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR=' '
+    typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR=' '
+    typeset -g POWERLEVEL9K_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=''
+    typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL=''
+    typeset -g POWERLEVEL9K_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL=''
+    typeset -g POWERLEVEL9K_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL=''
+
+    # Aggressively shorten the directory.
+    typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_last
+    typeset -g POWERLEVEL9K_DIR_MAX_LENGTH=25
+
+    # Skip the blank line between prompts to save vertical space.
+    typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
+  fi
+
   # If p10k is already loaded, reload configuration.
   # This works even with POWERLEVEL9K_DISABLE_HOT_RELOAD=true.
   (( ! $+functions[p10k] )) || p10k reload

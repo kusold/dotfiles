@@ -2,7 +2,7 @@
 # mintt - Smart conditional status-right
 # Called via #() from tmux status-right
 #
-# Args: client_width pane_path min_width time_on host_on battery_on cpu_on
+# Args: client_width pane_path min_width time_on host_on battery_on cpu_on ssh_min_width
 
 client_width="${1:-0}"
 pane_path="${2:-$HOME}"
@@ -11,6 +11,7 @@ time_on="${4:-true}"
 host_on="${5:-true}"
 battery_on="${6:-true}"
 cpu_on="${7:-true}"
+ssh_min_width="${8:-60}"
 
 # Colors (matching theme palette)
 dim="colour240"
@@ -82,7 +83,7 @@ if [ "$battery_on" = "true" ]; then
 fi
 
 # --- Host/User (SSH only, width-gated) ---
-if [ "$host_on" = "true" ] && [ "$client_width" -ge "$min_width" ] 2>/dev/null; then
+if [ "$host_on" = "true" ] && [ "$client_width" -ge "$ssh_min_width" ] 2>/dev/null; then
   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTION" ]; then
     host=$(hostname -s 2>/dev/null || echo "$HOSTNAME")
     items+=("#[fg=$icon_color]󰌘 #[fg=$text]$USER@$host")

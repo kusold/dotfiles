@@ -40,6 +40,7 @@ right_battery=$(get_tmux_option "@mintt-right-battery" "true")
 right_cpu=$(get_tmux_option "@mintt-right-cpu" "true")
 right_min_width=$(get_tmux_option "@mintt-right-min-width" "200")
 left_git=$(get_tmux_option "@mintt-left-git" "true")
+left_min_width=$(get_tmux_option "@mintt-left-min-width" "200")
 
 # --- Session ---
 session_text=$(get_tmux_option "@mintt-session-text" " #S ")
@@ -68,6 +69,7 @@ ssh_enabled=$(get_tmux_option "@mintt-ssh" "true")
 ssh_icon=$(get_tmux_option "@mintt-ssh-icon" "󰌘")
 ssh_icon_only=$(get_tmux_option "@mintt-ssh-icon-only" "false")
 ssh_max_length=$(get_tmux_option "@mintt-ssh-max-length" "20")
+ssh_min_width=$(get_tmux_option "@mintt-ssh-min-width" "60")
 
 # --- Build bold attribute ---
 bold_attr=""
@@ -89,12 +91,12 @@ time_component="#[bg=$bg,fg=$fg${bold_attr}]${right_text}"
 
 # --- Build smart status-right component ---
 script_path="$HOME/.config/tmux/scripts/status-right.sh"
-smart_right="#($script_path #{client_width} #{pane_current_path} $right_min_width $right_time $right_host $right_battery $right_cpu)"
+smart_right="#($script_path #{client_width} #{pane_current_path} $right_min_width $right_time $right_host $right_battery $right_cpu $ssh_min_width)"
 
 # --- Build git branch component (left side) ---
 git_script="$HOME/.config/tmux/scripts/git-branch.sh"
 if [ "$left_git" = "true" ]; then
-  git_component="#($git_script #{pane_current_path})"
+  git_component="#($git_script #{pane_current_path} #{client_width} $left_min_width)"
 else
   git_component=""
 fi
