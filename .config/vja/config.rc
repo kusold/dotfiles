@@ -1,0 +1,4 @@
+[application]
+frontend_url=https://tasks.svc.rockymtn.org/
+api_url=https://tasks.svc.rockymtn.org/api/v1
+
