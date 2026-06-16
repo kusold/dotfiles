@@ -1,47 +1,9 @@
-local lsp_formatting = function(bufnr)
-  vim.lsp.buf.format({
-    filter = function(client)
-      return client.supports_method("textDocument/formatting") or client.name == "null-ls"
-    end,
-    bufnr = bufnr,
-  })
-end
-
--- if you want to set up formatting on save, you can use this as a callback
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
--- TODO(cleanup): Unsure if this is still needed with null-ls
----Common format-on-save for lsp servers that implements formatting
----@param client table
-local function lsp_fmt_on_save(client, bufnr)
-  if client.supports_method("textDocument/formatting") then
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        lsp_formatting(bufnr)
-      end,
-    })
-  end
-  -- if client.server_capabilities.documentFormattingProvider then
-  --   vim.cmd([[
-  --           augroup FORMATTING
-  --               autocmd! * <buffer>
-  --               autocmd BufWritePre <buffer> lua vim.lsp.buf.format()
-  --           augroup END
-  --       ]])
-  -- end
-end
-
 return {
   {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate", -- :MasonUpdate updates registry contents
-    config = function()
-      require("mason").setup()
-      -- TODO(idea): Enable automatic server setup - https://github.com/williamboman/mason-lspconfig.nvim#automatic-server-setup-advanced-feature
-    end,
+    -- lazy.nvim calls require("mason").setup(opts) for us; the registry now
+    -- downloads automatically, so no `config`, `build`, or `:MasonUpdate` needed.
+    "mason-org/mason.nvim",
+    opts = {},
   },
   {
     "jay-babu/mason-null-ls.nvim",
@@ -52,7 +14,7 @@ return {
     },
     --		event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "williamboman/mason.nvim",
+      "mason-org/mason.nvim",
       "nvimtools/none-ls.nvim",
       "nvim-lua/plenary.nvim",
     },
@@ -68,7 +30,7 @@ return {
         sources = { null_ls.builtins.formatting.stylua },
         -- you can reuse a shared lspconfig on_attach callback here
         on_attach = function(client, bufnr)
-          if client.supports_method("textDocument/formatting") then
+          if client:supports_method("textDocument/formatting") then
             vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
             vim.api.nvim_create_autocmd("BufWritePre", {
               group = augroup,
@@ -87,9 +49,9 @@ return {
     dependencies = {
       {
         "b0o/schemastore.nvim",
-        "williamboman/mason-lspconfig.nvim",
+        "mason-org/mason-lspconfig.nvim",
         dependencies = {
-          "williamboman/mason.nvim",
+          "mason-org/mason.nvim",
         },
       },
     },
@@ -105,24 +67,34 @@ return {
         },
       })
 
-      local function setup(server, server_config)
-        local server_opts = vim.tbl_deep_extend("force", {
-          capabilities = vim.deepcopy(capabilities),
-          on_attach = function(client, bufnr)
-            if opts.autoformat then
-              lsp_fmt_on_save(client, bufnr)
+      -- Neovim 0.11+ native LSP: apply shared capabilities to every server.
+      -- lspconfig ships per-server defaults in its `lsp/<name>.lua` files; these
+      -- overrides are merged on top by `vim.lsp.config`.
+      vim.lsp.config("*", {
+        capabilities = capabilities,
+      })
+
+      -- Format on save for any attached client that supports it.
+      if opts.autoformat then
+        local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+        vim.api.nvim_create_autocmd("LspAttach", {
+          callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if client and client:supports_method("textDocument/formatting") then
+              vim.api.nvim_clear_autocmds({ group = augroup, buffer = args.buf })
+              vim.api.nvim_create_autocmd("BufWritePre", {
+                group = augroup,
+                buffer = args.buf,
+                callback = function()
+                  vim.lsp.buf.format({ bufnr = args.buf })
+                end,
+              })
             end
           end,
-        }, server_config or {})
-
-        -- vim.pretty_print(server_opts)
-        require("lspconfig")[server].setup(server_opts)
+        })
       end
 
-      -- vim.pretty_print(GetTableKeys(servers))
-      require("mason-lspconfig").setup({
-        ensure_installed = GetTableKeys(servers),
-      })
+      -- Per-server overrides layered on top of lspconfig's shipped defaults.
       for server, conf in pairs(servers) do
         if server == "jsonls" then
           conf = {
@@ -142,11 +114,19 @@ return {
             },
           }
         end
-        setup(server, conf)
+        if conf and next(conf) ~= nil then
+          vim.lsp.config(server, conf)
+        end
       end
+
+      -- Install missing servers and auto-enable them via `vim.lsp.enable()`
+      -- (mason-lspconfig's `automatic_enable` defaults to true).
+      require("mason-lspconfig").setup({
+        ensure_installed = GetTableKeys(servers),
+      })
     end,
     opts = {
-      autoformat = true, -- autofoormat on save
+      autoformat = true, -- autoformat on save
       servers = {
         ansiblels = {},
         bashls = {},
