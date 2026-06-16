@@ -17,17 +17,19 @@ return {
     end,
   },
   {
-    "norcalli/nvim-colorizer.lua",
+    "brenoprata10/nvim-highlight-colors",
     config = function()
-      require("colorizer").setup({
-        "css",
-        "javascript",
+      require("nvim-highlight-colors").setup({
+        render = "virtual",
+        virtual_symbol = "■",
+        virtual_symbol_prefix = "",
+        virtual_symbol_suffix = " ",
+        virtual_symbol_position = "inline",
       })
     end,
   },
   {
     "kosayoda/nvim-lightbulb",
-    dependencies = "antoinemadec/FixCursorHold.nvim",
     config = function()
       require("nvim-lightbulb").setup({ autocmd = { enabled = true } })
     end,
