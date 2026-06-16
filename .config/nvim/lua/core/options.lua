@@ -1,5 +1,10 @@
 vim.g.mapleader = " "
 
+-- Toggle Mason-managed tool installation (mason-tool-installer, e.g. stylua for
+-- conform). Set to false once these tools are provided by home-manager / on
+-- $PATH so Mason stops installing them. Consumed in lua/core/plugins/lsp.lua.
+vim.g.use_mason_tools = true
+
 vim.opt.foldcolumn = "1"     -- '0' is not bad
 vim.opt.foldenable = true
 vim.opt.foldlevel = 99       -- Using ufo provider need a large value

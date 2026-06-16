@@ -6,6 +6,20 @@ return {
     opts = {},
   },
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    -- Toggle via vim.g.use_mason_tools (lua/core/options.lua). Disable to let
+    -- home-manager provide these tools instead of Mason.
+    enabled = function()
+      return vim.g.use_mason_tools ~= false
+    end,
+    dependencies = { "mason-org/mason.nvim" },
+    opts = {
+      -- Mason package names. stylua backs conform's Lua formatting; add more
+      -- CLI tools / formatters / linters here as you adopt them.
+      ensure_installed = { "stylua" },
+    },
+  },
+  {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
