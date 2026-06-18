@@ -2,7 +2,7 @@
 autoload is_callable
 
 # colorize ls
-if is_callable 'dircolors'; then
+if ls --group-directories-first /dev/null >/dev/null 2>&1; then
   # GNU Core Utilities
   alias ls='ls --group-directories-first'
 
