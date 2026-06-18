@@ -5,28 +5,21 @@
 # top-most EditorConfig file
 root = true
 
-# Unix-style newlines with a newline ending every file
+# Defaults for all files. Indentation is intentionally left unset so that
+# guess-indent.nvim (and other detectors) can match each file's real style.
+# The language-specific sections below pin the cases that must not be guessed.
 [*]
 end_of_line = lf
 insert_final_newline = true
-indent_style = tab
-indent_size = 2
 trim_trailing_whitespace = true
-insert_final_newline = true
-indent_brace_style = K&R
-curly_bracket_next_line = false
-spaces_around_brackets = outside
 
-[*.{go}]
-quote_type = double
+# Go is always tab-indented (gofmt)
+[*.go]
+indent_style = tab
 
-[*.{js}]
-quote_type = single
-
-# Indentation override for all JS under lib directory
-[lib/**.js]
-indent_style = space
-indent_size = 2
+# Makefiles require real tabs for recipe lines
+[{Makefile,GNUmakefile,*.mk,*.mak}]
+indent_style = tab
 
 [*.md]
 trim_trailing_whitespace = false
