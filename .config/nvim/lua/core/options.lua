@@ -15,3 +15,10 @@ vim.opt.splitbelow = true    -- Put new windows below current
 vim.opt.splitkeep = "screen" -- Stabalize cursor when windows open
 vim.opt.splitright = true    -- Put new windows right of current
 vim.opt.termguicolors = true -- True color support
+vim.opt.showmode = false     -- Mode is shown in the lualine statusline already
+
+-- Render tabs (and trailing/non-breaking spaces) but NOT regular spaces, so
+-- tab- vs space-indentation is obvious at a glance: tab-indented lines show the
+-- `»` glyph, space-indented lines stay clean (just snacks.indent's guide).
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
