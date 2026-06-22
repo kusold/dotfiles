@@ -4,6 +4,7 @@
 local lualine_icons = {
   worktree = vim.fn.nr2char(0xf126, 1), -- nf-fa-code_fork
   lsp = vim.fn.nr2char(0xf085, 1), -- nf-fa-cogs
+  recording = vim.fn.nr2char(0xf111, 1), -- nf-fa-circle (record dot)
 }
 
 local function worktree_name()
@@ -62,6 +63,17 @@ local function lsp_attached()
   return #vim.lsp.get_clients({ bufnr = 0 }) > 0
 end
 
+-- Macro recording indicator, e.g. "REC @q". Native cmdline shows this too, but
+-- not when 'cmdheight' is 0, and the statusline keeps it visible regardless.
+local function macro_recording()
+  local reg = vim.fn.reg_recording()
+  return reg ~= "" and ("REC @" .. reg) or ""
+end
+
+local function is_recording()
+  return vim.fn.reg_recording() ~= ""
+end
+
 return {
   {
     "j-hui/fidget.nvim",
@@ -90,7 +102,10 @@ return {
             "diff",
             { "diagnostics", sources = { "nvim_diagnostic" } },
           },
-          lualine_c = { { "filename", path = 1 } }, -- path relative to cwd
+          lualine_c = {
+            { "filename", path = 1 }, -- path relative to cwd
+            { macro_recording, icon = lualine_icons.recording, cond = is_recording, color = "DiagnosticError" },
+          },
           -- Attached LSP server names + filetype.
           lualine_x = {
             { lsp_clients, icon = lualine_icons.lsp, cond = lsp_attached },
@@ -101,9 +116,10 @@ return {
         },
       })
 
+      local group = vim.api.nvim_create_augroup("Lualine", { clear = true })
+
       -- Resolve the worktree off the render path on buffer/dir changes, plus
       -- once now for the buffer that's already open when lualine loads.
-      local group = vim.api.nvim_create_augroup("LualineWorktree", { clear = true })
       vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, {
         group = group,
         callback = function(args)
@@ -111,6 +127,15 @@ return {
         end,
       })
       update_worktree(0)
+
+      -- Refresh immediately when macro recording starts/stops so the indicator
+      -- doesn't lag a redraw behind (scheduled so reg_recording() is settled).
+      vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+        group = group,
+        callback = function()
+          vim.schedule(require("lualine").refresh)
+        end,
+      })
     end,
   },
   {
