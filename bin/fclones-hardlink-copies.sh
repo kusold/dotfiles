@@ -3,14 +3,10 @@ set -Eeuo pipefail
 
 umask 0027
 
-VIDEO_PATTERNS=(
-    "*.mkv"
-    "*.mp4"
-    "*.m4v"
-    "*.avi"
-    "*.ts"
-    "*.m2ts"
-)
+# Use one fclones-native brace glob for compatibility with releases where
+# --name consumes only one argument. Multiple bare patterns would otherwise be
+# interpreted as input paths relative to the script's working directory.
+VIDEO_PATTERN="*.{mkv,mp4,m4v,avi,ts,m2ts}"
 
 APPLY=false
 ASSUME_YES=false
@@ -356,7 +352,7 @@ if [[ -n "$FCLONES_CACHE_DIR" ]]; then
 fi
 
 GROUP_ARGS+=(
-    --name "${VIDEO_PATTERNS[@]}"
+    --name "$VIDEO_PATTERN"
     --output "$GROUP_REPORT"
     "$ORIGINALS"
     "$COPIES"
