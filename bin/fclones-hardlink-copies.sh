@@ -47,6 +47,11 @@ Environment overrides:
   FCLONES_LOCK_FILE
   FCLONES_HASH_FUNCTION
   FCLONES_RETENTION_DAYS  Days to retain reports and logs; 0 keeps them forever.
+  FCLONES_HEALTHCHECK_URL Optional Healthchecks.io-compatible base ping URL.
+
+When FCLONES_HEALTHCHECK_URL is set, the script requests URL/start when work
+begins and URL/<exit-code> when it finishes. Ping failures are logged as
+warnings and do not change the script's exit code.
 EOF
 }
 
@@ -54,7 +59,7 @@ set_config_defaults() {
     if [[ "${1:-}" == "--reset" ]]; then
         unset FCLONES_BIN ORIGINALS COPIES FCLONES_REPORT_DIR FCLONES_LOG_DIR \
             FCLONES_CACHE_DIR FCLONES_LOCK_FILE FCLONES_HASH_FUNCTION \
-            FCLONES_RETENTION_DAYS
+            FCLONES_RETENTION_DAYS FCLONES_HEALTHCHECK_URL
     fi
 
     FCLONES_BIN="${FCLONES_BIN:-fclones}"
@@ -66,6 +71,7 @@ set_config_defaults() {
     FCLONES_LOCK_FILE="${FCLONES_LOCK_FILE:-${FCLONES_REPORT_DIR}/fclones-hardlink-copies.lock}"
     FCLONES_HASH_FUNCTION="${FCLONES_HASH_FUNCTION:-blake3}"
     FCLONES_RETENTION_DAYS="${FCLONES_RETENTION_DAYS:-30}"
+    FCLONES_HEALTHCHECK_URL="${FCLONES_HEALTHCHECK_URL:-}"
 }
 
 generate_env_file() {
@@ -90,6 +96,8 @@ FCLONES_LOCK_FILE=$FCLONES_LOCK_FILE
 FCLONES_HASH_FUNCTION=$FCLONES_HASH_FUNCTION
 # Set FCLONES_RETENTION_DAYS to 0 to keep reports and logs forever.
 FCLONES_RETENTION_DAYS=$FCLONES_RETENTION_DAYS
+# Optional Healthchecks.io-compatible base ping URL. Treat this value as a secret.
+FCLONES_HEALTHCHECK_URL=$FCLONES_HEALTHCHECK_URL
 EOF
     ); then
         die "could not write sample env file: $output_path"
@@ -147,7 +155,7 @@ load_env_file() {
         case "$name" in
             FCLONES_BIN | ORIGINALS | COPIES | FCLONES_REPORT_DIR | FCLONES_LOG_DIR | \
                 FCLONES_CACHE_DIR | FCLONES_LOCK_FILE | FCLONES_HASH_FUNCTION | \
-                FCLONES_RETENTION_DAYS)
+                FCLONES_RETENTION_DAYS | FCLONES_HEALTHCHECK_URL)
                 printf -v "$name" '%s' "$value"
                 ;;
             *)
@@ -170,6 +178,45 @@ log_exit() {
     local exit_code="$1"
 
     log "Finished with exit code $exit_code after $((SECONDS - START_SECONDS)) seconds"
+}
+
+healthcheck_endpoint() {
+    local suffix="$1"
+    local base_url query_string=""
+
+    base_url="$FCLONES_HEALTHCHECK_URL"
+    if [[ "$base_url" == *\?* ]]; then
+        query_string="?${base_url#*\?}"
+        base_url="${base_url%%\?*}"
+    fi
+
+    printf '%s/%s%s' "${base_url%/}" "$suffix" "$query_string"
+}
+
+report_healthcheck() {
+    local event="$1"
+    local endpoint
+
+    [[ -n "$FCLONES_HEALTHCHECK_URL" ]] || return 0
+    endpoint="$(healthcheck_endpoint "$event")"
+
+    # Monitoring must not delay or change the result of the actual job. Keep
+    # requests bounded, retry transient failures, and reduce any curl failure
+    # to a warning without printing the secret ping URL.
+    if ! curl --fail --silent --show-error --max-time 10 --retry 3 \
+        --retry-delay 1 --proto '=http,https' --output /dev/null -- "$endpoint" \
+        >/dev/null 2>&1; then
+        log "warning: healthcheck $event ping failed" >&2
+    fi
+}
+
+handle_exit() {
+    local exit_code="$1"
+
+    trap - EXIT
+    log_exit "$exit_code"
+    report_healthcheck "$exit_code"
+    exit "$exit_code"
 }
 
 while (($# > 0)); do
@@ -240,6 +287,11 @@ fi
 command -v "$FCLONES_BIN" >/dev/null 2>&1 || die "fclones executable not found: $FCLONES_BIN"
 command -v flock >/dev/null 2>&1 || die "flock is required for single-instance execution"
 command -v tee >/dev/null 2>&1 || die "tee is required for persistent logging"
+if [[ -n "$FCLONES_HEALTHCHECK_URL" ]]; then
+    command -v curl >/dev/null 2>&1 || die "curl is required when FCLONES_HEALTHCHECK_URL is set"
+    [[ "$FCLONES_HEALTHCHECK_URL" =~ ^https?://[^[:space:]]+$ ]] || \
+        die "FCLONES_HEALTHCHECK_URL must be an HTTP or HTTPS URL without whitespace"
+fi
 
 [[ "$FCLONES_RETENTION_DAYS" =~ ^[0-9]+$ ]] || die "FCLONES_RETENTION_DAYS must be a non-negative integer"
 
@@ -275,7 +327,11 @@ START_SECONDS=$SECONDS
 
 exec > >(tee -a -- "$RUN_LOG") \
     2> >(tee -a -- "$RUN_LOG" >&2)
-trap 'log_exit "$?"' EXIT
+trap 'handle_exit "$?"' EXIT
+
+# Healthchecks.io-style endpoints use /start for the beginning of a run and
+# /<exit-code> for completion, where zero is success and non-zero is failure.
+report_healthcheck start
 
 cleanup_old_files "$FCLONES_REPORT_DIR" 'duplicate-groups-*.txt'
 cleanup_old_files "$FCLONES_REPORT_DIR" 'hardlink-dry-run-*.txt'
