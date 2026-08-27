@@ -1,7 +1,21 @@
 --- === ClaudeUsage ===
 ---
---- Menubar item showing Claude Code session usage with animated Clawd mascot.
---- Eyes change expression based on rate limit utilization (anime-style).
+--- Claude Code session usage with an animated Clawd mascot, shown on a menubar
+--- item and/or a Stream Deck key. Eyes change expression based on rate limit
+--- utilization (anime-style).
+---
+--- start() only begins polling; each display surface is opted into separately
+--- with startMenubar() and startStreamDeck().
+---
+--- The spoon is assembled from four modules, wired together at the bottom of this
+--- file:
+---
+---  * `clawd.lua`      - the mascot pixel map and canvas drawing
+---  * `monitor.lua`    - credentials, the polling loop, backoff, state snapshots
+---  * `menubar.lua`    - the menubar item and its dropdown
+---  * `streamdeck.lua` - the Stream Deck key
+---
+--- Both surfaces subscribe to the one monitor; neither fetches for itself.
 
 local obj = {}
 obj.__index = obj
@@ -14,373 +28,218 @@ obj.license = "MIT"
 
 --- ClaudeUsage.refreshInterval
 --- Variable
---- How often (in seconds) to refresh usage data. Default 30.
-obj.refreshInterval = 30
+--- How often (in seconds) to poll for usage data. Default 180.
+---
+--- Claude Code hits this same endpoint with this same token for its own usage
+--- display, so the quota is shared; polling aggressively here can starve it. The
+--- five-hour window this reports moves slowly enough that minutes of latency are
+--- not noticeable.
+obj.refreshInterval = 180
+
+--- ClaudeUsage.minRetryInterval
+--- Variable
+--- Floor (in seconds) for the wait after a rate-limited or failed request, and
+--- the first step of the backoff ramp. Default 60.
+---
+--- The endpoint sends `Retry-After: 0`, so a literal reading of the header would
+--- mean retrying immediately; this floor is what makes it safe to honour.
+obj.minRetryInterval = 60
+
+--- ClaudeUsage.maxRetryInterval
+--- Variable
+--- Ceiling (in seconds) on the self-imposed backoff ramp. Default 1800.
+---
+--- A longer explicit Retry-After from the server overrides this — the cap limits
+--- how far our own guessing escalates, not how long the server may ask us to
+--- wait. Observed recovery from a rate limit took roughly 15 minutes of near
+--- idleness, so the ceiling is set above that.
+obj.maxRetryInterval = 1800
+
+--- ClaudeUsage.stateKey
+--- Variable
+--- hs.settings key under which state is persisted across reloads.
+obj.stateKey = "ClaudeUsage.state"
+
+--- ClaudeUsage.keychainService
+--- Variable
+--- macOS Keychain generic-password service holding Claude Code's OAuth blob.
+--- This is where Claude Code stores credentials on macOS; credentialsPath is
+--- only consulted when no such Keychain item can be read.
+obj.keychainService = "Claude Code-credentials"
 
 --- ClaudeUsage.credentialsPath
 --- Variable
---- Path to Claude credentials file.
+--- Fallback path to a Claude credentials file, for setups that keep one on disk
+--- rather than in the Keychain.
 obj.credentialsPath = os.getenv("HOME") .. "/.claude/.credentials.json"
 
--- Internal state
-local menubar = nil
-local timer = nil
-local usageData = nil
-local lastError = nil
-local credentials = nil
-local iconCache = {}
+--- ClaudeUsage.streamDeckButton
+--- Variable
+--- Which Stream Deck key (1-based) shows the usage. Default 1.
+obj.streamDeckButton = 1
+
+--- ClaudeUsage.usageURL
+--- Variable
+--- Opened when the Stream Deck key is pressed.
+obj.usageURL = "https://claude.ai/settings/usage"
+
+--- ClaudeUsage.manageButtonCallback
+--- Variable
+--- Whether to install hs.streamdeck:buttonCallback() on a deck handed to this spoon.
+--- Default true.
+---
+--- That callback is per-device and reports every key on the deck, not just this
+--- spoon's, so a config where something else also wants a key must set this false and
+--- route its own claim on this key to openUsage(). Left true in that situation, this
+--- spoon would answer for keys it knows nothing about and silently drop their presses.
+obj.manageButtonCallback = true
 
 -- ---------------------------------------------------------------------------
--- Clawd pixel art renderer
+-- Module wiring
 -- ---------------------------------------------------------------------------
 
--- Colors matched from the Clawd mascot
-local BODY  = {red=0.76, green=0.48, blue=0.35, alpha=1}  -- warm terracotta
-local DARK  = {red=0.36, green=0.22, blue=0.16, alpha=1}  -- dark brown (eyes/nose)
-local CREAM = {red=0.95, green=0.90, blue=0.85, alpha=1}  -- eye whites (dizzy/panic)
-local SWEAT = {red=0.55, green=0.78, blue=0.98, alpha=1}  -- sweat drop blue
-local RED   = {red=0.85, green=0.18, blue=0.18, alpha=1}  -- panic red eyes
-
--- Pixel size (each game-pixel = 2 canvas points)
-local PX = 2
-
--- Body pixel map: 11 cols x 8 rows
--- 0=empty, 1=body
--- Clawd is a flat rectangle block with arms poking out the sides
-local BODY_MAP = {
-    {0,1,1,1,1,1,1,1,1,1,0},  -- row 0: flat top (9 wide)
-    {1,1,1,1,1,1,1,1,1,1,1},  -- row 1: arms extend (11 wide), eye row top
-    {1,1,1,1,1,1,1,1,1,1,1},  -- row 2: arms extend (11 wide), eye row mid
-    {1,1,1,1,1,1,1,1,1,1,1},  -- row 3: arms extend (11 wide), eye row bottom
-    {0,1,1,1,1,1,1,1,1,1,0},  -- row 4: body (9 wide)
-    {0,1,1,1,1,1,1,1,1,1,0},  -- row 5: flat bottom (9 wide)
-    {0,0,1,0,1,0,1,0,1,0,0},  -- row 6: four little legs
-    {0,0,1,0,1,0,1,0,1,0,0},  -- row 7: four little legs
-}
-
--- Eye positions (top-left corner of each 2x3 eye)
-local LEFT_EYE  = {3, 1}   -- cols 3-4, rows 1-3
-local RIGHT_EYE = {6, 1}   -- cols 6-7, rows 1-3
-
--- Eye expression overlays for each level
--- Each entry: {col, row, color_table}
--- Drawn ON TOP of body pixels
-local function getEyeOverlay(level)
-    local le, re = LEFT_EYE, RIGHT_EYE  -- shortcuts
-
-    -- Eyes are 2 wide x 3 tall. Rows: top=le[2], mid=le[2]+1, bot=le[2]+2
-    local overlays = {
-        -- Level 1 (0-40%): Normal - full 2x3 dark eyes
-        {
-            {le[1],le[2],DARK}, {le[1]+1,le[2],DARK},
-            {le[1],le[2]+1,DARK}, {le[1]+1,le[2]+1,DARK},
-            {le[1],le[2]+2,DARK}, {le[1]+1,le[2]+2,DARK},
-            {re[1],re[2],DARK}, {re[1]+1,re[2],DARK},
-            {re[1],re[2]+1,DARK}, {re[1]+1,re[2]+1,DARK},
-            {re[1],re[2]+2,DARK}, {re[1]+1,re[2]+2,DARK},
-        },
-        -- Level 2 (40-65%): Normal eyes + sweat drop
-        {
-            {le[1],le[2],DARK}, {le[1]+1,le[2],DARK},
-            {le[1],le[2]+1,DARK}, {le[1]+1,le[2]+1,DARK},
-            {le[1],le[2]+2,DARK}, {le[1]+1,le[2]+2,DARK},
-            {re[1],re[2],DARK}, {re[1]+1,re[2],DARK},
-            {re[1],re[2]+1,DARK}, {re[1]+1,re[2]+1,DARK},
-            {re[1],re[2]+2,DARK}, {re[1]+1,re[2]+2,DARK},
-            {9, 0, SWEAT},  -- sweat drop
-        },
-        -- Level 3 (65-85%): Half-lidded (bottom 2 rows only) + sweat
-        {
-            {le[1],le[2]+1,DARK}, {le[1]+1,le[2]+1,DARK},
-            {le[1],le[2]+2,DARK}, {le[1]+1,le[2]+2,DARK},
-            {re[1],re[2]+1,DARK}, {re[1]+1,re[2]+1,DARK},
-            {re[1],re[2]+2,DARK}, {re[1]+1,re[2]+2,DARK},
-            {9, 0, SWEAT},
-        },
-        -- Level 4 (85-95%): X eyes (3 tall gives proper X) + big sweat
-        {
-            {le[1],le[2],DARK},   {le[1]+1,le[2],CREAM},   -- left X
-            {le[1],le[2]+1,CREAM},{le[1]+1,le[2]+1,CREAM},
-            {le[1],le[2]+2,CREAM},{le[1]+1,le[2]+2,DARK},
-            {re[1],re[2],CREAM},  {re[1]+1,re[2],DARK},    -- right X (mirrored)
-            {re[1],re[2]+1,CREAM},{re[1]+1,re[2]+1,CREAM},
-            {re[1],re[2]+2,DARK}, {re[1]+1,re[2]+2,CREAM},
-            {9, 0, SWEAT}, {9, 1, SWEAT},
-        },
-        -- Level 5 (95-100%): Red panic eyes
-        {
-            {le[1],le[2],RED}, {le[1]+1,le[2],RED},
-            {le[1],le[2]+1,RED}, {le[1]+1,le[2]+1,RED},
-            {le[1],le[2]+2,RED}, {le[1]+1,le[2]+2,RED},
-            {re[1],re[2],RED}, {re[1]+1,re[2],RED},
-            {re[1],re[2]+1,RED}, {re[1]+1,re[2]+1,RED},
-            {re[1],re[2]+2,RED}, {re[1]+1,re[2]+2,RED},
-        },
-    }
-    return overlays[level]
+-- Each module file returns a factory taking its dependencies, so there is one
+-- place — here — where the dependency graph is visible, and no module can be used
+-- before it has been given its config.
+--
+-- The config passed is this table itself, read live: assigning to
+-- `spoon.ClaudeUsage.refreshInterval` before start(), or to `streamDeckButton`
+-- at any time, keeps working as it did when every setting lived in one file.
+--
+-- dofile rather than require: hs.loadSpoon finds a spoon through package.path,
+-- which has no pattern that would resolve a second file inside the bundle.
+--
+-- resourcePath() resolves against the file its caller was loaded from, so this
+-- helper only works while it lives alongside the modules it loads.
+local function submodule(name)
+    return dofile(hs.spoons.resourcePath(name))
 end
 
-local function getEyeLevel(utilization)
-    if not utilization then return 1 end
-    if utilization < 40 then return 1 end
-    if utilization < 65 then return 2 end
-    if utilization < 85 then return 3 end
-    if utilization < 95 then return 4 end
-    return 5
-end
-
-local function drawClawdIcon(level)
-    local cols, rows = 11, 8
-    local w, h = cols * PX, rows * PX  -- 22 x 16 points
-
-    local elements = {}
-
-    -- Draw body from pixel map
-    for row = 0, rows - 1 do
-        for col = 0, cols - 1 do
-            local val = BODY_MAP[row + 1][col + 1]
-            if val > 0 then
-                table.insert(elements, {
-                    type = "rectangle",
-                    frame = {x = col * PX, y = row * PX, w = PX, h = PX},
-                    fillColor = val == 1 and BODY or DARK,
-                    action = "fill",
-                })
-            end
-        end
-    end
-
-    -- Draw eye expression overlay
-    local overlay = getEyeOverlay(level)
-    for _, p in ipairs(overlay) do
-        table.insert(elements, {
-            type = "rectangle",
-            frame = {x = p[1] * PX, y = p[2] * PX, w = PX, h = PX},
-            fillColor = p[3],
-            action = "fill",
-        })
-    end
-
-    local c = hs.canvas.new({x = 0, y = 0, w = w, h = h})
-    c:appendElements(elements)
-    local img = c:imageFromCanvas()
-    c:delete()
-    return img
-end
-
-local function initIconCache()
-    for level = 1, 5 do
-        iconCache[level] = drawClawdIcon(level)
-    end
-end
+local clawd = submodule("clawd.lua")
+local monitor = submodule("monitor.lua")(obj, clawd)
+local menubar = submodule("menubar.lua")(obj, monitor, clawd)
+local streamdeck = submodule("streamdeck.lua")(obj, monitor, clawd)
 
 -- ---------------------------------------------------------------------------
--- Helpers
+-- Usage state
 -- ---------------------------------------------------------------------------
 
-local function readCredentials()
-    local path = obj.credentialsPath
-    local f = io.open(path, "r")
-    if not f then
-        return nil, "Credentials file not found"
-    end
-    local raw = f:read("*a")
-    f:close()
-
-    local ok, parsed = pcall(hs.json.decode, raw)
-    if not ok or not parsed then
-        return nil, "Failed to parse credentials JSON"
-    end
-
-    local oauth = parsed.claudeAiOauth
-    if not oauth or not oauth.accessToken then
-        return nil, "No claudeAiOauth.accessToken in credentials"
-    end
-
-    if oauth.expiresAt then
-        local nowSec = os.time()
-        local expireSec = math.floor(oauth.expiresAt / 1000)
-        if nowSec >= expireSec then
-            return nil, "OAuth token expired"
-        end
-    end
-
-    return oauth
+--- ClaudeUsage:state()
+--- Method
+--- Snapshot of the current usage state, for consumers other than the menubar.
+---
+--- Returns a table with: utilization (session percent or nil), level (1-5 eye
+--- level), text (the display string), usageData (last decoded payload or nil),
+--- fetchedAt (os.time of that payload), error (last error string or nil), retryIn
+--- (seconds until the backoff gate opens, or nil), hasCredentials, and plan (the
+--- subscription type, or nil).
+function obj:state()
+    return monitor.state()
 end
 
-local function parseISO8601(str)
-    if not str then return nil end
-    local y, m, d, H, M, S = str:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
-    if not y then return nil end
-    return os.time({
-        year = tonumber(y), month = tonumber(m), day = tonumber(d),
-        hour = tonumber(H), min = tonumber(M), sec = tonumber(S),
-        isdst = false,
-    })
+--- ClaudeUsage:subscribe(fn)
+--- Method
+--- Register a function to be called with a state snapshot on every state change.
+---
+--- This is how a second display surface reuses the single poller instead of
+--- fetching on its own: the API quota is shared with Claude Code itself, so a
+--- second fetch loop would double the request rate against a limit that reports
+--- no remaining-quota header. Returns a token for unsubscribe().
+function obj:subscribe(fn)
+    return monitor.subscribe(fn)
 end
 
-local function utcOffset()
-    local now = os.time()
-    local utc = os.time(os.date("!*t", now))
-    return os.difftime(now, utc)
+--- ClaudeUsage:unsubscribe(token)
+--- Method
+--- Remove a subscriber previously registered with subscribe().
+function obj:unsubscribe(token)
+    return monitor.unsubscribe(token)
 end
 
-local function formatCountdown(resetUtcEpoch)
-    if not resetUtcEpoch then return nil end
-    local nowUtc = os.time() - utcOffset()
-    local diff = resetUtcEpoch - nowUtc
-    if diff <= 0 then return "now" end
-    local hours = math.floor(diff / 3600)
-    local mins = math.floor((diff % 3600) / 60)
-    if hours > 0 then
-        return string.format("%dh %dm", hours, mins)
-    end
-    return string.format("%dm", mins)
-end
-
-local function formatPercent(val)
-    if not val then return "N/A" end
-    return string.format("%.0f%%", val)
-end
-
--- ---------------------------------------------------------------------------
--- Menubar update
--- ---------------------------------------------------------------------------
-
-local function updateMenubar()
-    if not menubar then return end
-
-    local utilization = nil
-    local titleText = "?"
-
-    if not credentials then
-        titleText = "?"
-    elseif lastError then
-        titleText = "--"
-    elseif usageData and usageData.five_hour then
-        utilization = usageData.five_hour.utilization or 0
-        titleText = string.format("%.0f%%", utilization)
-    else
-        titleText = "--"
-    end
-
-    local level = getEyeLevel(utilization)
-    if iconCache[level] then
-        menubar:setIcon(iconCache[level], false)
-    end
-    menubar:setTitle(titleText)
-end
-
--- ---------------------------------------------------------------------------
--- Menu builder (called dynamically on each click)
--- ---------------------------------------------------------------------------
-
-local function buildMenu()
-    local items = {}
-
-    if not credentials then
-        table.insert(items, { title = "No credentials found", disabled = true })
-        table.insert(items, { title = obj.credentialsPath, disabled = true })
-        table.insert(items, { title = "-" })
-        table.insert(items, { title = "Refresh Now", fn = function() obj:fetchUsage() end })
-        return items
-    end
-
-    if lastError then
-        table.insert(items, { title = "Error: " .. lastError, disabled = true })
-        table.insert(items, { title = "-" })
-    end
-
-    if usageData then
-        if usageData.five_hour then
-            local fh = usageData.five_hour
-            local line = "Session (5h): " .. formatPercent(fh.utilization)
-            local countdown = formatCountdown(parseISO8601(fh.resets_at))
-            if countdown then
-                line = line .. "  (resets in " .. countdown .. ")"
-            end
-            table.insert(items, { title = line, disabled = true })
-        end
-
-        if usageData.seven_day and usageData.seven_day.utilization then
-            local sd = usageData.seven_day
-            local line = "Weekly (7d): " .. formatPercent(sd.utilization)
-            local countdown = formatCountdown(parseISO8601(sd.resets_at))
-            if countdown then
-                line = line .. "  (resets in " .. countdown .. ")"
-            end
-            table.insert(items, { title = line, disabled = true })
-        end
-
-        if usageData.seven_day_opus and usageData.seven_day_opus.utilization then
-            local line = "Weekly Opus: " .. formatPercent(usageData.seven_day_opus.utilization)
-            table.insert(items, { title = line, disabled = true })
-        end
-
-        if usageData.seven_day_sonnet and usageData.seven_day_sonnet.utilization then
-            local line = "Weekly Sonnet: " .. formatPercent(usageData.seven_day_sonnet.utilization)
-            table.insert(items, { title = line, disabled = true })
-        end
-
-        if usageData.extra_usage and usageData.extra_usage.total_spend then
-            local spend = usageData.extra_usage.total_spend
-            if spend > 0 then
-                table.insert(items, { title = string.format("Extra spend: $%.2f", spend), disabled = true })
-            end
-        end
-    end
-
-    if credentials and credentials.planType then
-        table.insert(items, { title = "-" })
-        table.insert(items, { title = "Plan: " .. credentials.planType, disabled = true })
-    end
-
-    table.insert(items, { title = "-" })
-    table.insert(items, { title = "Refresh Now", fn = function() obj:fetchUsage() end })
-
-    return items
-end
-
--- ---------------------------------------------------------------------------
--- API fetch
--- ---------------------------------------------------------------------------
-
+--- ClaudeUsage:fetchUsage()
+--- Method
+--- Refresh now, unless a backoff is still in force — in which case this only
+--- republishes the current state so countdowns move.
 function obj:fetchUsage()
-    local creds, err = readCredentials()
-    credentials = creds
-    if not creds then
-        lastError = err
-        usageData = nil
-        updateMenubar()
-        return
-    end
+    monitor.fetchUsage()
+end
 
-    local url = "https://api.anthropic.com/api/oauth/usage"
-    local headers = {
-        ["Authorization"] = "Bearer " .. creds.accessToken,
-        ["anthropic-beta"] = "oauth-2025-04-20",
-    }
+--- ClaudeUsage:clearPersistedState()
+--- Method
+--- Forget the persisted reading and backoff deadline.
+function obj:clearPersistedState()
+    monitor.clearPersistedState()
+    return self
+end
 
-    hs.http.asyncGet(url, headers, function(status, body, _responseHeaders)
-        if status ~= 200 then
-            lastError = "HTTP " .. tostring(status)
-            usageData = nil
-            updateMenubar()
-            return
-        end
+-- ---------------------------------------------------------------------------
+-- Menubar surface
+-- ---------------------------------------------------------------------------
 
-        local ok, parsed = pcall(hs.json.decode, body)
-        if not ok or not parsed then
-            lastError = "Invalid JSON response"
-            usageData = nil
-            updateMenubar()
-            return
-        end
+--- ClaudeUsage:startMenubar()
+--- Method
+--- Add the menubar item and mirror the usage onto it.
+---
+--- The item appears whether or not credentials have resolved yet — they are read
+--- asynchronously, so until then its title reads "..." and its menu reports why.
+--- Safe to call before or after start(); it paints from whatever the monitor has.
+function obj:startMenubar()
+    menubar.start()
+    return self
+end
 
-        lastError = nil
-        usageData = parsed
-        updateMenubar()
-    end)
+--- ClaudeUsage:stopMenubar()
+--- Method
+--- Remove the menubar item and stop mirroring to it.
+function obj:stopMenubar()
+    menubar.stop()
+    return self
+end
+
+-- ---------------------------------------------------------------------------
+-- Stream Deck surface
+-- ---------------------------------------------------------------------------
+
+--- ClaudeUsage:openUsage()
+--- Method
+--- Open the usage page, which is what pressing the Stream Deck key does.
+---
+--- Exposed so that a config brokering key presses can wire a key to it without
+--- reaching into the surface, having set manageButtonCallback false.
+function obj:openUsage()
+    hs.urlevent.openURL(self.usageURL)
+    return self
+end
+
+--- ClaudeUsage:startStreamDeck()
+--- Method
+--- Claim a Stream Deck and mirror the usage onto one of its keys.
+---
+--- Note that hs.streamdeck.init() installs a single process-wide discovery
+--- callback, so calling this hands Stream Deck discovery to this spoon; any other
+--- Stream Deck code in the config must go through setStreamDeckDevice() instead.
+--- Hammerspoon also claims the USB device exclusively, so the official Elgato
+--- Stream Deck app cannot be running.
+function obj:startStreamDeck()
+    streamdeck.start()
+    return self
+end
+
+--- ClaudeUsage:setStreamDeckDevice(dev)
+--- Method
+--- Use an already-discovered device instead of managing discovery here, for
+--- configs that call hs.streamdeck.init() themselves. Pass nil to detach.
+function obj:setStreamDeckDevice(dev)
+    streamdeck.setDevice(dev)
+    return self
+end
+
+--- ClaudeUsage:stopStreamDeck()
+--- Method
+--- Stop mirroring to the Stream Deck and blank the key.
+function obj:stopStreamDeck()
+    streamdeck.stop()
+    return self
 end
 
 -- ---------------------------------------------------------------------------
@@ -389,73 +248,26 @@ end
 
 --- ClaudeUsage:start()
 --- Method
---- Start the menubar item and begin polling.
---- Only creates the menubar if credentials exist; otherwise watches for
---- the file to appear and starts automatically.
+--- Begin polling for usage.
+---
+--- This starts no display surface of its own: a poller with no subscribers is
+--- what every surface shares, so both the menubar and the Stream Deck key are
+--- claimed explicitly, by startMenubar() and startStreamDeck().
 function obj:start()
-    local path = self.credentialsPath
-    local f = io.open(path, "r")
-    if f then
-        f:close()
-    else
-        -- No credentials yet — watch for the file to appear
-        self._pathwatcher = hs.pathwatcher.new(
-            path:match("(.*/)")  ,  -- watch the parent directory
-            function(paths, flagTables)
-                for _, p in ipairs(paths) do
-                    if p == path then
-                        local check = io.open(path, "r")
-                        if check then
-                            check:close()
-                            self._pathwatcher:stop()
-                            self._pathwatcher = nil
-                            self:start()  -- retry now that file exists
-                            return
-                        end
-                    end
-                end
-            end
-        ):start()
-        return self
-    end
-
-    initIconCache()
-
-    menubar = hs.menubar.new()
-    menubar:setMenu(buildMenu)
-    if iconCache[1] then
-        menubar:setIcon(iconCache[1], false)
-    end
-    menubar:setTitle("...")
-
-    self:fetchUsage()
-
-    timer = hs.timer.doEvery(self.refreshInterval, function()
-        self:fetchUsage()
-    end)
-
+    monitor.start()
     return self
 end
 
 --- ClaudeUsage:stop()
 --- Method
---- Remove the menubar item and stop polling.
+--- Stop polling.
+---
+--- Each surface is torn down only by its own stopMenubar()/stopStreamDeck(), so
+--- that start() and stop() round-trip without silently losing one. Surfaces left
+--- up after this show their last reading and stay refreshable by hand, since
+--- fetchUsage() does not need the timer.
 function obj:stop()
-    if self._pathwatcher then
-        self._pathwatcher:stop()
-        self._pathwatcher = nil
-    end
-    if timer then
-        timer:stop()
-        timer = nil
-    end
-    if menubar then
-        menubar:delete()
-        menubar = nil
-    end
-    usageData = nil
-    lastError = nil
-    credentials = nil
+    monitor.stop()
     return self
 end
 
