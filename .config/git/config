@@ -88,3 +88,6 @@ clean = "sed -e '/^_auth =.*/d' | sed -e '/^AuthSession =.*/d' | sed -e '/^expir
 	required = true
 [init]
 	defaultBranch = main
+[credential "https://github.marqeta.com"]
+	helper = 
+	helper = !/Users/mkusold/.nix-profile/bin/.gh-wrapped auth git-credential
