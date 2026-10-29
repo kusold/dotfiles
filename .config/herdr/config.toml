@@ -1,0 +1,25 @@
+onboarding = false
+[keys]
+# Disable the built-in new-worktree action; the command below replaces it
+# with a repo-root-relative version so direnv's .envrc parent-walk still
+# works (Herdr's global [worktrees].directory would land outside the repo).
+new_worktree = ""
+
+[[keys.command]]
+key = "prefix+shift+g"
+type = "popup"
+command = "root=$(git rev-parse --show-toplevel) && read -p 'worktree name: ' name && herdr worktree create --cwd \"$root\" --path \"$root/.claude/worktrees/$name\" --branch \"$name\""
+width = "60%"
+height = "20%"
+
+[ui]
+status_indicators = "dots"
+
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "priority"
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "rose-pine"
+auto_switch = false
