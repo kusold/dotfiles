@@ -335,14 +335,14 @@ function obj:toggleMute()
     return self
 end
 
---- StreamDeckMedia:volumeImage([level, muted]) -> hs.image
+--- StreamDeckMedia:volumeImage([level, muted, deviceName]) -> hs.image
 --- Method
 --- The volume segment's artwork for a level, defaulting to the current one.
 ---
 --- Public so the readout can be previewed with no deck connected: hs.canvas has no
 --- way to show what it drew other than handing back the image.
-function obj:volumeImage(level, muted)
-    return volume.screenImage(level, muted)
+function obj:volumeImage(level, muted, deviceName)
+    return volume.screenImage(level, muted, deviceName)
 end
 
 -- ---------------------------------------------------------------------------

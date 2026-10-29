@@ -1,7 +1,8 @@
 --- === StreamDeckMedia.volume ===
 ---
 --- Output volume on a Stream Deck Plus knob: turn it to change the level, press
---- it to toggle mute, and read the level back off the touch strip above it.
+--- it to toggle mute, and read the level and output device back off the touch strip
+--- above it.
 ---
 --- A deliberate turn moves in the system's quarter-sized increment and a spin in
 --- its full one, so the same knob covers a nudge and a sweep without a modifier.
@@ -118,16 +119,19 @@ end
 -- Touch strip
 -- ---------------------------------------------------------------------------
 
---- StreamDeckMedia.volume.screenImage([level, muted]) -> hs.image
+--- StreamDeckMedia.volume.screenImage([level, muted, deviceName]) -> hs.image
 --- Function
---- The strip artwork for a level, defaulting to the current one.
+--- The strip artwork for a level, defaulting to the current one. The device name
+--- defaults to the current output device's only when level and muted do too.
 ---
 --- Public so the readout can be previewed with no deck connected: hs.canvas has no
 --- way to show what it drew other than handing back the image.
-function M.screenImage(level, muted)
+function M.screenImage(level, muted, deviceName)
     local W, H = deck().SEGMENT_W, deck().SEGMENT_H
     if level == nil and muted == nil then
-        level, muted = M.level()
+        local device
+        level, muted, device = M.level()
+        deviceName = deviceName or (device and device:name())
     end
     local silent = muted or level == 0
     local shown = level and string.format("%d", math.floor(level + 0.5)) or "--"
@@ -147,7 +151,7 @@ function M.screenImage(level, muted)
         {
             type = "text",
             text = shown,
-            frame = {x=0, y=24, w=W, h=48},
+            frame = {x=0, y=22, w=W, h=48},
             textColor = silent and draw.DIM or draw.FG,
             textSize = 42,
             textAlignment = "center",
@@ -155,17 +159,27 @@ function M.screenImage(level, muted)
         },
         {
             type = "rectangle",
-            frame = {x=24, y=78, w=W-48, h=8},
+            frame = {x=24, y=72, w=W-48, h=8},
             fillColor = draw.TRACK,
             action = "fill",
             roundedRectRadii = {xRadius=4, yRadius=4},
+        },
+        {
+            type = "text",
+            text = deviceName or "no output device",
+            frame = {x=8, y=82, w=W-16, h=16},
+            textColor = draw.DIM,
+            textSize = 11,
+            textAlignment = "center",
+            textFont = draw.BODY_FONT,
+            textLineBreak = "truncateTail",
         },
     }
 
     if fill > 0 then
         table.insert(elements, {
             type = "rectangle",
-            frame = {x=24, y=78, w=(W-48) * fill, h=8},
+            frame = {x=24, y=72, w=(W-48) * fill, h=8},
             fillColor = silent and draw.DIM or draw.BAR,
             action = "fill",
             roundedRectRadii = {xRadius=4, yRadius=4},
