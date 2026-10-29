@@ -207,6 +207,32 @@ NotificationCenter.default.addObserver(
     }
 }
 
+// macOS applies the Control Center Mic Mode per app, in coreaudiod, ahead of anything
+// the tap sees — and there is no API to opt out of it. Under Voice Isolation whatever
+// is not close-up speech is gated to near-silence, so the meter reads the floor while
+// the raw input is anything but, which is the opposite of what a clip meter is for.
+// Reporting the mode is what lets the strip say so instead of looking dead.
+func micModeName(_ mode: AVCaptureDevice.MicrophoneMode) -> String {
+    switch mode {
+    case .standard: return "standard"
+    case .wideSpectrum: return "wideSpectrum"
+    case .voiceIsolation: return "voiceIsolation"
+    @unknown default: return "unknown"
+    }
+}
+
+// Mic Mode is chosen per app, so fixing it means choosing it for this app, which is
+// background-only and has no UI of its own to choose it from. showSystemUserInterface
+// opens the picker on behalf of the calling app; monitor.lua sends SIGUSR1 to ask for
+// it. The default action would kill the process, hence SIG_IGN before the dispatch
+// source takes over.
+signal(SIGUSR1, SIG_IGN)
+let micModeSignal = DispatchSource.makeSignalSource(signal: SIGUSR1, queue: .main)
+micModeSignal.setEventHandler {
+    AVCaptureDevice.showSystemUserInterface(.microphoneModes)
+}
+micModeSignal.resume()
+
 // scheduledTimer schedules itself on the current run loop's default mode, which
 // RunLoop.main.run() below spins forever, so no explicit add() is needed and no
 // reference to the timer has to be kept alive. Both timers below run on the main run
@@ -244,6 +270,7 @@ _ = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
         let peakDb = peak > 0 ? max(silenceFloorDb, 20 * log10(Double(peak))) : silenceFloorDb
         payload["peakDb"] = peakDb
         payload["over"] = peakDb >= clipThresholdDb
+        payload["micMode"] = micModeName(AVCaptureDevice.activeMicrophoneMode)
     }
     if let data = try? JSONSerialization.data(withJSONObject: payload),
        let json = String(data: data, encoding: .utf8) {

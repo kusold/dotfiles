@@ -21,6 +21,7 @@ local nextToken = 1
 
 local peakDb = nil          -- last reading from the helper, or nil before one arrives
 local active = nil           -- whether the helper's tap is currently engaged
+local micMode = nil          -- the helper's active Mic Mode while tapping, e.g. "voiceIsolation"
 local lastReadAt = nil       -- os.time() the last reading was decoded
 local clipHeldUntil = nil    -- hs.timer.secondsSinceEpoch() until which "clipped" reads true
 local helperError = nil      -- "no-access", "access-timeout", a gate failure, or a decode failure
@@ -53,6 +54,8 @@ function M.state()
     return {
         peakDb = fresh and peakDb or nil,
         active = fresh and active or nil,
+        micMode = fresh and micMode or nil,
+        deviceName = device and device:name(),
         clipped = fresh and clipHeldUntil ~= nil and now < clipHeldUntil or false,
         gain = gain,
         -- Not `device and device:inputMuted() or nil`: inputMuted() legitimately
@@ -131,6 +134,20 @@ function M.toggleMute()
 
     device:setInputMuted(not muted)
     publish()
+end
+
+--- InputLevel.monitor.showMicModes()
+--- Function
+--- Ask the helper to open the system Mic Mode picker for itself.
+---
+--- Mic Mode is kept per app and applied before the helper's tap sees the signal, so
+--- the helper's own mode is what decides whether the meter reads the raw input. Anything
+--- other than Standard means the strip is not showing the raw input level. See
+--- helper/inputlevel.swift for the SIGUSR1 handler on the other end.
+function M.showMicModes()
+    for _, app in ipairs(hs.application.applicationsForBundleID(BUNDLE_ID)) do
+        hs.task.new("/bin/kill", nil, {"-USR1", tostring(app:pid())}):start()
+    end
 end
 
 -- ---------------------------------------------------------------------------
@@ -233,11 +250,13 @@ local function poll()
 
     if active then
         peakDb = parsed.peakDb
+        micMode = parsed.micMode
         if parsed.over then
             clipHeldUntil = hs.timer.secondsSinceEpoch() + cfg.clipHoldSeconds
         end
     else
         peakDb = nil
+        micMode = nil
     end
 
     publish()
@@ -281,6 +300,7 @@ function M.stop()
 
     peakDb = nil
     active = nil
+    micMode = nil
     lastReadAt = nil
     clipHeldUntil = nil
     helperError = nil

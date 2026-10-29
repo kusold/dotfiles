@@ -1,7 +1,8 @@
 --- === InputLevel ===
 ---
 --- Live microphone peak level and clipping on a Stream Deck Plus knob and the touch
---- strip segment above it. Turn the knob to change input gain; press it to mute.
+--- strip segment above it, with the input device's name. Turn the knob to change input
+--- gain; press it to mute; tap the segment to pick the helper's Mic Mode.
 ---
 --- hs.audiodevice exposes only the input *gain setting*, never the incoming signal,
 --- so there is no way to see real clipping from Lua alone. The signal itself is read
@@ -142,7 +143,10 @@ local streamdeck = submodule("streamdeck.lua")(obj, deck, monitor)
 ---
 --- Returns a table with: peakDb (the latest window's peak in dBFS, or nil while
 --- stale or not active), active (whether the helper's tap is currently engaged,
---- because some other process is using the mic, or nil while stale), clipped
+--- because some other process is using the mic, or nil while stale), micMode (the
+--- helper's active Mic Mode while tapping — "standard", "wideSpectrum" or
+--- "voiceIsolation" — or nil), deviceName (the default input device's name, or
+--- nil), clipped
 --- (whether the hold from a recent crossing of clipThresholdDb is still in effect),
 --- gain (0-100 input level, or nil), muted (boolean or nil), hasGainControl (whether
 --- CoreAudio exposes a software input gain on this device at all), stale (no fresh

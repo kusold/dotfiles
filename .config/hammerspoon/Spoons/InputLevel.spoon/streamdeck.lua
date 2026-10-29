@@ -1,7 +1,8 @@
 --- === InputLevel.streamdeck ===
 ---
 --- The knob and its strip segment: turn to change input gain, press to toggle mute,
---- and read the peak level and clip status off the segment above it.
+--- and read the peak level, clip status and input device off the segment above it.
+--- Tap the segment to pick the helper's Mic Mode — see monitor.showMicModes().
 ---
 --- Subscribing to the monitor rather than polling is the whole point: this surface
 --- adds no reads of its own, and repaints on the same tick the monitor already
@@ -23,6 +24,8 @@ local YELLOW= {red=0.95, green=0.78, blue=0.25, alpha=1}
 local RED   = {red=0.86, green=0.20, blue=0.20, alpha=1}
 
 local FONT = "Menlo-Bold"
+-- The device line, matching StreamDeckMedia.draw.BODY_FONT on the volume segment beside it.
+local BODY_FONT = "Menlo"
 
 local function render(w, h, elements)
     local c = hs.canvas.new({x = 0, y = 0, w = w, h = h})
@@ -93,12 +96,24 @@ local function drawClip(W, H)
     }
 end
 
+-- Anything but Standard means coreaudiod is processing the signal before the tap sees
+-- it, so the level on the strip is not the level going in. Named so the reading is not
+-- mistaken for a quiet mic; see helper/inputlevel.swift for why it cannot be bypassed.
+local MIC_MODE_LABELS = {
+    voiceIsolation = "VOICE ISO",
+    wideSpectrum = "WIDE",
+    unknown = "MIC MODE?",
+}
+
 local function drawMeter(W, H, state)
-    local label = "INPUT"
+    local label, labelColor = "INPUT", nil
     if state.stale or state.error then label = "--"
     elseif state.muted then label = "MUTED"
     elseif not state.hasGainControl then label = "NO GAIN"
-    elseif state.active == false then label = "IDLE" end
+    elseif state.active == false then label = "IDLE"
+    elseif MIC_MODE_LABELS[state.micMode] then
+        label, labelColor = MIC_MODE_LABELS[state.micMode], YELLOW
+    end
 
     local gainText = (state.hasGainControl and state.gain)
         and string.format("%d%%", math.floor(state.gain + 0.5)) or ""
@@ -112,7 +127,7 @@ local function drawMeter(W, H, state)
         {
             type = "text", text = label,
             frame = {x=8, y=8, w=W/2 - 8, h=18},
-            textColor = ink,
+            textColor = labelColor or ink,
             textSize = 14, textAlignment = "left", textFont = FONT,
         },
         {
@@ -122,14 +137,20 @@ local function drawMeter(W, H, state)
         },
         {
             type = "text", text = peakText,
-            frame = {x=0, y=24, w=W, h=48},
+            frame = {x=0, y=22, w=W, h=48},
             textColor = peakColor, textSize = 42, textAlignment = "center", textFont = FONT,
         },
         {
             type = "rectangle",
-            frame = {x=24, y=78, w=W-48, h=8},
+            frame = {x=24, y=72, w=W-48, h=8},
             fillColor = TRACK, action = "fill",
             roundedRectRadii = {xRadius=4, yRadius=4},
+        },
+        {
+            type = "text", text = state.deviceName or "no input device",
+            frame = {x=8, y=82, w=W-16, h=16},
+            textColor = DIM, textSize = 11, textAlignment = "center", textFont = BODY_FONT,
+            textLineBreak = "truncateTail",
         },
     }
 
@@ -142,7 +163,7 @@ local function drawMeter(W, H, state)
         if fraction > 0 then
             table.insert(elements, {
                 type = "rectangle",
-                frame = {x=24, y=78, w=(W-48) * fraction, h=8},
+                frame = {x=24, y=72, w=(W-48) * fraction, h=8},
                 fillColor = zoneColor(state.peakDb), action = "fill",
                 roundedRectRadii = {xRadius=4, yRadius=4},
             })
@@ -179,7 +200,10 @@ function M.start()
     if token then return end
     token = monitor.subscribe(paint)
 
-    deck():addStrip(cfg.levelEncoder, {paint = function() return M.screenImage() end})
+    deck():addStrip(cfg.levelEncoder, {
+        paint = function() return M.screenImage() end,
+        touch = function(kind) if kind == "shortPress" then monitor.showMicModes() end end,
+    })
 
     deck():addEncoder(cfg.levelEncoder, function(pressed, left, right)
         if left or right then
