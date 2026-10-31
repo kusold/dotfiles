@@ -12,3 +12,12 @@ end)
 if not ok then
     print("rex init: could not start the agent recorder: " .. tostring(err))
 end
+
+-- Keep the agents' self-report hooks installed; the shell hooks no
+-- longer do this now that resume lives on the Rex side.
+pcall(function()
+    rex.exec.start(
+        { "/bin/sh", "-c",
+          os.getenv("HOME") .. "/.config/rex/install-hooks.sh --ensure" },
+        { detach = true })
+end)
