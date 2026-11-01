@@ -1,7 +1,11 @@
 -- Rex configuration. rex.on is invalid in configuration files (handlers
 -- are never called), so the block recorder can't live here; start it as
--- a detached process instead. ~/.config/rex/ensure-recorder.sh, run from
--- every terminal shell, is the fallback that starts it if this fails.
+-- a detached process instead. This runs at every server start and on
+-- every `rex config reload` — the recovery lever should the recorder
+-- ever die — and the recorder replaces any earlier instance it finds in
+-- its pidfile, so starting here unconditionally keeps exactly one
+-- running. Nothing else bootstraps it: no shell hook of any kind is
+-- involved.
 local dir = os.getenv("REX_BIN_DIR")
 local exe = (dir and dir .. "/rex") or "rex"
 
@@ -18,7 +22,6 @@ end
 start({ exe, "do",
     os.getenv("HOME") .. "/.config/rex/recorder.lua", "--all" })
 
--- Keep the agents' self-report hooks installed; the shell hooks no
--- longer do this now that resume lives on the Rex side.
+-- Keep the agents' self-report hooks installed.
 start({ "/bin/sh", "-c",
     os.getenv("HOME") .. "/.config/rex/install-hooks.sh --ensure" })
