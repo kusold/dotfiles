@@ -32,6 +32,17 @@ export default function (pi: any) {
       for (let i = 0; i < 20; i++) {
         try {
           fs.mkdirSync(lock);
+        } catch (e: any) {
+          if (e && e.code === "EEXIST") {
+            Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
+            continue;
+          }
+          return; // never disturb the agent
+        }
+        // The lock is released on every path out of here; a stale one
+        // would starve this extension and the sh hook alike (they share
+        // the path) out of every future report.
+        try {
           let lines: string[] = [];
           try {
             lines = fs
@@ -47,14 +58,15 @@ export default function (pi: any) {
           const tmp = sessions + ".tmp";
           fs.writeFileSync(tmp, lines.join("\n") + "\n");
           fs.renameSync(tmp, sessions);
-          fs.rmdirSync(lock);
           return;
-        } catch (e: any) {
-          if (e && e.code === "EEXIST") {
-            Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
-            continue;
-          }
+        } catch {
           return; // never disturb the agent
+        } finally {
+          try {
+            fs.rmdirSync(lock);
+          } catch {
+            // never disturb the agent
+          }
         }
       }
     } catch {
