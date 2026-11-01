@@ -28,6 +28,8 @@
 #     - agent_resume_forget clears both the recording and the tsv ref
 #   B (REX_AGENT_RESUME_MODE=prompt)
 #     - the resume command is typed and waits: nothing runs until Enter
+#     - Enter settles the pending hold at once (the agent's start in the
+#       fresh epoch adopts the generation the sweep could not)
 #     - a delivery left waiting survives a sweep (the pending hold), and
 #       agent_resume_now re-delivers it after the line is cleared
 #   C (REX_AGENT_RESUME=0)
@@ -290,6 +292,7 @@ recorded_as() { jq -e --arg b "$1" --arg a "$2" '.[$b].agent == $a' "$CACHE/reco
 has_entry() { jq -e --arg b "$1" 'has($b)' "$CACHE/recorder.json" >/dev/null 2>&1; }
 entry_gone() { jq -e --arg b "$1" 'has($b) | not' "$CACHE/recorder.json" >/dev/null 2>&1; }
 pending_flag() { jq -e --arg b "$1" '.[$b].pending == true' "$CACHE/recorder.json" >/dev/null 2>&1; }
+pending_cleared() { jq -e --arg b "$1" '.[$b] != null and .[$b].pending != true' "$CACHE/recorder.json" >/dev/null 2>&1; }
 fg_pid() { R block call -s "$1" -b "$2" process 2>/dev/null | jq -r '.foreground.pid // empty'; }
 fg_name() { R block call -s "$1" -b "$2" process 2>/dev/null | jq -r '.foreground.name // empty'; }
 fg_cwd() { R block call -s "$1" -b "$2" process 2>/dev/null | jq -r '.foreground.cwd // empty'; }
@@ -473,13 +476,14 @@ check "the recording is held pending" 'wait_for 10 pending_flag "$BC"' "$(cat "$
 check "the debug log names the prompt delivery" 'grep -qF "prompt delivery to $BC" "$CACHE/debug.log"' "$(grep prompt "$CACHE/debug.log" 2>/dev/null | tail -2)"
 R send -s "$SC" -b "$BC" $'\r'
 check "Enter runs the typed resume" 'wait_for 15 log_has "claude run args=[--resume $RB1] id=$RB1"' "$(cat "$LOG") $(cap "$SC" "$BC" | tail -2)"
-# No assertion that the pending flag clears here, on purpose: a restore
-# the sweep detected (rather than the generation-reset event) leaves the
-# recorded generation stale, so the agent's start is misread as another
-# reset and bails at the consumed check before clearing `pending`. The
-# flag is inert while the agent runs — the quit path drops the whole
-# entry — and the load-bearing pending assertions are the survival ones
-# below.
+# Enter settles the hold at once: the agent's start is the fresh epoch's
+# first event, and the recording stops being pending. (A sweep-detected
+# restore once left the generation on record stale-high, so this start
+# was misread as another reset, bailed at the consumed check, and the
+# flag stuck — leaving quit detection suppressed after a run the user
+# had watched happen.)
+check "Enter settles the pending hold" 'wait_for 10 pending_cleared "$BC"' "$(cat "$CACHE/recorder.json" 2>/dev/null)"
+check "the debug log names the adoption" 'grep -q "agent running again in $BC" "$CACHE/debug.log"' "$(grep "agent running again" "$CACHE/debug.log" 2>/dev/null | tail -2)"
 
 if wait_for 40 screen_has "$SQ" "$BQ" "claude --resume '$RB2'"; then
     ok "the second pane's delivery also waits"

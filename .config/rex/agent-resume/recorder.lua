@@ -394,12 +394,32 @@ end
 rex.on("terminal.process_changed", function(ctx, ev)
     local e = state[ctx.block_id]
     local gen = ev.generation
+    local agent = classify(ev.foreground)
     if e and type(e) == "table" and e.gen and gen then
         -- A restored block restarts generations from 1, so a generation
         -- lower than the one on record means this block was restored
         -- while an agent had the foreground. An equal one is an echo of
         -- the current foreground and never an update.
         if gen < e.gen then
+            if agent == e.agent then
+                -- The recorded agent itself is starting in the fresh
+                -- epoch — Enter pressed on a delivered command, or the
+                -- agent started anew — not a restore to answer. Only a
+                -- sweep-detected restore reaches this test with the
+                -- agent running: the event path adopts the fresh
+                -- generation when it schedules, the sweep cannot, so
+                -- the one on record is stale-high. Adopt it here, or
+                -- every later change in the block reads as another
+                -- reset, and settle any prompt-mode hold — the command
+                -- demonstrably ran, and a hold left set would keep the
+                -- sweep's quit detection suppressed after it.
+                e.gen, e.ts, e.pending = gen, os.time(), nil
+                dirty = true
+                dlog("agent running again in " .. ctx.block_id
+                    .. ": adopting generation " .. tostring(gen)
+                    .. ", settling any hold")
+                return
+            end
             dlog("restore detected: generation reset in " .. ctx.block_id)
             schedule_resume(ctx.session_id, ctx.block_id, e, gen,
                 shell_pid_of(ev))
@@ -415,7 +435,6 @@ rex.on("terminal.process_changed", function(ctx, ev)
             return
         end
     end
-    local agent = classify(ev.foreground)
     if agent == nil then return end
     if agent == "" then
         -- A plain foreground (shell, vim, ...) means no resume; keep no
