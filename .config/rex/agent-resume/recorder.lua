@@ -25,6 +25,11 @@
 --                                  rejected) to debug.log beside this
 --                                  state — the same decisions rex.log
 --                                  carries, collected in one place
+--   REX_AGENT_RESUME_MODE=prompt   deliver by typing the command without
+--                                  the Enter that runs it, so nothing
+--                                  resumes without a keystroke; any
+--                                  other value (the default, auto)
+--                                  resumes as before
 --
 -- The agent_resume_now / agent_resume_forget actions that init.lua
 -- registers never edit this recorder's files; they drop request files
@@ -50,6 +55,16 @@ local max_age_s = max_age_days * 86400
 -- wrong can be read back after the fact without digging through the
 -- server log. A logging failure must never break the behavior it
 -- observes, hence the pcall.
+
+-- Prompt mode holds every delivery for one keystroke of consent: the
+-- command is typed exactly as before but the Enter is left to the user.
+-- A trust lever for the first while after any change to this system —
+-- nothing runs by itself, and clearing the line is a skip. While a
+-- delivery waits, the block's recording carries a `pending` flag, so
+-- the sweep below can tell a pane holding an unrun command from one
+-- whose agent was really quit.
+local prompt_mode = os.getenv("REX_AGENT_RESUME_MODE") == "prompt"
+
 local debug_on = os.getenv("REX_AGENT_RESUME_DEBUG") == "1"
 local function dlog(msg)
     if not debug_on then return end
@@ -280,7 +295,9 @@ end
 -- Type a resume command into a block's own first shell, after a beat
 -- that lets a restored shell settle. Shared by the automatic path (a
 -- detected restore) and the manual one (a queued request): the guards
--- below apply to both.
+-- below apply to both, and so does prompt mode — with the Enter
+-- withheld, a manual resume waits for the same keystroke an automatic
+-- one does.
 local function deliver_resume(session_id, block_id, cmd)
     rex.after(2.0, function()
         -- One native write, addressed to the target block's own
@@ -301,16 +318,44 @@ local function deliver_resume(session_id, block_id, cmd)
             dlog("busy skip: " .. block_id)
             return
         end
+        -- Prompt mode withholds the Enter, so the command sits on the
+        -- shell's command line until the user runs or clears it. The
+        -- delivery is final either way — mark_consumed has already run,
+        -- and nothing here auto-fires twice — so clearing the line
+        -- (Ctrl-C or Ctrl-U) skips this delivery for good; the recovery
+        -- levers are the agent_resume_now / agent_resume_forget palette
+        -- actions, and the former re-delivers on demand. Nothing
+        -- explanatory may be typed into the pane instead: any extra
+        -- bytes reach the pty and become part of the command line, so
+        -- the visible command on the prompt is the whole interface.
+        local data = cmd .. (prompt_mode and "" or "\r")
         local res, err = rex.block.call(TERMINAL, "write", {
             session_id = session_id,
             block_id = block_id,
-            data = cmd .. "\r",
+            data = data,
         })
         if not res then
             rex.log("warn", "agent-resume: write to " .. block_id
                 .. " failed: " .. tostring(err))
             dlog("resume write to " .. block_id .. " failed: "
                 .. tostring(err))
+        elseif prompt_mode then
+            -- Hold the recording while the command waits: until Enter is
+            -- pressed the pane looks exactly like one whose agent was
+            -- quit, and the sweep must not read it that way and drop the
+            -- block, or agent_resume_now would find nothing left to
+            -- re-deliver. Cleared as soon as the agent is seen running.
+            local e = state[block_id]
+            if type(e) == "table" then
+                e.pending = true
+                dirty = true
+            end
+            rex.log("info", "agent-resume: typed without Enter into "
+                .. block_id .. "; press Enter to resume or clear the line"
+                .. " to skip")
+            dlog("prompt delivery to " .. block_id .. ": " .. cmd
+                .. " — typed without Enter; press Enter to resume, or"
+                .. " clear the line to skip")
         else
             dlog("resume delivered to " .. block_id .. ": " .. cmd)
         end
@@ -387,6 +432,9 @@ rex.on("terminal.process_changed", function(ctx, ev)
     e.agent = agent
     e.ts = os.time()
     e.shell = shell_pid_of(ev) or e.shell
+    -- An agent in the foreground again means the typed command was run
+    -- (or a new one started): the prompt-mode hold is settled.
+    e.pending = nil
     state[ctx.block_id] = e
     dirty = true
 end)
@@ -427,8 +475,9 @@ local function check_block(session_id, block_id)
         if fg == e.agent then
             -- The agent is running again (already resumed, or started
             -- anew): adopt the fresh shell so the restore is not
-            -- re-fired.
+            -- re-fired, and settle any prompt-mode hold.
             e.shell, e.ts = child, os.time()
+            e.pending = nil
             dirty = true
         else
             dlog("restore detected: sweep found a fresh shell in " .. block_id)
@@ -438,10 +487,14 @@ local function check_block(session_id, block_id)
         -- No shell on record yet; learn it while the agent
         -- demonstrably runs, for every later comparison.
         e.shell = child
+        e.pending = nil
         dirty = true
-    elseif e.shell and child == e.shell and fg == "" then
+    elseif e.shell and child == e.shell and fg == "" and not e.pending then
         -- The same shell the agent ran in has the foreground back: the
         -- agent was quit, not cut off by a restart. Nothing to resume.
+        -- A pending flag excepts this: in prompt mode the delivered
+        -- command is still sitting unrun on that shell's line, and the
+        -- pane only looks like a quit.
         state[block_id] = nil
         dirty = true
     end

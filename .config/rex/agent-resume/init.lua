@@ -16,7 +16,10 @@
 -- unregistered, with no recorder to drain their queue);
 -- REX_AGENT_RESUME_MAX_AGE_DAYS bounds what the recorder auto-resumes
 -- (default 7); REX_AGENT_RESUME_DEBUG=1 makes the recorder append its
--- decisions to debug.log in the cache.
+-- decisions to debug.log in the cache; REX_AGENT_RESUME_MODE=prompt has
+-- the recorder type each resume command without the Enter that runs it,
+-- so nothing resumes without a keystroke (any other value, the default
+-- auto, resumes as before).
 local dir = os.getenv("REX_BIN_DIR")
 local exe = (dir and dir .. "/rex") or "rex"
 
