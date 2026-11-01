@@ -1,6 +1,6 @@
 // Self-report extension for the pi coding agent, installed into
-// ~/.pi/agent/extensions/ by ~/.config/rex/install-hooks.sh (pi
-// autoloads that directory). Records which conversation belongs to this
+// ~/.pi/agent/extensions/ by ~/.config/rex/agent-resume/install-hooks.sh
+// (pi autoloads that directory). Records which conversation belongs to this
 // Rex block, so a restored terminal resumes the exact session that ran
 // in it. pi prefers the session file path over the id for resuming.
 //

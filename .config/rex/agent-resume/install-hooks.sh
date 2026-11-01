@@ -17,7 +17,7 @@
 
 set -u
 
-hooks_dir="$HOME/.config/rex/hooks"
+hooks_dir="$HOME/.config/rex/agent-resume/hooks"
 hook_sh="$hooks_dir/rex-agent-state.sh"
 hook_ts="$hooks_dir/rex-agent-state.ts"
 marker="rex-agent-state"

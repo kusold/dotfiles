@@ -4,8 +4,9 @@
 -- The agent self-report hooks write exact session ids to sessions.tsv
 -- beside this state.
 --
--- Runs as:  rex do ~/.config/rex/recorder.lua --all
--- Started by ~/.config/rex/init.lua at every server start and on every
+-- Runs as:  rex do ~/.config/rex/agent-resume/recorder.lua --all
+-- Started by ~/.config/rex/agent-resume/init.lua (pulled into
+-- ~/.config/rex/init.lua by require) at every server start and on every
 -- `rex config reload` — the recovery lever should the recorder ever
 -- die. Any recorder named in the pidfile is replaced first, so exactly
 -- one runs, the newest. Events are the fast path; the periodic sweep

@@ -1,11 +1,12 @@
 #!/bin/sh
 # Self-report hook for claude and codex, installed into their hook
-# configs by ~/.config/rex/install-hooks.sh. The agent runs it on
+# configs by ~/.config/rex/agent-resume/install-hooks.sh. The agent
+# runs it on
 # SessionStart with a JSON payload on stdin; it records which
 # conversation belongs to this Rex block, so a restored terminal resumes
 # the exact session that ran in it. Invoked as:
-#   bash ~/.config/rex/hooks/rex-agent-state.sh claude
-#   bash ~/.config/rex/hooks/rex-agent-state.sh codex
+#   bash ~/.config/rex/agent-resume/hooks/rex-agent-state.sh claude
+#   bash ~/.config/rex/agent-resume/hooks/rex-agent-state.sh codex
 # Never fails and never blocks the agent.
 
 # REX_AGENT_RESUME_HOOK_VERSION=1
