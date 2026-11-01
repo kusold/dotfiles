@@ -13,12 +13,30 @@
 -- below catches restores whose events fired before this recorder
 -- subscribed or while no recorder was running at all. REX_AGENT_RESUME=0
 -- (in the server's environment) disables the whole system.
+--
+-- Environment, read once from the server's at start:
+--   REX_AGENT_RESUME_MAX_AGE_DAYS  how old a recording may be and still
+--                                  auto-resume (default 7, 0 disables
+--                                  resuming entirely)
+--   REX_AGENT_RESUME_DEBUG=1       append a timestamped line per
+--                                  decision (restore detected and by
+--                                  which signal, resume delivered or
+--                                  skipped and why, queue drained or
+--                                  rejected) to debug.log beside this
+--                                  state — the same decisions rex.log
+--                                  carries, collected in one place
+--
+-- The agent_resume_now / agent_resume_forget actions that init.lua
+-- registers never edit this recorder's files; they drop request files
+-- into commands/ beside them, and the flush timer below drains the
+-- queue. The recorder owns the state, so no other write can race it.
 
 local cache = (os.getenv("XDG_CACHE_HOME") or os.getenv("HOME") .. "/.cache")
     .. "/rex-agent-resume"
 local json_file = cache .. "/recorder.json"
 local pid_file = cache .. "/recorder.pid"
 local consumed_file = cache .. "/consumed.txt"
+local commands_dir = cache .. "/commands"
 
 -- Resume only state recorded within this many days: a recorder gap can
 -- leave an agent on record long after the user has moved on, and
@@ -27,6 +45,23 @@ local consumed_file = cache .. "/consumed.txt"
 local max_age_days = tonumber(os.getenv("REX_AGENT_RESUME_MAX_AGE_DAYS") or "") or 7
 local max_age_s = max_age_days * 86400
 
+-- The debug log mirrors the decisions rex.log already reports, but with
+-- timestamps and in one file beside the state, so a resume that went
+-- wrong can be read back after the fact without digging through the
+-- server log. A logging failure must never break the behavior it
+-- observes, hence the pcall.
+local debug_on = os.getenv("REX_AGENT_RESUME_DEBUG") == "1"
+local function dlog(msg)
+    if not debug_on then return end
+    pcall(function()
+        local fh = io.open(cache .. "/debug.log", "a")
+        if fh then
+            fh:write(os.date("%Y-%m-%dT%H:%M:%S "), msg, "\n")
+            fh:close()
+        end
+    end)
+end
+
 local TERMINAL = "com.superlogical.terminal"
 
 -- Replace any earlier recorder before reading state: init.lua starts
@@ -34,6 +69,7 @@ local TERMINAL = "com.superlogical.terminal"
 -- its server may linger, timers still running, writing the same state
 -- file. The pidfile's process is signalled only when ps confirms it is
 -- a recorder, so a recycled pid is never killed.
+local replaced
 do
     local fh = io.open(pid_file, "r")
     local old = fh and fh:read("*a"):match("%d+")
@@ -44,6 +80,7 @@ do
         if r and r.ok and r.stdout and r.stdout:find("recorder%.lua") then
             rex.exec({ "kill", tostring(old) })
             rex.sleep(0.3)
+            replaced = old
         end
     end
 end
@@ -92,15 +129,18 @@ local function flush()
     dirty = false
 end
 
--- Bootstrap the cache directory and claim the pidfile. A rex.exec
--- child's parent is the rex do process itself, so its PPID is this
--- script's pid.
-rex.exec({ "mkdir", "-p", cache })
+-- Bootstrap the cache and command-queue directories and claim the
+-- pidfile. A rex.exec child's parent is the rex do process itself, so
+-- its PPID is this script's pid.
+rex.exec({ "mkdir", "-p", cache, commands_dir })
 local pid = rex.exec({ "sh", "-c", "echo $PPID" })
 if pid and pid.ok then
     local p = pid.stdout and pid.stdout:gsub("%s", "")
     if p and p ~= "" then write(pid_file, p .. "\n") end
 end
+
+dlog(replaced and ("recorder started, replacing pid " .. replaced)
+    or "recorder started")
 
 -- Session-scoped calls (list_blocks, block.call) work only on a
 -- connection attached to that session, and this recorder is born with
@@ -225,6 +265,58 @@ do
     end
 end
 
+-- Record a resume command as taken, in memory and in the persisted
+-- consumed file, so a recorder restarted mid-restore (a second crash)
+-- keeps the protection.
+local function mark_consumed(cmd)
+    consumed[cmd] = true
+    local cfh = io.open(consumed_file, "a")
+    if cfh then
+        cfh:write(cmd .. "\t" .. os.time() .. "\n")
+        cfh:close()
+    end
+end
+
+-- Type a resume command into a block's own first shell, after a beat
+-- that lets a restored shell settle. Shared by the automatic path (a
+-- detected restore) and the manual one (a queued request): the guards
+-- below apply to both.
+local function deliver_resume(session_id, block_id, cmd)
+    rex.after(2.0, function()
+        -- One native write, addressed to the target block's own
+        -- session: no CLI process that must outlive the timer, and no
+        -- text-then-Enter race. Write only into the terminal's own
+        -- first shell: a foreground the user has since started (a
+        -- nested shell, an editor) would read the typed command
+        -- instead of the shell.
+        local ok, proc = pcall(rex.block.call, TERMINAL, "process", {
+            session_id = session_id,
+            block_id = block_id,
+        })
+        local fg = ok and proc and proc.foreground or nil
+        local child = ok and proc and proc.child or nil
+        if fg and child and fg.pid ~= child.pid then
+            rex.log("info", "agent-resume: " .. block_id
+                .. " is busy; not typing a resume into it")
+            dlog("busy skip: " .. block_id)
+            return
+        end
+        local res, err = rex.block.call(TERMINAL, "write", {
+            session_id = session_id,
+            block_id = block_id,
+            data = cmd .. "\r",
+        })
+        if not res then
+            rex.log("warn", "agent-resume: write to " .. block_id
+                .. " failed: " .. tostring(err))
+            dlog("resume write to " .. block_id .. " failed: "
+                .. tostring(err))
+        else
+            dlog("resume delivered to " .. block_id .. ": " .. cmd)
+        end
+    end)
+end
+
 local function schedule_resume(session_id, block_id, e, gen, shell)
     if not e.agent or e.agent == "" then return end
     -- Check staleness against the ts on record, before it is refreshed.
@@ -246,43 +338,12 @@ local function schedule_resume(session_id, block_id, e, gen, shell)
     if max_age_s <= 0 or age > max_age_s then
         rex.log("info", "agent-resume: state for " .. block_id
             .. " is stale (or resuming is disabled); leaving it at its shell")
+        dlog("stale skip: " .. block_id)
         return
     end
     if not cmd or consumed[cmd] then return end
-    consumed[cmd] = true
-    local cfh = io.open(consumed_file, "a")
-    if cfh then
-        cfh:write(cmd .. "\t" .. os.time() .. "\n")
-        cfh:close()
-    end
-    rex.after(2.0, function()
-        -- One native write, addressed to the restored block's own
-        -- session: no CLI process that must outlive the timer, and no
-        -- text-then-Enter race. Write only into the terminal's own
-        -- first shell: a foreground the user has since started (a
-        -- nested shell, an editor) would read the typed command
-        -- instead of the shell.
-        local ok, proc = pcall(rex.block.call, TERMINAL, "process", {
-            session_id = session_id,
-            block_id = block_id,
-        })
-        local fg = ok and proc and proc.foreground or nil
-        local child = ok and proc and proc.child or nil
-        if fg and child and fg.pid ~= child.pid then
-            rex.log("info", "agent-resume: " .. block_id
-                .. " is busy; not typing a resume into it")
-            return
-        end
-        local res, err = rex.block.call(TERMINAL, "write", {
-            session_id = session_id,
-            block_id = block_id,
-            data = cmd .. "\r",
-        })
-        if not res then
-            rex.log("warn", "agent-resume: write to " .. block_id
-                .. " failed: " .. tostring(err))
-        end
-    end)
+    mark_consumed(cmd)
+    deliver_resume(session_id, block_id, cmd)
 end
 
 rex.on("terminal.process_changed", function(ctx, ev)
@@ -294,6 +355,7 @@ rex.on("terminal.process_changed", function(ctx, ev)
         -- while an agent had the foreground. An equal one is an echo of
         -- the current foreground and never an update.
         if gen < e.gen then
+            dlog("restore detected: generation reset in " .. ctx.block_id)
             schedule_resume(ctx.session_id, ctx.block_id, e, gen,
                 shell_pid_of(ev))
             return
@@ -369,6 +431,7 @@ local function check_block(session_id, block_id)
             e.shell, e.ts = child, os.time()
             dirty = true
         else
+            dlog("restore detected: sweep found a fresh shell in " .. block_id)
             schedule_resume(session_id, block_id, e, nil, child)
         end
     elseif not e.shell and fg == e.agent then
@@ -384,27 +447,211 @@ local function check_block(session_id, block_id)
     end
 end
 
-local function sweep()
-    reattach()
+-- Every terminal block on this server, across sessions. Sessions on
+-- remote hosts are listed but not addressable from this server; their
+-- blocks skip the walk (their events still arrive). Failures stay
+-- silent for the same reason. fn returns true to stop the walk early.
+local function each_terminal_block(fn)
     local res = rex.call("session.list")
     if type(res) ~= "table" or type(res.sessions) ~= "table" then
         -- Unreachable or restarting; the next sweep retries.
         return
     end
     for _, s in ipairs(res.sessions) do
-        -- Sessions on remote hosts are listed here but not addressable
-        -- from this server; their blocks skip the sweep (their events
-        -- still arrive). Failures stay silent for the same reason.
         local blocks = rex.session.list_blocks{ session_id = s.session_id }
         if type(blocks) == "table" and type(blocks.blocks) == "table" then
             for _, b in ipairs(blocks.blocks) do
-                if b.creator_name == TERMINAL then
-                    check_block(s.session_id, b.block_id)
+                if b.creator_name == TERMINAL
+                    and fn(s.session_id, b.block_id) then
+                    return
                 end
             end
         end
     end
 end
+
+local function sweep()
+    reattach()
+    each_terminal_block(check_block)
+end
+
+-- The session that owns a block, for queue commands that name only a
+-- block (the CLI can pass one without a session).
+local function find_session(block_id)
+    local found
+    each_terminal_block(function(session_id, bid)
+        if bid == block_id then
+            found = session_id
+            return true
+        end
+    end)
+    return found
+end
+
+-- The manual levers. The agent_resume_now / agent_resume_forget actions
+-- that init.lua registers never edit this recorder's state: recorder.json
+-- is the in-memory table below, flushed whenever dirty, so a direct edit
+-- races the next flush and is resurrected by it. They drop request files
+-- into commands/ instead, and only this recorder applies them — one file
+-- per request, "resume\t<session>\t<block>" (session "-" meaning:
+-- locate it) or "forget\t<block>".
+
+-- The same mkdir lock the self-report hooks take around sessions.tsv
+-- (see hooks/rex-agent-state.sh): without it, a hook write landing
+-- between this read and the rename would be lost. A short, bounded wait
+-- rather than a blocking one — the drain shares a timer with the flush —
+-- and a lock orphaned by a killed hook is taken over after a minute,
+-- exactly as the hooks do.
+local sessions_lock = cache .. "/.sessions.lock"
+local function with_sessions_lock(fn)
+    local took = false
+    for i = 1, 20 do
+        local r = rex.exec({ "mkdir", sessions_lock })
+        if r and r.ok then
+            took = true
+            break
+        end
+        if i == 1 then
+            local f = rex.exec({ "find", sessions_lock, "-type", "d",
+                "-mmin", "+1" })
+            if f and f.ok and f.stdout and f.stdout ~= "" then
+                rex.exec({ "rmdir", sessions_lock })
+            end
+        end
+        rex.sleep(0.05)
+    end
+    if not took then return false end
+    local ok, err = pcall(fn)
+    rex.exec({ "rmdir", sessions_lock })
+    if not ok then error(err, 0) end
+    return true
+end
+
+-- Drop one block's line from sessions.tsv, so no ref is left for an
+-- agent this pane no longer has. A plain prefix compare, not a pattern:
+-- block ids hold no tabs, and nothing in them should ever be read as a
+-- magic character.
+local function forget_ref(block_id)
+    local tsv = cache .. "/sessions.tsv"
+    local fh = io.open(tsv, "r")
+    if not fh then return end
+    local kept, seen = {}, false
+    for line in fh:lines() do
+        if line:sub(1, #block_id + 1) == block_id .. "\t" then
+            seen = true
+        else
+            kept[#kept + 1] = line
+        end
+    end
+    fh:close()
+    if not seen then return end
+    write(tsv, #kept > 0 and table.concat(kept, "\n") .. "\n" or "")
+end
+
+local function apply_forget(block_id)
+    state[block_id] = nil
+    dirty = true
+    with_sessions_lock(function() forget_ref(block_id) end)
+    flush()
+    rex.log("info", "agent-resume: forgot " .. block_id)
+    dlog("forgot " .. block_id)
+end
+
+-- A resume the user asked for by hand: the freshness window and the
+-- consumed check do not apply — they asked explicitly — but the busy
+-- check in deliver_resume still guards the pane, and the command is
+-- recorded as consumed so a later auto-restore cannot double-fire the
+-- same fallback.
+local function manual_resume(session_id, block_id)
+    local e = state[block_id]
+    if type(e) ~= "table" or not e.agent or e.agent == "" then
+        rex.log("debug", "agent-resume: no saved agent for " .. block_id
+            .. "; dropping manual resume")
+        dlog("queue rejected: no saved agent for " .. block_id)
+        return
+    end
+    if not session_id or session_id == "" or session_id == "-" then
+        session_id = find_session(block_id)
+        if not session_id then
+            rex.log("warn", "agent-resume: no session owns " .. block_id
+                .. "; dropping manual resume")
+            dlog("queue rejected: no session for " .. block_id)
+            return
+        end
+    end
+    load_refs()
+    local r = refs[block_id]
+    local ref = (r and r.agent == e.agent) and r.ref or nil
+    local cmd = resume_cmd(e.agent, ref)
+    if not cmd then
+        rex.log("warn", "agent-resume: no resume command for agent "
+            .. tostring(e.agent) .. "; dropping manual resume")
+        dlog("queue rejected: no command for agent " .. tostring(e.agent))
+        return
+    end
+    -- Mark the recording fresh so the next flush keeps the entry
+    -- through its delivery window.
+    e.ts = os.time()
+    dirty = true
+    mark_consumed(cmd)
+    dlog("manual resume for " .. block_id .. ": " .. cmd)
+    deliver_resume(session_id, block_id, cmd)
+end
+
+local function apply_command(path)
+    local fh = io.open(path, "r")
+    if not fh then return end
+    local line = fh:read("*l") or ""
+    fh:close()
+    local op = line:match("^%a+")
+    if op == "resume" then
+        local sid, bid = line:match("^resume\t([^\t]*)\t([^\t]+)$")
+        if bid then
+            dlog("queue drained: resume " .. bid)
+            manual_resume(sid, bid)
+            return
+        end
+    elseif op == "forget" then
+        local bid = line:match("^forget\t([^\t]+)$")
+        if bid then
+            dlog("queue drained: forget " .. bid)
+            apply_forget(bid)
+            return
+        end
+    end
+    rex.log("warn", "agent-resume: dropping malformed command: " .. line)
+    dlog("queue rejected: " .. line)
+end
+
+-- Drain the action queue. Each file is claimed by renaming it to
+-- .doing before it is read — two overlapping recorders (one being
+-- replaced) never apply the same request — and removed after it is
+-- applied whatever happened inside, so a request never fires twice.
+-- .tmp files are writes still in flight and are left alone.
+local function drain_commands()
+    local r = rex.exec({ "ls", "-1", commands_dir })
+    if not r or not r.ok or not r.stdout or r.stdout == "" then return end
+    for name in r.stdout:gmatch("[^\n]+") do
+        if not name:match("%.tmp$") and not name:match("%.doing$") then
+            local claimed = commands_dir .. "/" .. name .. ".doing"
+            if os.rename(commands_dir .. "/" .. name, claimed) then
+                local ok, err = pcall(apply_command, claimed)
+                if not ok then
+                    rex.log("warn", "agent-resume: command " .. name
+                        .. " failed: " .. tostring(err))
+                    dlog("queue command " .. name .. " failed: "
+                        .. tostring(err))
+                end
+                os.remove(claimed)
+            end
+        end
+    end
+end
+
+-- Clear claim files left by a recorder that died mid-command: this
+-- recorder replaced it, so anything it had claimed is stale.
+rex.exec({ "sh", "-c",
+    "rm -f " .. shellq(commands_dir) .. "/*.doing" })
 
 -- The first sweep waits for the restore dust to settle (shells to spawn
 -- and the event path to take anything it saw); the rest keep watch over
@@ -412,6 +659,10 @@ end
 rex.after(3, sweep)
 rex.every(30, sweep)
 
+-- Flush pending state first, then drain the action queue: a forget's
+-- flush is never delayed behind queue work, and the drain — bounded,
+-- and pcall-guarded per command — cannot hold the flush up for long.
 rex.every(2, function()
     if dirty then flush() end
+    drain_commands()
 end)
