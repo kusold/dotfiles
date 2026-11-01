@@ -27,14 +27,25 @@ mode=ensure
 
 say() { printf 'install-hooks: %s\n' "$1"; }
 
+# sq <string>: single-quote for a shell command line, so a config path
+# holding spaces or a quote still resolves when the agent runs the hook.
+sq() {
+    printf "'"
+    printf '%s' "$1" | sed "s/'/'\\\\''/g"
+    printf "'"
+}
+
 # merge_json <file> <command> <matcher|->:
 # rewrite our managed hook entry, preserve everything else. Both claude's
 # settings.json and codex's hooks.json nest event keys under a top-level
-# "hooks" object.
+# "hooks" object. The file is resolved through any symlink first: an
+# atomic replace over a symlinked path would swap the link for a plain
+# file and silently detach it from whatever managed it (stow, chezmoi).
 merge_json() {
     python3 - "$1" "$2" "$3" <<'EOF'
 import json, os, sys
 path, command, matcher = sys.argv[1], sys.argv[2], sys.argv[3]
+path = os.path.realpath(path)
 marker = "rex-agent-state"
 if matcher == "-":
     matcher = None
@@ -90,25 +101,38 @@ has_hook() {
     grep -q "$marker" "$1" 2>/dev/null
 }
 
-# fix_toml <config.toml> : set [features] hooks = true, preserving rest.
+# fix_toml <config.toml> : set [features] hooks = true, preserving rest
+# (a trailing comment on the hooks line included). Symlink-resolved like
+# merge_json, for the same reason.
 fix_toml() {
     python3 - "$1" <<'EOF'
 import re, sys
 path = sys.argv[1]
+import os
+path = os.path.realpath(path)
 try:
     s = open(path).read()
 except FileNotFoundError:
     s = ""
 # A trailing comment on the header is legal TOML and must still count as
-# the section, or a second [features] table would be appended below.
+# the section, or a second [features] table would be appended below. The
+# comment must stop at the end of its line ([^\n]*), not run on with the
+# dotall flag the section body needs: a greedy dotall .* after the #
+# would swallow the whole file and leave the body empty, so an existing
+# hooks key went unseen and a duplicate was appended — invalid TOML.
 m = re.search(r"(?m)^\[features\][ \t]*(?:#.*)?$", s)
-section = re.search(r"(?ms)^\[features\][ \t]*(?:#.*)?$(.*?)(?=^\[|\Z)", s)
-if section and re.search(r"(?m)^\s*hooks\s*=\s*true\s*$", section.group(1)):
+section = re.search(
+    r"(?ms)^\[features\][ \t]*(?:#[^\n]*)?$(.*?)(?=^\[|\Z)", s)
+if section and re.search(
+        r"(?m)^\s*hooks\s*=\s*true\s*(?:#.*)?$", section.group(1)):
     sys.exit(0)
 if section:
     block = section.group(1)
     if re.search(r"(?m)^\s*hooks\s*=", block):
-        new = re.sub(r"(?m)^(\s*hooks\s*=\s*).*$", r"\1true", block, count=1)
+        # Replace the value, keep anything after it that is a comment.
+        new = re.sub(r"(?m)^(\s*hooks\s*=\s*)(\S+)(\s*#.*)?$",
+                     lambda mm: mm.group(1) + "true" + (mm.group(3) or ""),
+                     block, count=1)
         s = s[:section.start(1)] + new + s[section.end(1):]
     else:
         at = m.end()
@@ -119,7 +143,7 @@ if not s.endswith("\n"):
     s += "\n"
 tmp = path + ".rex-install.tmp"
 open(tmp, "w").write(s)
-import os; os.replace(tmp, path)
+os.replace(tmp, path)
 EOF
 }
 
@@ -127,7 +151,7 @@ EOF
 claude_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 if [ -d "$claude_dir" ]; then
     settings="$claude_dir/settings.json"
-    cmd="bash '$hook_sh' claude"
+    cmd="bash $(sq "$hook_sh") claude"
     if [ "$mode" = status ]; then
         if has_hook "$settings"; then
             say "claude: hook installed"
@@ -150,7 +174,7 @@ fi
 codex_dir="${CODEX_HOME:-$HOME/.codex}"
 if [ -d "$codex_dir" ]; then
     hooks_json="$codex_dir/hooks.json"
-    cmd="bash '$hook_sh' codex"
+    cmd="bash $(sq "$hook_sh") codex"
     if [ "$mode" = status ]; then
         if has_hook "$hooks_json"; then
             say "codex: hook installed"

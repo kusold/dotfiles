@@ -284,7 +284,10 @@ EOF
 cap() { R capture -s "$1" -b "$2" --trim --unwrap 2>/dev/null; }
 screen_has() { cap "$1" "$2" | grep -qF -- "$3"; }
 log_has() { grep -qF -- "$1" "$LOG" 2>/dev/null; }
-log_lines() { wc -l < "$LOG" 2>/dev/null | tr -d ' '; }
+# Only agent runs, not the nested probes: a probe logs about a second
+# after its pane's agent starts, so a whole-file count snapshotted the
+# moment the recording lands can still grow when the probe line arrives.
+run_lines() { grep -cE '^(claude|codex|pi) run ' "$LOG" 2>/dev/null || true; }
 ref_of() { awk -F'\t' -v b="$1" '$1 == b {print $3}' "$CACHE/sessions.tsv" 2>/dev/null | tail -1; }
 ref_line() { awk -F'\t' -v b="$1" '$1 == b' "$CACHE/sessions.tsv" 2>/dev/null; }
 ref_gone() { [ -z "$(ref_of "$1")" ]; }
@@ -305,6 +308,14 @@ pane_new() { # pane_new LABEL DIR -> sets PANE_SID / PANE_BID
     PANE_SID="$(printf '%s' "$out" | jq -r .session_id)"
     PANE_BID="$(printf '%s' "$out" | jq -r '.initial_windows[0].block_ids[0]')"
 }
+
+# Isolation guard: snapshot whether this machine already has a real
+# ~/.cache/rex-agent-resume before anything runs, so the final check
+# catches the sandbox creating one without failing on a machine that
+# simply uses agent-resume for real.
+REAL_CACHE="$HOME/.cache/rex-agent-resume"
+REAL_CACHE_BEFORE="absent"
+[ -e "$REAL_CACHE" ] && REAL_CACHE_BEFORE="present"
 
 echo "agent-resume e2e (sandbox at $D)"
 
@@ -483,7 +494,17 @@ check "Enter runs the typed resume" 'wait_for 15 log_has "claude run args=[--res
 # flag stuck — leaving quit detection suppressed after a run the user
 # had watched happen.)
 check "Enter settles the pending hold" 'wait_for 10 pending_cleared "$BC"' "$(cat "$CACHE/recorder.json" 2>/dev/null)"
-check "the debug log names the adoption" 'grep -q "agent running again in $BC" "$CACHE/debug.log"' "$(grep "agent running again" "$CACHE/debug.log" 2>/dev/null | tail -2)"
+# Which dlog names the settlement depends on a startup race this test
+# cannot control: when the sweep detects the restore (the recorder
+# subscribed after the restore events fired), the generation on record
+# is stale-high and the agent's start is logged as an adoption; when the
+# event path detects it ("generation reset"), the fresh generation was
+# adopted when the resume was scheduled and the start goes through the
+# ordinary recording path. Both settle the hold; the flag sticking would
+# fail the check above in either case.
+check "the debug log names the settlement" \
+    'grep -q "agent running again in $BC" "$CACHE/debug.log" || grep -q "restore detected: generation reset in $BC" "$CACHE/debug.log"' \
+    "$(grep -E "agent running again|generation reset" "$CACHE/debug.log" 2>/dev/null | tail -3)"
 
 if wait_for 40 screen_has "$SQ" "$BQ" "claude --resume '$RB2'"; then
     ok "the second pane's delivery also waits"
@@ -524,29 +545,38 @@ kill_agent "$SC" "$BC"
 check "quitting clears the way for a fresh recording" 'wait_for 10 entry_gone "$BC"' "$(cat "$CACHE/recorder.json" 2>/dev/null)"
 R send -s "$SC" -b "$BC" 'claude'$'\r'
 check "recorded again" 'wait_for 20 recorded_as "$BC" claude' "$(cat "$CACHE/recorder.json" 2>/dev/null)"
+# The new conversation's self-report must land in sessions.tsv before
+# its ref is read: the report races the recording, and a ref read too
+# early still names the previous conversation — one this log already
+# holds a --resume run for, which the checks below would count as a
+# resume that never happened.
+wait_for 10 '[ -n "$(ref_of "$BC")" ] && [ "$(ref_of "$BC")" != "$RB1" ]'
 RC1="$(ref_of "$BC")"
 kill_agent "$SQ" "$BQ"
 wait_for 10 entry_gone "$BQ"
 R send -s "$SQ" -b "$BQ" 'claude'$'\r'
 wait_for 20 recorded_as "$BQ" claude
+wait_for 10 '[ -n "$(ref_of "$BQ")" ] && [ "$(ref_of "$BQ")" != "$RB2" ]'
 RC2="$(ref_of "$BQ")"
 
-MARK="$(log_lines)"
+MARK="$(run_lines)"
 stop_server
 start_server REX_AGENT_RESUME=0
 echo "== generation C: REX_AGENT_RESUME=0"
 sleep 8  # past the point any delivery would have landed
-check "nothing resumes while disabled" '[ "$(log_lines)" -eq "$MARK" ]' "before=$MARK now=$(log_lines)"
+check "nothing resumes while disabled" '[ "$(run_lines)" -eq "$MARK" ]' "before=$MARK now=$(run_lines)"
 check "the recorded conversations stayed unresumed" \
     '! log_has "claude run args=[--resume $RC1]" && ! log_has "claude run args=[--resume $RC2]"' "$(tail -5 "$LOG")"
 check "the panes sit at their shells" 'wait_for 15 at_prompt "$SC" "$BC" && at_prompt "$SQ" "$BQ"' "$(cap "$SC" "$BC" | tail -2)"
 check "the recordings are left in place (the recorder never ran)" 'has_entry "$BC" && has_entry "$BQ"' "$(cat "$CACHE/recorder.json" 2>/dev/null)"
 check "the manual actions stay unregistered" '! R actions 2>/dev/null | grep -q agent_resume_now' "$(R actions 2>/dev/null | grep -c agent_resume)"
 
-# Isolation: this machine has no real ~/.cache/rex-agent-resume, so its
-# absence after a full run is a cheap guard that the sandbox held.
+# Isolation: a cache that was absent before the run must still be absent
+# after it, or the sandbox leaked into the real one. (A cache that was
+# already present belongs to real use and is left alone by this check.)
 check "the real ~/.cache/rex-agent-resume was never created" \
-    '[ ! -e "$HOME/.cache/rex-agent-resume" ]' "$(ls -la "$HOME/.cache" 2>/dev/null | grep rex)"
+    '[ "$REAL_CACHE_BEFORE" = present ] || [ ! -e "$REAL_CACHE" ]' \
+    "before=$REAL_CACHE_BEFORE now=$(ls -la "$HOME/.cache" 2>/dev/null | grep rex)"
 
 echo
 printf '%d passed, %d failed\n' "$PASS" "$FAIL"

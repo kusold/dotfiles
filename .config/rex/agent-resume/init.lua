@@ -12,7 +12,8 @@
 -- Nothing else bootstraps it: no shell hook of any kind is involved.
 --
 -- Environment, read from the server's: REX_AGENT_RESUME=0 disables the
--- whole system (the recorder exits at once and the actions below stay
+-- whole system (the recorder exits at once, install-hooks stays unrun
+-- so the agents' configs are left alone, and the actions below stay
 -- unregistered, with no recorder to drain their queue);
 -- REX_AGENT_RESUME_MAX_AGE_DAYS bounds what the recorder auto-resumes
 -- (default 7); REX_AGENT_RESUME_DEBUG=1 makes the recorder append its
@@ -20,6 +21,7 @@
 -- the recorder type each resume command without the Enter that runs it,
 -- so nothing resumes without a keystroke (any other value, the default
 -- auto, resumes as before).
+local enabled = os.getenv("REX_AGENT_RESUME") ~= "0"
 local dir = os.getenv("REX_BIN_DIR")
 local exe = (dir and dir .. "/rex") or "rex"
 
@@ -36,10 +38,20 @@ end
 start({ exe, "do",
     os.getenv("HOME") .. "/.config/rex/agent-resume/recorder.lua", "--all" })
 
--- Keep the agents' self-report hooks installed.
-start({ "/bin/sh", "-c",
-    os.getenv("HOME")
-        .. "/.config/rex/agent-resume/install-hooks.sh --ensure" })
+-- Quote a path for a shell command line, so a HOME holding spaces or a
+-- quote still resolves (the recorder quotes its own paths the same way).
+local function shq(s)
+    return "'" .. s:gsub("'", "'\\''") .. "'"
+end
+
+if enabled then
+    -- Keep the agents' self-report hooks installed — but only while the
+    -- system is enabled: a disabled system must not keep rewriting the
+    -- agents' own config files on every server start.
+    start({ "/bin/sh", "-c",
+        shq(os.getenv("HOME")
+            .. "/.config/rex/agent-resume/install-hooks.sh") .. " --ensure" })
+end
 
 -- Manual levers on the recorder's state, as command-palette actions.
 -- recorder.json is the recorder's in-memory table flushed to disk
@@ -74,6 +86,7 @@ local function queue_command(line)
     fh:write(line, "\n")
     fh:close()
     if not os.rename(tmp, queue_dir .. "/" .. name) then
+        os.remove(tmp)
         error("cannot queue " .. name, 0)
     end
 end
@@ -90,7 +103,7 @@ end
 -- REX_AGENT_RESUME=0 leaves no recorder to drain the queue, so the
 -- actions stay unregistered rather than accept requests that would sit
 -- forever.
-if os.getenv("REX_AGENT_RESUME") ~= "0" then
+if enabled then
     rex.action({
         name = "agent_resume_now",
         title = "Agent Resume: Resume This Pane Now",

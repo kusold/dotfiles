@@ -92,10 +92,20 @@ do
     old = old and tonumber(old) or nil
     if old then
         local r = rex.exec({ "ps", "-o", "command=", "-p", tostring(old) })
-        if r and r.ok and r.stdout and r.stdout:find("recorder%.lua") then
-            rex.exec({ "kill", tostring(old) })
-            rex.sleep(0.3)
-            replaced = old
+        if r and r.ok and r.stdout then
+            -- The command must be this recorder's own invocation — a
+            -- rex binary running `do` on exactly this script — not
+            -- merely any command line that mentions recorder.lua (an
+            -- editor or a pager opened on it), or a recycled pid
+            -- would be killed.
+            local script = os.getenv("HOME")
+                .. "/.config/rex/agent-resume/recorder.lua"
+            if r.stdout:match("^%S*rex%s+do%s")
+                and r.stdout:find(script, 1, true) then
+                rex.exec({ "kill", tostring(old) })
+                rex.sleep(0.3)
+                replaced = old
+            end
         end
     end
 end
@@ -123,7 +133,9 @@ local function write(path, contents)
     local tmp = path .. ".tmp"
     local fh = io.open(tmp, "w")
     if not fh then return end
-    fh:write(contents)
+    -- A failed write (a full disk, quota) leaves a partial tmp file;
+    -- renaming it over the good state would corrupt it, so stop short.
+    if not fh:write(contents) then fh:close() return end
     fh:close()
     os.rename(tmp, path)
 end
@@ -170,8 +182,17 @@ reattach()
 
 -- Match a foreground process to an agent name. Node-shimmed CLIs report
 -- as env or node, so every name field is checked, by basename first, and
--- the script a node/python interpreter runs last.
+-- the script a node/python interpreter runs last. The name itself must
+-- be the agent's with at most a -, _ or . suffix (the same grammar the
+-- self-report hook's ps walk uses), so a program merely named claudette
+-- or codexify is not read as an agent.
 -- Returns "" for a plain foreground (shell, vim, ...) meaning: no resume.
+local function is_agent_name(b, name)
+    if b:sub(1, #name) ~= name then return false end
+    local rest = b:sub(#name + 1)
+    return rest == "" or rest:sub(1, 1):match("^[-_%.]") ~= nil
+end
+
 local function classify(f)
     if not f then return nil end
     local fields = { f.name, f.argv0, f.invoked_path, f.path, f.script }
@@ -179,8 +200,8 @@ local function classify(f)
         if s then
             local b = s:match("[^/]+$") or s
             if b == "pi" then return "pi" end
-            if b:sub(1, 6) == "claude" then return "claude" end
-            if b:sub(1, 5) == "codex" then return "codex" end
+            if is_agent_name(b, "claude") then return "claude" end
+            if is_agent_name(b, "codex") then return "codex" end
         end
     end
     return ""
@@ -203,8 +224,9 @@ rex.on("terminal.program_status_changed", function(ctx, ev)
     local e = state[ctx.block_id] or {}
     -- A live report outranks path matching; the generation and shell on
     -- record stay, so a restore after a crash is still detected by
-    -- them.
-    e.agent, e.ts = app, os.time()
+    -- them. A live report also means the agent itself is running, so
+    -- any prompt-mode delivery in this block has demonstrably been run.
+    e.agent, e.ts, e.pending = app, os.time(), nil
     state[ctx.block_id] = e
     dirty = true
 end)
@@ -292,6 +314,17 @@ local function mark_consumed(cmd)
     end
 end
 
+-- Settle a prompt-mode hold: nothing of the delivery waits in the pane
+-- any more (it was skipped as busy, or the write failed), so the sweep
+-- may read the block like any other again.
+local function settle_pending(block_id)
+    local e = state[block_id]
+    if type(e) == "table" and e.pending then
+        e.pending = nil
+        dirty = true
+    end
+end
+
 -- Type a resume command into a block's own first shell, after a beat
 -- that lets a restored shell settle. Shared by the automatic path (a
 -- detected restore) and the manual one (a queued request): the guards
@@ -305,17 +338,20 @@ local function deliver_resume(session_id, block_id, cmd)
         -- text-then-Enter race. Write only into the terminal's own
         -- first shell: a foreground the user has since started (a
         -- nested shell, an editor) would read the typed command
-        -- instead of the shell.
+        -- instead of the shell. A foreground with no child to compare
+        -- against is treated as busy too: typing into a program that
+        -- cannot be confirmed idle is the riskier mistake.
         local ok, proc = pcall(rex.block.call, TERMINAL, "process", {
             session_id = session_id,
             block_id = block_id,
         })
         local fg = ok and proc and proc.foreground or nil
         local child = ok and proc and proc.child or nil
-        if fg and child and fg.pid ~= child.pid then
+        if fg and (not child or fg.pid ~= child.pid) then
             rex.log("info", "agent-resume: " .. block_id
                 .. " is busy; not typing a resume into it")
             dlog("busy skip: " .. block_id)
+            settle_pending(block_id)
             return
         end
         -- Prompt mode withholds the Enter, so the command sits on the
@@ -339,6 +375,7 @@ local function deliver_resume(session_id, block_id, cmd)
                 .. " failed: " .. tostring(err))
             dlog("resume write to " .. block_id .. " failed: "
                 .. tostring(err))
+            settle_pending(block_id)
         elseif prompt_mode then
             -- Hold the recording while the command waits: until Enter is
             -- pressed the pane looks exactly like one whose agent was
@@ -388,6 +425,15 @@ local function schedule_resume(session_id, block_id, e, gen, shell)
     end
     if not cmd or consumed[cmd] then return end
     mark_consumed(cmd)
+    -- Hold the recording from the moment the delivery is scheduled, not
+    -- from the write: a sweep that lands inside the delivery delay
+    -- would otherwise read the pane as a quit and drop it before the
+    -- write could set the flag, leaving the typed command with no
+    -- agent_resume_now to re-deliver it.
+    if prompt_mode then
+        e.pending = true
+        dirty = true
+    end
     deliver_resume(session_id, block_id, cmd)
 end
 
@@ -439,7 +485,11 @@ rex.on("terminal.process_changed", function(ctx, ev)
     if agent == "" then
         -- A plain foreground (shell, vim, ...) means no resume; keep no
         -- entry at all rather than growing the state file with blocks
-        -- that have nothing to resume.
+        -- that have nothing to resume. A pending flag excepts this, as
+        -- it does in the sweep below: in prompt mode a delivered
+        -- command may still be sitting unrun on that shell's line.
+        local held = state[ctx.block_id]
+        if type(held) == "table" and held.pending then return end
         if state[ctx.block_id] then
             state[ctx.block_id] = nil
             dirty = true
@@ -662,8 +712,11 @@ local function manual_resume(session_id, block_id)
         return
     end
     -- Mark the recording fresh so the next flush keeps the entry
-    -- through its delivery window.
+    -- through its delivery window, and hold it for the delivery as the
+    -- automatic path does (a sweep inside the delivery delay must not
+    -- read the pane as a quit).
     e.ts = os.time()
+    if prompt_mode then e.pending = true end
     dirty = true
     mark_consumed(cmd)
     dlog("manual resume for " .. block_id .. ": " .. cmd)
