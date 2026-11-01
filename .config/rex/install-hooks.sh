@@ -1,9 +1,10 @@
 #!/bin/sh
 # Detect installed coding agents (claude, codex, pi) and install the
 # self-report hooks that let a restored Rex terminal resume the exact
-# conversation that ran in it. Run with --ensure (the default, from the
-# shell startup hooks) it only writes when something is missing or
-# outdated; run with --status it reports and changes nothing.
+# conversation that ran in it. Run with --ensure (the default, from
+# init.lua at server start) it rewrites the managed entry idempotently,
+# which also repairs an entry an older version of this script left in a
+# different shape; run with --status it reports and changes nothing.
 #
 # What it touches, honoring each agent's config override:
 #   claude  $CLAUDE_CONFIG_DIR (default ~/.claude)      settings.json
@@ -23,17 +24,17 @@ marker="rex-agent-state"
 
 mode=ensure
 [ "${1:-}" = "--status" ] && mode=status
-changed=0
 
 say() { printf 'install-hooks: %s\n' "$1"; }
 
-# merge_json <file> <command> <matcher|-> <wrap|top>:
-# rewrite our managed hook entry, preserve everything else. Claude's
-# settings.json nests under "hooks"; codex's hooks.json is top-level.
+# merge_json <file> <command> <matcher|->:
+# rewrite our managed hook entry, preserve everything else. Both claude's
+# settings.json and codex's hooks.json nest event keys under a top-level
+# "hooks" object.
 merge_json() {
-    python3 - "$1" "$2" "$3" "$4" <<'EOF'
+    python3 - "$1" "$2" "$3" <<'EOF'
 import json, os, sys
-path, command, matcher, wrap = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+path, command, matcher = sys.argv[1], sys.argv[2], sys.argv[3]
 marker = "rex-agent-state"
 if matcher == "-":
     matcher = None
@@ -48,13 +49,21 @@ except Exception:
 if not isinstance(doc, dict):
     print(f"install-hooks: {path}: unexpected JSON shape, leaving it alone")
     sys.exit(1)
-if wrap == "hooks":
-    outer = doc.setdefault("hooks", {})
-    if not isinstance(outer, dict):
-        print(f"install-hooks: {path}: hooks is not an object")
-        sys.exit(1)
-else:
-    outer = doc
+# Migrate the shape an earlier version of this script wrote for codex:
+# a top-level "SessionStart" instead of one under "hooks". Codex ignores
+# (or rejects) that shape, so the hook never fired. Only drop it when
+# every entry in it is ours.
+top = doc.get("SessionStart")
+if isinstance(top, list) and top and all(
+        isinstance(e, dict) and any(
+            marker in str(h.get("command", ""))
+            for h in e.get("hooks", []) if isinstance(h, dict))
+        for e in top):
+    del doc["SessionStart"]
+outer = doc.setdefault("hooks", {})
+if not isinstance(outer, dict):
+    print(f"install-hooks: {path}: hooks is not an object")
+    sys.exit(1)
 arr = outer.setdefault("SessionStart", [])
 if not isinstance(arr, list):
     print(f"install-hooks: {path}: SessionStart is not a list")
@@ -90,8 +99,10 @@ try:
     s = open(path).read()
 except FileNotFoundError:
     s = ""
-m = re.search(r"(?m)^\[features\][ \t]*$", s)
-section = re.search(r"(?ms)^\[features\][ \t]*$(.*?)(?=^\[|\Z)", s)
+# A trailing comment on the header is legal TOML and must still count as
+# the section, or a second [features] table would be appended below.
+m = re.search(r"(?m)^\[features\][ \t]*(?:#.*)?$", s)
+section = re.search(r"(?ms)^\[features\][ \t]*(?:#.*)?$(.*?)(?=^\[|\Z)", s)
 if section and re.search(r"(?m)^\s*hooks\s*=\s*true\s*$", section.group(1)):
     sys.exit(0)
 if section:
@@ -117,13 +128,17 @@ claude_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 if [ -d "$claude_dir" ]; then
     settings="$claude_dir/settings.json"
     cmd="bash '$hook_sh' claude"
-    if has_hook "$settings"; then
-        [ "$mode" = status ] && say "claude: hook installed"
-    elif [ "$mode" = status ]; then
-        say "claude: not installed"
+    if [ "$mode" = status ]; then
+        if has_hook "$settings"; then
+            say "claude: hook installed"
+        else
+            say "claude: not installed"
+        fi
     elif command -v python3 >/dev/null 2>&1; then
-        merge_json "$settings" "$cmd" '^(startup|resume|clear|compact|fork)$' hooks \
-            && say "claude: hook installed in $settings" && changed=1
+        # Always re-merge: it is idempotent, and it also repairs or
+        # upgrades an entry an older version of this script wrote.
+        merge_json "$settings" "$cmd" '^(startup|resume|clear|compact|fork)$' \
+            && say "claude: hook installed in $settings"
     else
         say "claude: python3 missing, skipped"
     fi
@@ -136,23 +151,24 @@ codex_dir="${CODEX_HOME:-$HOME/.codex}"
 if [ -d "$codex_dir" ]; then
     hooks_json="$codex_dir/hooks.json"
     cmd="bash '$hook_sh' codex"
-    if has_hook "$hooks_json"; then
-        [ "$mode" = status ] && say "codex: hook installed"
-    elif [ "$mode" != status ]; then
-        if command -v python3 >/dev/null 2>&1; then
-            merge_json "$hooks_json" "$cmd" - top \
-                && say "codex: hook installed in $hooks_json" && changed=1
+    if [ "$mode" = status ]; then
+        if has_hook "$hooks_json"; then
+            say "codex: hook installed"
         else
-            say "codex: python3 missing, skipped"
+            say "codex: not installed"
         fi
+    elif command -v python3 >/dev/null 2>&1; then
+        merge_json "$hooks_json" "$cmd" - \
+            && say "codex: hook installed in $hooks_json"
     else
-        say "codex: not installed"
+        say "codex: python3 missing, skipped"
     fi
     if [ "$mode" != status ]; then
         toml="$codex_dir/config.toml"
-        # Fast path: python3 only when the setting is actually missing.
-        if ! grep -q 'hooks *= *true' "$toml" 2>/dev/null \
-            && { [ -f "$toml" ] || [ -f "$hooks_json" ]; } \
+        # fix_toml is idempotent and exits before writing when
+        # [features] already sets hooks = true. A grep fast path would
+        # false-positive on a same-named key in any other section.
+        if { [ -f "$toml" ] || [ -f "$hooks_json" ]; } \
             && command -v python3 >/dev/null 2>&1; then
             fix_toml "$toml"
         fi
@@ -175,7 +191,7 @@ if [ -d "$pi_dir" ]; then
     else
         mkdir -p "$pi_dir/extensions" 2>/dev/null \
             && cp "$hook_ts" "$dest" \
-            && say "pi: extension installed in $dest" && changed=1
+            && say "pi: extension installed in $dest"
     fi
 else
     [ "$mode" = status ] && say "pi: not found"

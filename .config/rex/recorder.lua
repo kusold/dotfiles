@@ -12,6 +12,14 @@ local cache = (os.getenv("XDG_CACHE_HOME") or os.getenv("HOME") .. "/.cache")
     .. "/rex-agent-resume"
 local json_file = cache .. "/recorder.json"
 local pid_file = cache .. "/recorder.pid"
+local consumed_file = cache .. "/consumed.txt"
+
+-- Resume only state recorded within this many days: a recorder gap can
+-- leave an agent on record long after the user has moved on, and
+-- resuming a weeks-old conversation is never wanted. 0 disables
+-- resuming entirely. (The knob the old shell-side hook used.)
+local max_age_days = tonumber(os.getenv("REX_AGENT_RESUME_MAX_AGE_DAYS") or "") or 7
+local max_age_s = max_age_days * 86400
 
 local TERMINAL = "com.superlogical.terminal"
 
@@ -42,6 +50,16 @@ local function write(path, contents)
 end
 
 local function flush()
+    -- Drop entries that could never resume again — no agent, or one
+    -- recorded further back than the freshness window — so the state
+    -- file does not grow without bound.
+    local now = os.time()
+    for k, v in pairs(state) do
+        if type(v) ~= "table" or not v.agent or v.agent == ""
+            or (max_age_s > 0 and now - (v.ts or 0) > max_age_s) then
+            state[k] = nil
+        end
+    end
     local text = rex.json.encode(state)
     if text then write(json_file, text) end
     dirty = false
@@ -61,11 +79,12 @@ if pid and pid.ok then
 end
 
 -- Match a foreground process to an agent name. Node-shimmed CLIs report
--- as env or node, so every name field is checked, by basename first.
+-- as env or node, so every name field is checked, by basename first, and
+-- the script a node/python interpreter runs last.
 -- Returns "" for a plain foreground (shell, vim, ...) meaning: no resume.
 local function classify(f)
     if not f then return nil end
-    local fields = { f.name, f.argv0, f.invoked_path, f.path }
+    local fields = { f.name, f.argv0, f.invoked_path, f.path, f.script }
     for _, s in ipairs(fields) do
         if s then
             local b = s:match("[^/]+$") or s
@@ -116,25 +135,47 @@ local function load_refs()
 end
 load_refs()
 
-local function resume_cmd(agent, ref)
-    if agent == "claude" then
-        return ref and ("claude --resume " .. ref) or "claude --continue"
-    end
-    if agent == "codex" then
-        return ref and ("codex resume " .. ref) or "codex resume --last"
-    end
-    if agent == "pi" then return ref and ("pi --session " .. ref) end
+-- Quote a ref for the shell that will read the typed command; a pi ref
+-- is a session file path, and paths can hold spaces.
+local function shellq(s)
+    return "'" .. s:gsub("'", "'\\''") .. "'"
 end
 
--- Resume commands already scheduled by this recorder. An exact ref
--- makes a command unique, so this only bites on the fallbacks
--- (--continue, resume --last): two restored blocks in one directory
--- must not both fork the newest conversation there; the second stays at
--- its shell.
+local function resume_cmd(agent, ref)
+    if agent == "claude" then
+        return ref and ("claude --resume " .. shellq(ref)) or "claude --continue"
+    end
+    if agent == "codex" then
+        return ref and ("codex resume " .. shellq(ref)) or "codex resume --last"
+    end
+    if agent == "pi" then return ref and ("pi --session " .. shellq(ref)) end
+end
+
+-- Resume commands already taken. An exact ref makes a command unique,
+-- so this only bites on the fallbacks (--continue, resume --last): two
+-- restored blocks in one directory must not both fork the newest
+-- conversation there; the second stays at its shell. Persisted with a
+-- timestamp, so a recorder restarted mid-restore (a second crash) keeps
+-- the protection, and entries expire with the freshness window instead
+-- of blocking a later genuine fallback forever.
 local consumed = {}
+do
+    local fh = io.open(consumed_file, "r")
+    if fh then
+        for line in fh:lines() do
+            local c, t = line:match("^([^\t]+)\t(%d+)$")
+            if c and max_age_s > 0 and os.time() - tonumber(t) <= max_age_s then
+                consumed[c] = true
+            end
+        end
+        fh:close()
+    end
+end
 
 local function schedule_resume(session_id, block_id, e, gen)
     if not e.agent or e.agent == "" then return end
+    -- Check staleness against the ts on record, before it is refreshed.
+    local age = os.time() - (e.ts or os.time())
     load_refs()
     local r = refs[block_id]
     -- Trust the hook's ref only when its agent is the one this recorder
@@ -147,12 +188,36 @@ local function schedule_resume(session_id, block_id, e, gen)
     e.gen = gen or e.gen
     e.ts = os.time()
     flush()
+    if max_age_s <= 0 or age > max_age_s then
+        rex.log("info", "agent-resume: state for " .. block_id
+            .. " is stale (or resuming is disabled); leaving it at its shell")
+        return
+    end
     if not cmd or consumed[cmd] then return end
     consumed[cmd] = true
+    local cfh = io.open(consumed_file, "a")
+    if cfh then
+        cfh:write(cmd .. "\t" .. os.time() .. "\n")
+        cfh:close()
+    end
     rex.after(2.0, function()
         -- One native write, addressed to the restored block's own
         -- session: no CLI process that must outlive the timer, and no
-        -- text-then-Enter race.
+        -- text-then-Enter race. Write only into the terminal's own
+        -- first shell: a foreground the user has since started (a
+        -- nested shell, an editor) would read the typed command
+        -- instead of the shell.
+        local ok, proc = pcall(rex.block.call, TERMINAL, "process", {
+            session_id = session_id,
+            block_id = block_id,
+        })
+        local fg = ok and proc and proc.foreground or nil
+        local child = ok and proc and proc.child or nil
+        if fg and child and fg.pid ~= child.pid then
+            rex.log("info", "agent-resume: " .. block_id
+                .. " is busy; not typing a resume into it")
+            return
+        end
         local res, err = rex.block.call(TERMINAL, "write", {
             session_id = session_id,
             block_id = block_id,
@@ -181,12 +246,19 @@ rex.on("terminal.process_changed", function(ctx, ev)
     end
     local agent = classify(ev.foreground)
     if agent == nil then return end
+    if agent == "" then
+        -- A plain foreground (shell, vim, ...) means no resume; keep no
+        -- entry at all rather than growing the state file with blocks
+        -- that have nothing to resume.
+        if state[ctx.block_id] then
+            state[ctx.block_id] = nil
+            dirty = true
+        end
+        return
+    end
     e = e or {}
     e.gen = gen or 0
     e.agent = agent
-    if ev.foreground and ev.foreground.cwd then
-        e.cwd = ev.foreground.cwd
-    end
     e.ts = os.time()
     state[ctx.block_id] = e
     dirty = true
@@ -208,7 +280,9 @@ do
             { session_id = s, block_id = b })
         local fg = ok and proc and proc.foreground or nil
         -- Anything but the recorded agent still in the foreground (a
-        -- shell, or a query that could not run) means restored.
+        -- shell, or a query that could not run) means restored. A
+        -- nested shell the user opened also lands here, so the write
+        -- re-checks the foreground before typing.
         if classify(fg) ~= e.agent then
             schedule_resume(s, b, e, 1)
         end

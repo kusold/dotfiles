@@ -34,6 +34,17 @@ export default function (pi: any) {
           fs.mkdirSync(lock);
         } catch (e: any) {
           if (e && e.code === "EEXIST") {
+            // A lock orphaned by a killed run is taken over after a
+            // minute; a live holder keeps it for milliseconds only.
+            try {
+              const st = fs.statSync(lock);
+              if (Date.now() - st.mtimeMs > 60_000) {
+                fs.rmdirSync(lock);
+                continue;
+              }
+            } catch {
+              // raced away; just wait
+            }
             Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
             continue;
           }
@@ -44,11 +55,18 @@ export default function (pi: any) {
         // the path) out of every future report.
         try {
           let lines: string[] = [];
+          // Keep anything from the last 30 days; the recorder's
+          // freshness window never reaches older refs anyway.
+          const cutoff = Math.floor(Date.now() / 1000) - 30 * 86400;
           try {
             lines = fs
               .readFileSync(sessions, "utf8")
               .split("\n")
-              .filter((l) => l && !l.startsWith(block + "\t"));
+              .filter((l) => {
+                if (!l || l.startsWith(block + "\t")) return false;
+                const ts = Number(l.split("\t")[3]);
+                return Number.isFinite(ts) && ts > cutoff;
+              });
           } catch {
             lines = []; // first report: the file does not exist yet
           }

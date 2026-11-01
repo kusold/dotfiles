@@ -38,13 +38,21 @@ if command -v pgrep >/dev/null 2>&1 \
 fi
 
 # Serialize shells restored in the same instant: the first through the
-# lock spawns the recorder, the rest find it through the pidfile.
+# lock spawns the recorder, the rest find it through the pidfile. A lock
+# orphaned by a killed shell (its trap never ran) is taken over after a
+# minute — a live holder keeps it for milliseconds only.
 lock="$cache/.recorder.lock"
+if [ -d "$lock" ] && [ -n "$(find "$lock" -type d -mmin +1 2>/dev/null)" ]; then
+    rmdir "$lock" 2>/dev/null
+fi
 if ! mkdir "$lock" 2>/dev/null; then
+    # 50 ms sleeps when sleep takes fractions, else whole seconds and
+    # few of them: a restored shell's startup must not block for long.
+    if sleep 0.01 >/dev/null 2>&1; then unit=0.05 tries=20; else unit=1 tries=3; fi
     i=0
-    while ! recorder_running && [ "$i" -lt 20 ]; do
+    while ! recorder_running && [ "$i" -lt "$tries" ]; do
         i=$((i + 1))
-        sleep 0.05 2>/dev/null || sleep 1
+        sleep "$unit" 2>/dev/null
     done
     exit 0
 fi
