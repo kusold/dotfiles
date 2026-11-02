@@ -97,10 +97,15 @@ do
             -- rex binary running `do` on exactly this script — not
             -- merely any command line that mentions recorder.lua (an
             -- editor or a pager opened on it), or a recycled pid
-            -- would be killed.
+            -- would be killed. The binary path itself can hold spaces
+            -- (~/Library/Application Support/...), so match the `/rex
+            -- do` boundary — or a bare `rex do` at the start — rather
+            -- than a no-space prefix from the start of the line,
+            -- which never matched and left every takeover a no-op.
             local script = os.getenv("HOME")
                 .. "/.config/rex/agent-resume/recorder.lua"
-            if r.stdout:match("^%S*rex%s+do%s")
+            if (r.stdout:match("^rex%s+do%s")
+                    or r.stdout:match("/rex%s+do%s"))
                 and r.stdout:find(script, 1, true) then
                 rex.exec({ "kill", tostring(old) })
                 rex.sleep(0.3)

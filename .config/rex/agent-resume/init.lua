@@ -22,8 +22,26 @@
 -- so nothing resumes without a keystroke (any other value, the default
 -- auto, resumes as before).
 local enabled = os.getenv("REX_AGENT_RESUME") ~= "0"
-local dir = os.getenv("REX_BIN_DIR")
-local exe = (dir and dir .. "/rex") or "rex"
+
+-- Spawn the CLI by path, not by name: the server's own environment has
+-- PATH=/usr/bin:/bin:... and no rex on it, and older servers set no
+-- REX_BIN_DIR either — bare "rex" failed to resolve and warned on every
+-- start. Prefer REX_BIN_DIR when it points at a real file, else the
+-- copy beside the running server binary (Versions/Current follows the
+-- server even when it lags a fresh app install), keeping bare "rex"
+-- only as a last resort for servers whose PATH does resolve.
+local function runnable(p)
+    local fh = io.open(p, "r")
+    if fh then fh:close() end
+    return fh ~= nil
+end
+
+local bin_dir = os.getenv("REX_BIN_DIR")
+local beside = os.getenv("HOME")
+    .. "/Library/Application Support/com.superlogical.rex/RexServer"
+    .. "/Versions/Current/Rex Server.app/Contents/MacOS/rex"
+local exe = (bin_dir and runnable(bin_dir .. "/rex") and bin_dir .. "/rex")
+    or (runnable(beside) and beside) or "rex"
 
 -- exec.start is one of the calls that works at load time, but it still
 -- reports failure as nil + message rather than an error, so catch both.
